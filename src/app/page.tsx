@@ -1,65 +1,343 @@
-import Image from "next/image";
+"use client";
+
+import { useTheme } from "next-themes";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+
+const colorTokens = [
+  { name: "Background", bg: "bg-background", fg: "text-foreground" },
+  { name: "Primary", bg: "bg-primary", fg: "text-primary-foreground" },
+  { name: "Secondary", bg: "bg-secondary", fg: "text-secondary-foreground" },
+  { name: "Accent", bg: "bg-accent", fg: "text-accent-foreground" },
+  {
+    name: "Highlight",
+    bg: "bg-highlight",
+    fg: "text-highlight-foreground",
+  },
+  { name: "Muted", bg: "bg-muted", fg: "text-muted-foreground" },
+  { name: "Card", bg: "bg-card", fg: "text-card-foreground" },
+  {
+    name: "Destructive",
+    bg: "bg-destructive",
+    fg: "text-destructive-foreground",
+  },
+  { name: "Success", bg: "bg-success", fg: "text-success-foreground" },
+  { name: "Warning", bg: "bg-warning", fg: "text-warning-foreground" },
+  { name: "Info", bg: "bg-info", fg: "text-info-foreground" },
+];
+
+const chartColors = [
+  { name: "Chart 1", bg: "bg-chart-1" },
+  { name: "Chart 2", bg: "bg-chart-2" },
+  { name: "Chart 3", bg: "bg-chart-3" },
+  { name: "Chart 4", bg: "bg-chart-4" },
+  { name: "Chart 5", bg: "bg-chart-5" },
+];
+
+const sidebarColors = [
+  { name: "Sidebar", bg: "bg-sidebar", fg: "text-sidebar-foreground" },
+  {
+    name: "Sidebar Accent",
+    bg: "bg-sidebar-accent",
+    fg: "text-sidebar-accent-foreground",
+  },
+  {
+    name: "Sidebar Primary",
+    bg: "bg-sidebar-primary",
+    fg: "text-sidebar-primary-foreground",
+  },
+];
+
+function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-sm text-muted-foreground">Light</span>
+      <Switch
+        checked={theme === "dark"}
+        onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+      />
+      <span className="text-sm text-muted-foreground">Dark</span>
+    </div>
+  );
+}
+
+function Section({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="space-y-4">
+      <h2 className="font-heading text-2xl tracking-tight">{title}</h2>
+      <Separator />
+      {children}
+    </section>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main className="mx-auto max-w-5xl space-y-12 p-8 pb-20">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="font-heading text-4xl tracking-tight text-primary">
+            Theme Preview
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mt-1 text-muted-foreground">
+            Paleta baseada no template Minsk — Dark Teal + Terracotta
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <ThemeToggle />
+      </div>
+
+      <Section title="Paleta de Cores">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+          {colorTokens.map((t) => (
+            <div key={t.name} className="space-y-1.5">
+              <div
+                className={`${t.bg} ${t.fg} flex h-20 items-end rounded-lg border p-3 text-xs font-medium shadow-sm`}
+              >
+                {t.name}
+              </div>
+              <p className="text-xs text-muted-foreground">{t.bg}</p>
+            </div>
+          ))}
         </div>
-      </main>
-    </div>
+      </Section>
+
+      <Section title="Chart Colors">
+        <div className="flex gap-2">
+          {chartColors.map((c) => (
+            <div key={c.name} className="flex-1 space-y-1.5">
+              <div className={`${c.bg} h-12 rounded-lg shadow-sm`} />
+              <p className="text-center text-xs text-muted-foreground">
+                {c.name}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section title="Sidebar Colors">
+        <div className="flex gap-3">
+          {sidebarColors.map((s) => (
+            <div key={s.name} className="flex-1 space-y-1.5">
+              <div
+                className={`${s.bg} ${s.fg} flex h-16 items-center justify-center rounded-lg text-sm font-medium shadow-sm`}
+              >
+                {s.name}
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section title="Tipografia — Headings (Marcellus)">
+        <div className="space-y-3">
+          <h1 className="font-heading text-5xl tracking-tight">
+            Heading 1 — Marcellus
+          </h1>
+          <h2 className="font-heading text-4xl tracking-tight">
+            Heading 2 — Marcellus
+          </h2>
+          <h3 className="font-heading text-3xl">Heading 3 — Marcellus</h3>
+          <h4 className="font-heading text-2xl">Heading 4 — Marcellus</h4>
+          <h5 className="font-heading text-xl">Heading 5 — Marcellus</h5>
+          <h6 className="font-heading text-lg">Heading 6 — Marcellus</h6>
+        </div>
+      </Section>
+
+      <Section title="Tipografia — Body (Plus Jakarta Sans)">
+        <div className="max-w-2xl space-y-3">
+          <p className="text-base font-semibold">
+            Semibold — Serviços contábeis profissionais para o seu negócio.
+          </p>
+          <p className="text-base font-medium">
+            Medium — Planejamento tributário e compliance fiscal.
+          </p>
+          <p className="text-base leading-relaxed">
+            Regular — Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Suspendisse varius enim in eros elementum tristique. Serviços
+            contábeis profissionais para o seu negócio.
+          </p>
+          <p className="text-base font-light">
+            Light — Informações complementares com peso mais leve para
+            hierarquia visual.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Texto muted — Informações secundárias e descrições de apoio que
+            complementam o conteúdo principal.
+          </p>
+          <p className="font-mono text-sm">
+            Monospace — JetBrains Mono: const total = 1_250.00
+          </p>
+        </div>
+      </Section>
+
+      <Section title="Heading + Body Combinados">
+        <div className="max-w-2xl space-y-4">
+          <h2 className="font-heading text-3xl tracking-tight text-primary">
+            Consultoria Financeira Estratégica
+          </h2>
+          <p className="leading-relaxed">
+            Nossa equipe de especialistas oferece serviços contábeis
+            personalizados para atender às necessidades específicas do seu
+            negócio. Com anos de experiência no setor, temos a expertise
+            necessária para fornecer as soluções certas.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Agende uma consulta gratuita e descubra como podemos ajudar.
+          </p>
+          <Button>Agendar consulta</Button>
+        </div>
+      </Section>
+
+      <Section title="Botões">
+        <div className="space-y-6">
+          <div className="flex flex-wrap items-center gap-3">
+            <Button>Primary</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="outline">Outline</Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button variant="destructive">Destructive</Button>
+            <Button variant="link">Link</Button>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <Button size="xs">Extra Small</Button>
+            <Button size="sm">Small</Button>
+            <Button size="default">Default</Button>
+            <Button size="lg">Large</Button>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <Button disabled>Disabled</Button>
+            <Button variant="outline" disabled>
+              Disabled Outline
+            </Button>
+          </div>
+        </div>
+      </Section>
+
+      <Section title="Badges">
+        <div className="flex flex-wrap items-center gap-3">
+          <Badge>Default</Badge>
+          <Badge variant="secondary">Secondary</Badge>
+          <Badge variant="outline">Outline</Badge>
+          <Badge variant="destructive">Destructive</Badge>
+        </div>
+      </Section>
+
+      <Section title="Formulários">
+        <div className="grid max-w-xl gap-4">
+          <div className="space-y-2">
+            <label htmlFor="name" className="text-sm font-medium">
+              Nome
+            </label>
+            <Input id="name" placeholder="Digite seu nome..." />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-sm font-medium">
+              Email
+            </label>
+            <Input id="email" type="email" placeholder="email@exemplo.com" />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="message" className="text-sm font-medium">
+              Mensagem
+            </label>
+            <Textarea id="message" placeholder="Escreva sua mensagem..." />
+          </div>
+          <Button className="w-fit">Enviar</Button>
+        </div>
+      </Section>
+
+      <Section title="Cards">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-heading text-xl">
+                Contabilidade
+              </CardTitle>
+              <CardDescription>
+                Serviços contábeis completos para empresas de todos os portes.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="outline" className="w-full">
+                Saiba mais
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-heading text-xl">Impostos</CardTitle>
+              <CardDescription>
+                Planejamento tributário e compliance fiscal para otimizar seus
+                resultados.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="outline" className="w-full">
+                Saiba mais
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-heading text-xl">
+                Consultoria
+              </CardTitle>
+              <CardDescription>
+                Análise financeira e consultoria estratégica para crescimento
+                sustentável.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="outline" className="w-full">
+                Saiba mais
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </Section>
+
+      <Section title="Bordas & Espaçamento">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex h-16 w-16 items-center justify-center rounded-sm border bg-card text-xs text-muted-foreground">
+            sm
+          </div>
+          <div className="flex h-16 w-16 items-center justify-center rounded-md border bg-card text-xs text-muted-foreground">
+            md
+          </div>
+          <div className="flex h-16 w-16 items-center justify-center rounded-lg border bg-card text-xs text-muted-foreground">
+            lg
+          </div>
+          <div className="flex h-16 w-16 items-center justify-center rounded-xl border bg-card text-xs text-muted-foreground">
+            xl
+          </div>
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border bg-card text-xs text-muted-foreground">
+            full
+          </div>
+        </div>
+      </Section>
+    </main>
   );
 }
