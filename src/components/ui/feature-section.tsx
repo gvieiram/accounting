@@ -43,18 +43,24 @@ export function StackedFeatures({ features }: StackedFeaturesProps) {
 		offset: ["start start", "end end"],
 	});
 
+	const total = features.length;
+
 	return (
 		<section ref={containerRef} className="mt-40 md:mt-52">
 			{features.map((feature, i) => {
-				const targetScale = 1 - (features.length - i) * 0.05;
+				const targetScale = 1 - (total - i) * 0.05;
+				const isLast = i === total - 1;
+				const nextCardAppears = (i + 1) / total;
+
 				return (
 					<StackedCard
 						key={feature.badge}
 						index={i}
 						feature={feature}
 						progress={scrollYProgress}
-						range={[i * (1 / features.length), 1]}
+						range={[i / total, 1]}
 						targetScale={targetScale}
+						shrinkRange={isLast ? null : [nextCardAppears, 1]}
 					/>
 				);
 			})}
@@ -68,6 +74,7 @@ type StackedCardProps = {
 	progress: MotionValue<number>;
 	range: [number, number];
 	targetScale: number;
+	shrinkRange: [number, number] | null;
 };
 
 function StackedCard({
@@ -76,9 +83,18 @@ function StackedCard({
 	progress,
 	range,
 	targetScale,
+	shrinkRange,
 }: StackedCardProps) {
 	const cardRef = useRef<HTMLDivElement>(null);
 	const scale = useTransform(progress, range, [1, targetScale]);
+
+	const scaleY = useTransform(
+		progress,
+		shrinkRange
+			? [shrinkRange[0] - 0.05, shrinkRange[0], shrinkRange[1]]
+			: [0, 0.5, 1],
+		shrinkRange ? [1, 1, 0.8] : [1, 1, 1],
+	);
 
 	return (
 		<div
@@ -88,13 +104,14 @@ function StackedCard({
 			<motion.div
 				style={{
 					scale,
+					scaleY,
 					top: `calc(${index * 30}px)`,
 				}}
 				className="relative mx-auto w-full max-w-5xl origin-top px-4"
 			>
 				<div
 					className={cn(
-						"flex h-[calc(100vh-15rem)] flex-col justify-center gap-10 rounded-2xl border p-10 shadow-lg md:p-16",
+						"flex min-h-[calc(100vh-15rem)] flex-col justify-between gap-8 rounded-2xl border p-10 shadow-lg md:p-16",
 						feature.accentClassName || "bg-background",
 					)}
 				>
@@ -105,26 +122,28 @@ function StackedCard({
 						<h2 className="font-heading text-3xl tracking-tight md:text-5xl">
 							{feature.title}
 						</h2>
+					</div>
+
+					<div className="flex flex-col gap-6">
 						<p className="max-w-2xl text-base text-muted-foreground leading-relaxed md:text-lg">
 							{feature.description}
 						</p>
-					</div>
-
-					<div className="grid gap-4 sm:grid-cols-2 md:pl-1">
-						{feature.bullets.map((bullet) => (
-							<div
-								key={bullet.title}
-								className="flex flex-row items-start gap-3"
-							>
-								<CheckIcon className="mt-1 size-4 shrink-0 text-highlight" />
-								<div className="flex flex-col gap-0.5">
-									<p className="font-medium text-sm">{bullet.title}</p>
-									<p className="text-muted-foreground text-sm">
-										{bullet.description}
-									</p>
+						<div className="grid gap-4 sm:grid-cols-2 md:pl-1">
+							{feature.bullets.map((bullet) => (
+								<div
+									key={bullet.title}
+									className="flex flex-row items-start gap-3"
+								>
+									<CheckIcon className="mt-1 size-4 shrink-0 text-highlight" />
+									<div className="flex flex-col gap-0.5">
+										<p className="font-medium text-sm">{bullet.title}</p>
+										<p className="text-muted-foreground text-sm">
+											{bullet.description}
+										</p>
+									</div>
 								</div>
-							</div>
-						))}
+							))}
+						</div>
 					</div>
 
 					<div>
