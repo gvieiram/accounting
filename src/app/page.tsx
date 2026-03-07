@@ -1,12 +1,24 @@
+import { HeroSection, LogosSection } from "@/components/ui/hero";
+
 export default function Home() {
 	return (
-		<main className="flex min-h-screen flex-col items-center justify-center p-8">
-			<h1 className="font-heading text-4xl text-primary tracking-tight">
-				Accounting
-			</h1>
-			<p className="mt-2 text-muted-foreground">
-				Professional accounting services for your business.
-			</p>
-		</main>
+		<div className="flex w-full flex-col">
+			<main className="grow">
+				<HeroSection />
+				<LogosSection />
+				<section className="container mx-auto h-screen">
+					{/* <h2>Serviços</h2>
+					<p>
+						Oferecemos uma ampla gama de serviços para atender às necessidades
+						de seu negócio.
+					</p>
+					<ul>
+						<li>Contabilidade</li>
+						<li>Tributação</li>
+						<li>Financeiro</li>
+					</ul> */}
+				</section>
+			</main>
+		</div>
 	);
 }

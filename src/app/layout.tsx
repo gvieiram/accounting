@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono, Marcellus, Plus_Jakarta_Sans } from "next/font/google";
 import { Providers } from "@/components/providers";
 import "./globals.css";
+import { Header } from "@/components/ui/header";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
 	variable: "--font-plus-jakarta",
@@ -35,7 +36,10 @@ export default function RootLayout({
 				suppressHydrationWarning
 				className={`${plusJakartaSans.variable} ${marcellus.variable} ${jetbrainsMono.variable} antialiased`}
 			>
-				<Providers>{children}</Providers>
+				<Providers>
+					<Header />
+					{children}
+				</Providers>
 			</body>
 		</html>
 	);
