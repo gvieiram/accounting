@@ -8,7 +8,7 @@ const features: FeatureCardData[] = [
 		title: "Serviços contábeis completos para o seu negócio",
 		description:
 			"A Effer cuida de toda a gestão contábil da sua empresa, desde a escrituração até o planejamento tributário, para que você foque no crescimento do seu negócio.",
-		accentClassName: "bg-secondary border-secondary",
+		accentClassName: "bg-stack-1 border-stack-1",
 		bullets: [
 			{
 				title: "Gestão fiscal e tributária",
@@ -41,7 +41,7 @@ const features: FeatureCardData[] = [
 		title: "Tecnologia e proximidade em cada detalhe",
 		description:
 			"Combinamos uma plataforma digital moderna com atendimento humano e próximo. Você acompanha tudo online e conta com especialistas sempre disponíveis.",
-		accentClassName: "bg-muted border-border",
+		accentClassName: "bg-stack-2 border-stack-2",
 		bullets: [
 			{
 				title: "Plataforma 100% digital",
@@ -70,7 +70,7 @@ const features: FeatureCardData[] = [
 		title: "Foque no que importa, a gente cuida do resto",
 		description:
 			"Deixe a burocracia contábil com quem entende. Liberamos seu tempo para que você possa se dedicar ao que realmente faz o seu negócio crescer.",
-		accentClassName: "bg-background border-border",
+		accentClassName: "bg-stack-3 border-stack-3",
 		bullets: [
 			{
 				title: "Economia de tempo",

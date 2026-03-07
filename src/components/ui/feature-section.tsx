@@ -101,7 +101,7 @@ function StackedCard({
 	return (
 		<div
 			ref={cardRef}
-			className="sticky top-14 flex h-screen items-start justify-center pt-8"
+			className="sticky top-18 flex h-screen items-start justify-center pt-8"
 		>
 			<motion.div
 				style={{
