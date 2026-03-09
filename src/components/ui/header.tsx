@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { AnimatedThemeToggle } from "@/components/ui/animated-theme-toggle";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { MenuToggleIcon } from "@/components/ui/menu-toggle-icon";
-import { useScroll } from "@/components/ui/use-scroll";
+import { useScroll } from "@/hooks/use-scroll";
 import { cn } from "@/lib/utils";
 
 export function Header() {
