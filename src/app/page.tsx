@@ -1,12 +1,10 @@
 import { AboutSection } from "@/components/ui/about-section";
-import { CampaignSection } from "@/components/ui/campaign-section";
 import { CtaSection } from "@/components/ui/cta-section";
 import { FaqSection } from "@/components/ui/faq-section";
 import type { FeatureCardData } from "@/components/ui/feature-section";
 import { StackedFeatures } from "@/components/ui/feature-section";
 import { Footer } from "@/components/ui/footer";
 import { HeroSection, LogosSection } from "@/components/ui/hero";
-import { TestimonialsSection } from "@/components/ui/testimonials-section";
 
 const features: FeatureCardData[] = [
 	{
@@ -108,8 +106,7 @@ export default function Home() {
 				<LogosSection />
 				<StackedFeatures features={features} />
 				<AboutSection />
-				<TestimonialsSection />
-				<CampaignSection />
+				{/* <TestimonialsSection /> */}
 				<FaqSection />
 				<CtaSection />
 			</main>

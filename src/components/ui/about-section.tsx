@@ -1,16 +1,18 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const partners = [
 	{
-		name: "Ana Beatriz",
+		name: "Franciele",
 		role: "Sócia-fundadora · Contabilidade Estratégica",
-		initials: "AB",
+		initials: "FR",
+		image: "/Franciele.png",
 		bio: "Experiência em contabilidade de ponta a ponta: abertura, escrituração, obrigações acessórias e planejamento tributário. Relacionamento próximo com clientes e foco em fidelização de longo prazo.",
 	},
 	{
-		name: "Carolina Mendes",
+		name: "Samantha",
 		role: "Sócia · Consultoria Sob Demanda",
-		initials: "CM",
+		initials: "SA",
+		image: "/Samantha.png",
 		bio: "Especialista em consultoria contábil sob demanda, inovação digital e soluções escaláveis. Atua em serviços pontuais e delimitados para empresas que buscam agilidade.",
 	},
 ];
@@ -29,6 +31,10 @@ export function AboutSection() {
 						className="flex flex-col items-center text-center"
 					>
 						<Avatar className="mb-4 size-24 md:size-32">
+							<AvatarImage
+								src={partner.image}
+								alt={`Foto de ${partner.name}`}
+							/>
 							<AvatarFallback className="bg-muted">
 								{partner.initials}
 							</AvatarFallback>
