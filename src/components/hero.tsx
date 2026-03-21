@@ -1,9 +1,13 @@
 import { ArrowRightIcon, PhoneCallIcon, SparklesIcon } from "lucide-react";
+import { LogoCloud } from "@/components/logo-cloud";
 import { Button } from "@/components/ui/button";
-import { LogoCloud } from "@/components/ui/logo-cloud";
+import { messages } from "@/content/messages";
 import { cn } from "@/lib/utils";
 
 export function HeroSection() {
+	const titleLines = messages.home.hero.title.split("\n");
+	const descriptionLines = messages.home.hero.description.split("\n");
+
 	return (
 		<section className="mx-auto w-full max-w-5xl">
 			<div
@@ -37,10 +41,10 @@ export function HeroSection() {
 						"group mx-auto flex w-fit items-center gap-3 rounded-full border bg-card px-3 py-1 shadow",
 						"fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards transition-all delay-500 duration-500 ease-out",
 					)}
-					href="#link"
+					href={messages.home.hero.kickerHref}
 				>
 					<SparklesIcon className="size-3 text-muted-foreground" />
-					<span className="text-xs">Plataforma 100% digital</span>
+					<span className="text-xs">{messages.home.hero.kicker}</span>
 					<span className="block h-5 border-l" />
 					<ArrowRightIcon className="size-3 duration-150 ease-out group-hover:translate-x-1" />
 				</a>
@@ -51,22 +55,25 @@ export function HeroSection() {
 						"text-shadow-[0_0px_50px_theme(--color-foreground/.2)]",
 					)}
 				>
-					Contabilidade moderna <br /> para o seu negócio
+					{titleLines[0]}
+					<br />
+					{titleLines[1]?.trim()}
 				</h1>
 
 				<p className="fade-in slide-in-from-bottom-10 mx-auto max-w-lg animate-in fill-mode-backwards text-center text-base text-foreground/80 tracking-wider delay-200 duration-500 ease-out sm:text-lg md:text-xl">
-					Gestão fiscal, tributária e financeira <br /> com tecnologia e
-					atendimento especializado
+					{descriptionLines[0]}
+					<br />
+					{descriptionLines[1]?.trim()}
 				</p>
 
 				<div className="fade-in slide-in-from-bottom-10 flex animate-in flex-row flex-wrap items-center justify-center gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out">
 					<Button className="rounded-full" size="lg" variant="secondary">
 						{/* TODO: Trocar poara o ícone do whatsapp */}
 						<PhoneCallIcon className="mr-2 size-4" />
-						Fale conosco
+						{messages.home.hero.secondaryCta.label}
 					</Button>
 					<Button className="rounded-full" size="lg">
-						Começar agora
+						{messages.home.hero.primaryCta.label}
 						<ArrowRightIcon className="ms-2 size-4" />
 					</Button>
 				</div>
@@ -79,7 +86,10 @@ export function LogosSection() {
 	return (
 		<section className="relative space-y-4 border-t pt-6 pb-10">
 			<h2 className="text-center font-medium text-lg text-muted-foreground tracking-tight md:text-xl">
-				Confiança de quem <span className="text-foreground">entende</span>
+				{messages.home.logos.titlePrefix}
+				<span className="text-foreground">
+					{messages.home.logos.titleEmphasis}
+				</span>
 			</h2>
 			<div className="relative z-10 mx-auto max-w-4xl">
 				<LogoCloud logos={logos} />

@@ -3,8 +3,8 @@
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Button } from "./button";
 
 export const AnimatedThemeToggle = ({ className }: { className?: string }) => {
 	const { resolvedTheme, setTheme } = useTheme();

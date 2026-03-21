@@ -1,0 +1,22 @@
+const whatsappNumber = "5511999999999";
+
+function whatsappUrl(text: string) {
+	return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+}
+
+export const company = {
+	brand: {
+		name: "DuoHub Empresarial",
+		displayName: "DuoHub Empresarial",
+	},
+	contacts: {
+		whatsappNumber,
+	},
+	social: {
+		instagram: "#",
+		linkedin: "",
+	},
+	links: {
+		whatsappUrl,
+	},
+} as const;

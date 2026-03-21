@@ -13,7 +13,7 @@
 	--popover: hsl(0 0% 99%);
 	--popover-foreground: hsl(0 0% 32%);
 
-	--primary: hsl(173 34% 23%);
+	--primary: hsl(173 34% 23%); /* #274f4a */
 	--primary-foreground: hsl(0 0% 100%);
 
 	--secondary: hsl(11 52% 92%);
@@ -24,7 +24,7 @@
 
 	--accent: hsl(0 0% 93%);
 	--accent-foreground: hsl(0 0% 12%);
-	--highlight: hsl(11 51% 69.6%);
+	--highlight: hsl(11 51% 69.6%); /* #d9988a */
 	--highlight-foreground: hsl(0 0% 100%);
 
 	--destructive: hsl(0 84.2% 60.2%);

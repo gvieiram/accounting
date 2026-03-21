@@ -3,94 +3,21 @@
 import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import Image from "next/image";
 import React, { useCallback, useRef, useState } from "react";
-
-interface Testimonial {
-	text: string;
-	image: string;
-	name: string;
-	role: string;
-}
-
-const testimonials: Testimonial[] = [
-	{
-		text: "A Effer transformou a gestão financeira da nossa empresa. Antes perdíamos horas com burocracia contábil, agora temos tudo organizado e podemos focar no crescimento do negócio.",
-		image:
-			"https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150",
-		name: "Camila Ferreira",
-		role: "Diretora de Operações",
-	},
-	{
-		text: "O planejamento tributário que fizeram economizou mais de 30% nos impostos. Profissionalismo e agilidade que fazem a diferença.",
-		image:
-			"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150&h=150",
-		name: "Ricardo Almeida",
-		role: "CEO, TechFlow Soluções",
-	},
-	{
-		text: "O atendimento é nota 10. Sempre disponíveis quando preciso tirar dúvidas, e a plataforma digital facilita muito o acompanhamento.",
-		image:
-			"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150&h=150",
-		name: "Juliana Rocha",
-		role: "Proprietária, Loja Bella Moda",
-	},
-	{
-		text: "Finalmente encontrei um escritório que entende as necessidades de uma startup. A consultoria sob demanda é perfeita pro nosso momento.",
-		image:
-			"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150",
-		name: "Lucas Mendonça",
-		role: "Co-founder, DevSpace",
-	},
-	{
-		text: "A regularização da minha empresa foi resolvida em tempo recorde. Processos ágeis e sem dor de cabeça.",
-		image:
-			"https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150&h=150",
-		name: "Fernanda Costa",
-		role: "Arquiteta Autônoma",
-	},
-	{
-		text: "A abertura da minha empresa foi muito mais simples do que eu imaginava. A equipe cuidou de tudo, do CNPJ à licença de funcionamento.",
-		image:
-			"https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=150&h=150",
-		name: "Mariana Santos",
-		role: "Nutricionista",
-	},
-	{
-		text: "Relatórios financeiros claros e objetivos que me ajudam a tomar decisões estratégicas com confiança.",
-		image:
-			"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150&h=150",
-		name: "Marcos Silva",
-		role: "Diretor, Silva & Associados",
-	},
-	{
-		text: "A gestão de folha de pagamento ficou impecável. Zero erros e sempre no prazo, mesmo com o crescimento do time.",
-		image:
-			"https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150&h=150",
-		name: "Ana Paula Vieira",
-		role: "Gerente de RH",
-	},
-	{
-		text: "Migrei de outro escritório e a diferença é gritante. Transparência, tecnologia e um atendimento realmente humano.",
-		image:
-			"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150&h=150",
-		name: "Thiago Rezende",
-		role: "Sócio, Rezende Consultoria",
-	},
-];
-
-const firstColumn = testimonials.slice(0, 3);
-const secondColumn = testimonials.slice(3, 6);
-const thirdColumn = testimonials.slice(6, 9);
+import type { HomeTestimonial } from "@/content/messages/home";
+import { useMessages } from "@/stores/use-content-store";
 
 function TestimonialsColumn({
 	className,
 	testimonials,
+	photoAlt,
 	duration = 10,
 	isPaused,
 	onCardHover,
 	onCardLeave,
 }: {
 	className?: string;
-	testimonials: Testimonial[];
+	testimonials: readonly HomeTestimonial[];
+	photoAlt: (name: string) => string;
 	duration?: number;
 	isPaused: boolean;
 	onCardHover: () => void;
@@ -155,7 +82,7 @@ function TestimonialsColumn({
 											width={40}
 											height={40}
 											src={image}
-											alt={`Foto de ${name}`}
+											alt={photoAlt(name)}
 											className="h-10 w-10 rounded-full object-cover ring-2 ring-muted transition-all duration-300 ease-in-out group-hover:ring-primary/30"
 										/>
 										<div className="flex flex-col">
@@ -182,6 +109,12 @@ export function TestimonialsSection({
 }: {
 	pauseOnHover?: boolean;
 } = {}) {
+	const messages = useMessages();
+	const testimonials = messages.home.testimonials.items;
+	const firstColumn = testimonials.slice(0, 3);
+	const secondColumn = testimonials.slice(3, 6);
+	const thirdColumn = testimonials.slice(6, 9);
+
 	const [isPaused, setIsPaused] = useState(false);
 	const pauseTimer = useRef<ReturnType<typeof setTimeout>>(null);
 
@@ -215,7 +148,7 @@ export function TestimonialsSection({
 				<div className="mx-auto mb-16 flex max-w-[540px] flex-col items-center justify-center">
 					<div className="flex justify-center">
 						<div className="rounded-full border border-border bg-muted/50 px-4 py-1 font-semibold text-muted-foreground text-xs uppercase tracking-wide">
-							Depoimentos
+							{messages.home.testimonials.badge}
 						</div>
 					</div>
 
@@ -223,20 +156,20 @@ export function TestimonialsSection({
 						id="testimonials-heading"
 						className="mt-6 text-center font-heading text-3xl text-foreground tracking-tight md:text-4xl"
 					>
-						O que nossos clientes dizem
+						{messages.home.testimonials.title}
 					</h2>
 					<p className="mt-5 max-w-sm text-center text-lg text-muted-foreground leading-relaxed">
-						Conheça a experiência de quem confia na Effer para cuidar da
-						contabilidade do negócio.
+						{messages.home.testimonials.description}
 					</p>
 				</div>
 
 				<section
 					className="mt-10 flex max-h-[740px] justify-center gap-6 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]"
-					aria-label="Depoimentos em rolagem"
+					aria-label={messages.common.a11y.testimonialsScroll}
 				>
 					<TestimonialsColumn
 						testimonials={firstColumn}
+						photoAlt={messages.common.a11y.photoOf}
 						duration={15}
 						isPaused={isPaused}
 						onCardHover={onCardHover}
@@ -244,6 +177,7 @@ export function TestimonialsSection({
 					/>
 					<TestimonialsColumn
 						testimonials={secondColumn}
+						photoAlt={messages.common.a11y.photoOf}
 						className="hidden md:block"
 						duration={19}
 						isPaused={isPaused}
@@ -252,6 +186,7 @@ export function TestimonialsSection({
 					/>
 					<TestimonialsColumn
 						testimonials={thirdColumn}
+						photoAlt={messages.common.a11y.photoOf}
 						className="hidden lg:block"
 						duration={17}
 						isPaused={isPaused}

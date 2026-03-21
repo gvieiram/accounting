@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Marcellus, Plus_Jakarta_Sans } from "next/font/google";
+import { Banner } from "@/components/banner";
 import { Providers } from "@/components/providers";
-import { Banner } from "@/components/ui/banner";
 import "./globals.css";
 import { LandmarkIcon } from "lucide-react";
-import { Header } from "@/components/ui/header";
+import { Header } from "@/components/header";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
 	variable: "--font-plus-jakarta",

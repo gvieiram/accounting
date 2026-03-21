@@ -2,21 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatedThemeToggle } from "@/components/ui/animated-theme-toggle";
+import { AnimatedThemeToggle } from "@/components/animated-theme-toggle";
+import { MenuToggleIcon } from "@/components/menu-toggle-icon";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { MenuToggleIcon } from "@/components/ui/menu-toggle-icon";
 import { useScroll } from "@/hooks/use-scroll";
 import { cn } from "@/lib/utils";
+import { useMessages } from "@/stores/use-content-store";
 
 export function Header() {
+	const messages = useMessages();
 	const [open, setOpen] = useState(false);
 	const scrolled = useScroll(10);
 
-	const links = [
-		{ label: "Serviços", href: "#" },
-		{ label: "Planos", href: "#" },
-		{ label: "Sobre", href: "#" },
-	];
+	const links = messages.home.header.links;
 
 	useEffect(() => {
 		if (open) {
@@ -51,8 +49,8 @@ export function Header() {
 						</a>
 					))}
 					<AnimatedThemeToggle />
-					<Button variant="outline">Entrar</Button>
-					<Button>Começar</Button>
+					<Button variant="outline">{messages.common.actions.login}</Button>
+					<Button>{messages.common.actions.start}</Button>
 				</div>
 				<div className="flex items-center gap-2 md:hidden">
 					<AnimatedThemeToggle />
@@ -62,7 +60,7 @@ export function Header() {
 						onClick={() => setOpen(!open)}
 						aria-expanded={open}
 						aria-controls="mobile-menu"
-						aria-label="Toggle menu"
+						aria-label={messages.common.a11y.toggleMenu}
 					>
 						<MenuToggleIcon open={open} className="size-5" duration={300} />
 					</Button>
@@ -85,9 +83,9 @@ export function Header() {
 				</div>
 				<div className="flex flex-col gap-2">
 					<Button variant="outline" className="w-full bg-transparent">
-						Entrar
+						{messages.common.actions.login}
 					</Button>
-					<Button className="w-full">Começar</Button>
+					<Button className="w-full">{messages.common.actions.start}</Button>
 				</div>
 			</MobileMenu>
 		</header>

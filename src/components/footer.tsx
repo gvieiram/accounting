@@ -1,6 +1,8 @@
 import { InstagramIcon, LinkedinIcon, MessageCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
+import { company } from "@/content/company";
+import { messages } from "@/content/messages";
 
 const WordmarkIcon = (props: React.ComponentProps<"svg">) => (
 	<svg viewBox="0 0 84 24" fill="currentColor" aria-hidden="true" {...props}>
@@ -9,26 +11,26 @@ const WordmarkIcon = (props: React.ComponentProps<"svg">) => (
 );
 
 const links = [
-	{ label: "Serviços", href: "#servicos" },
-	{ label: "Planos", href: "#planos" },
-	{ label: "Sobre", href: "#sobre" },
-	{ label: "Contato", href: "#contato" },
+	{ label: messages.common.nav.services, href: "#servicos" },
+	{ label: messages.common.nav.plans, href: "#planos" },
+	{ label: messages.common.nav.about, href: "#sobre" },
+	{ label: messages.common.nav.contact, href: "#contato" },
 ];
 
 const socialLinks = [
 	{
 		label: "Instagram",
-		href: "#",
+		href: company.social.instagram,
 		icon: InstagramIcon,
 	},
 	{
 		label: "LinkedIn",
-		href: "#",
+		href: company.social.linkedin,
 		icon: LinkedinIcon,
 	},
 	{
 		label: "WhatsApp",
-		href: "#",
+		href: company.links.whatsappUrl(messages.home.cta.whatsappText),
 		icon: MessageCircleIcon,
 	},
 ];
@@ -41,13 +43,13 @@ export function Footer() {
 					<Link
 						href="/"
 						className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-						aria-label="Effer Contabilidade - Página inicial"
+						aria-label={messages.home.footer.ariaLabelHome}
 					>
 						<WordmarkIcon className="h-4" />
 					</Link>
 					<nav
 						className="flex flex-wrap justify-center gap-x-6 gap-y-2"
-						aria-label="Links do rodapé"
+						aria-label={messages.common.a11y.footerNav}
 					>
 						{links.map((link) => (
 							<Link
@@ -74,7 +76,7 @@ export function Footer() {
 				</div>
 				<Separator className="my-6" />
 				<p className="text-center text-muted-foreground text-sm">
-					© 2026 Effer Contabilidade. Todos os direitos reservados.
+					{messages.home.footer.copyright}
 				</p>
 			</div>
 		</footer>
