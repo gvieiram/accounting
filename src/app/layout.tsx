@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import {
+	Inter,
 	JetBrains_Mono,
 	Marcellus,
 	Playfair_Display,
@@ -32,6 +33,12 @@ const playfairDisplay = Playfair_Display({
 	subsets: ["latin"],
 });
 
+const inter = Inter({
+	variable: "--font-inter",
+	subsets: ["latin"],
+	weight: ["500"],
+});
+
 export const metadata: Metadata = {
 	title: "Accounting",
 	description: "Professional accounting services",
@@ -46,7 +53,7 @@ export default function RootLayout({
 		<html lang="pt-BR" suppressHydrationWarning>
 			<body
 				suppressHydrationWarning
-				className={`${plusJakartaSans.variable} ${marcellus.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable} antialiased`}
+				className={`${plusJakartaSans.variable} ${marcellus.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable} ${inter.variable} antialiased`}
 			>
 				<Providers>
 					<Header />

@@ -178,6 +178,7 @@
 	--font-heading: var(--font-marcellus);
 	--font-mono: var(--font-jetbrains-mono);
 	--font-logo: var(--font-playfair);
+	--font-subtitle: var(--font-inter);
 }
 
 @layer base {
