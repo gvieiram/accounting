@@ -7,7 +7,7 @@ function whatsappUrl(text: string) {
 export const company = {
 	brand: {
 		name: "DuoHub Empresarial",
-		displayName: "DuoHub Empresarial",
+		displayName: "DuoHub",
 	},
 	contacts: {
 		whatsappNumber,

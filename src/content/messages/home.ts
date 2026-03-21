@@ -1,4 +1,5 @@
 import type { FeatureCardData } from "@/components/feature-section";
+import { company } from "../company";
 
 export const home = {
 	hero: {
@@ -23,7 +24,7 @@ export const home = {
 			badge: "Nossos serviços",
 			title: "Serviços contábeis completos para o seu negócio",
 			description:
-				"A Effer cuida de toda a gestão contábil da sua empresa, desde a escrituração até o planejamento tributário, para que você foque no crescimento do seu negócio.",
+				"A DuoHub cuida de toda a gestão contábil da sua empresa, desde a escrituração até o planejamento tributário, para que você foque no crescimento do seu negócio.",
 			accentClassName: "bg-stack-1 border-stack-1",
 			bullets: [
 				{
@@ -128,16 +129,16 @@ export const home = {
 			},
 		],
 		conclusion:
-			"A Effer combina contabilidade contínua e consultoria sob demanda: atendimento recorrente para quem precisa de acompanhamento completo e serviços pontuais para quem busca soluções específicas e ágeis.",
+			"A DuoHub combina contabilidade contínua e consultoria sob demanda: atendimento recorrente para quem precisa de acompanhamento completo e serviços pontuais para quem busca soluções específicas e ágeis.",
 	},
 	testimonials: {
 		badge: "Depoimentos",
 		title: "O que nossos clientes dizem",
 		description:
-			"Conheça a experiência de quem confia na Effer para cuidar da contabilidade do negócio.",
+			"Conheça a experiência de quem confia na DuoHub para cuidar da contabilidade do negócio.",
 		items: [
 			{
-				text: "A Effer transformou a gestão financeira da nossa empresa. Antes perdíamos horas com burocracia contábil, agora temos tudo organizado e podemos focar no crescimento do negócio.",
+				text: "A DuoHub transformou a gestão financeira da nossa empresa. Antes perdíamos horas com burocracia contábil, agora temos tudo organizado e podemos focar no crescimento do negócio.",
 				image:
 					"https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150",
 				name: "Camila Ferreira",
@@ -208,7 +209,7 @@ export const home = {
 		items: [
 			{
 				id: "item-1",
-				question: "Como funciona a contabilidade digital da Effer?",
+				question: "Como funciona a contabilidade digital da DuoHub?",
 				answer:
 					"Nossa plataforma permite que você acompanhe toda a gestão contábil da sua empresa em tempo real. Cuidamos da escrituração, obrigações fiscais e tributárias, enquanto você acessa relatórios e documentos de qualquer lugar. Combinamos tecnologia com atendimento humano para oferecer a melhor experiência.",
 			},
@@ -253,7 +254,7 @@ export const home = {
 		title: "Pronto para simplificar sua contabilidade?",
 		description:
 			"Entre em contato agora e descubra como podemos ajudar o seu negócio a crescer com tranquilidade.",
-		whatsappText: "Olá! Gostaria de saber mais sobre os serviços da Effer.",
+		whatsappText: "Olá! Gostaria de saber mais sobre os serviços da DuoHub.",
 		form: {
 			namePlaceholder: "Nome",
 			emailPlaceholder: "E-mail",
@@ -263,8 +264,8 @@ export const home = {
 		},
 	},
 	footer: {
-		ariaLabelHome: "Effer Contabilidade - Página inicial",
-		copyright: "© 2026 Effer Contabilidade. Todos os direitos reservados.",
+		ariaLabelHome: `${company.brand.name} - Página inicial`,
+		copyright: `© 2026 ${company.brand.name}. Todos os direitos reservados.`,
 	},
 	header: {
 		links: [
