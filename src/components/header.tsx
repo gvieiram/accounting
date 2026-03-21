@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { AnimatedLogo } from "@/components/animated-logo";
 import { AnimatedThemeToggle } from "@/components/animated-theme-toggle";
 import { MenuToggleIcon } from "@/components/menu-toggle-icon";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Wordmark } from "@/components/wordmark";
 import { useScroll } from "@/hooks/use-scroll";
 import { cn } from "@/lib/utils";
 import { useMessages } from "@/stores/use-content-store";
@@ -36,9 +36,7 @@ export function Header() {
 			})}
 		>
 			<nav className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-4">
-				<div className="rounded-md p-2 hover:bg-accent">
-					<Wordmark />
-				</div>
+				<AnimatedLogo logoSize={28} textClassName="text-lg" />
 				<div className="hidden items-center gap-2 md:flex">
 					{links.map((link) => (
 						<a
@@ -123,4 +121,3 @@ function MobileMenu({ open, children, className, ...props }: MobileMenuProps) {
 		document.body,
 	);
 }
-
