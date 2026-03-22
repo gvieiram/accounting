@@ -313,7 +313,7 @@ export const home = {
 		links: [
 			{ label: "Serviços", href: "#" },
 			{ label: "Planos", href: "#" },
-			{ label: "Sobre", href: "#" },
+			{ label: "Sobre", href: "#about" },
 		],
 		desktopCtas: {
 			login: "Entrar",
