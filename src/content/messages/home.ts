@@ -117,25 +117,60 @@ export const home = {
 		},
 	] satisfies FeatureCardData[],
 	about: {
-		title: "Conheça quem cuida do seu negócio",
-		partners: [
+		badge: "Sobre a DuoHub",
+		title: "Contabilidade que acompanha o ritmo do seu negócio",
+		description:
+			"Nascemos para simplificar a gestão contábil de micro e pequenos empreendedores. Combinamos tecnologia e atendimento humano para que você foque no que realmente importa: fazer o seu negócio crescer.",
+		models: [
 			{
-				name: "Franciele",
-				role: "Sócia-fundadora · Contabilidade Estratégica",
-				initials: "FR",
-				image: "/Franciele.png",
-				bio: "Experiência em contabilidade de ponta a ponta: abertura, escrituração, obrigações acessórias e planejamento tributário. Relacionamento próximo com clientes e foco em fidelização de longo prazo.",
+				title: "Contabilidade Contínua",
+				description:
+					"Acompanhamento recorrente e completo para quem precisa de gestão contábil integral, do dia a dia ao planejamento estratégico.",
+				icon: "RefreshCw",
+				accentColor: "primary" as const,
+				bullets: [
+					"Escrituração contábil completa",
+					"Gestão fiscal e tributária",
+					"Folha de pagamento e DP",
+					"Obrigações acessórias",
+				],
 			},
 			{
-				name: "Samantha",
-				role: "Sócia · Consultoria Sob Demanda",
-				initials: "SA",
-				image: "/Samantha.png",
-				bio: "Especialista em consultoria contábil sob demanda, inovação digital e soluções escaláveis. Atua em serviços pontuais e delimitados para empresas que buscam agilidade.",
+				title: "Consultoria Sob Demanda",
+				description:
+					"Soluções pontuais e ágeis para quem busca resultados específicos, sem compromisso de longo prazo.",
+				icon: "Zap",
+				accentColor: "highlight" as const,
+				bullets: [
+					"Planejamento tributário",
+					"Abertura e regularização de empresas",
+					"Consultoria contábil pontual",
+					"Diagnóstico financeiro",
+				],
 			},
 		],
-		conclusion:
-			"A DuoHub combina contabilidade contínua e consultoria sob demanda: atendimento recorrente para quem precisa de acompanhamento completo e serviços pontuais para quem busca soluções específicas e ágeis.",
+		values: [
+			{
+				title: "Tecnologia",
+				description: "Plataforma 100% digital e acessível de qualquer lugar",
+				icon: "Monitor",
+			},
+			{
+				title: "Proximidade",
+				description: "Atendimento humano que entende o seu negócio",
+				icon: "HeartHandshake",
+			},
+			{
+				title: "Agilidade",
+				description: "Processos enxutos, sem burocracia desnecessária",
+				icon: "Zap",
+			},
+			{
+				title: "Transparência",
+				description: "Você sabe exatamente o que está acontecendo",
+				icon: "ShieldCheck",
+			},
+		],
 	},
 	testimonials: {
 		badge: "Depoimentos",
