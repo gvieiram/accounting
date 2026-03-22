@@ -346,13 +346,6 @@ export const home = {
 		description:
 			"Entre em contato agora e descubra como podemos ajudar o seu negócio a crescer com tranquilidade.",
 		whatsappText: "Olá! Gostaria de saber mais sobre os serviços da DuoHub.",
-		form: {
-			nameLabel: "Nome",
-			emailLabel: "E-mail",
-			phoneLabel: "Telefone",
-			messageLabel: "Mensagem (opcional)",
-			submitLabel: "Enviar",
-		},
 	},
 	footer: {
 		ariaLabelHome: `${company.brand.name} - Página inicial`,
