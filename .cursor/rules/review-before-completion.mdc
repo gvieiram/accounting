@@ -86,6 +86,12 @@ const messages = useMessages();
 - No scope creep — nothing added beyond what was asked
 - Breaking changes documented
 
+### Language
+
+- **Code in English** — variables, functions, components, comments, commit messages
+- **PRs in English** — title, body, and review comments
+- **Content in Portuguese (pt-BR)** — user-facing text lives in `src/content/`
+
 ### Production Readiness
 
 - No `console.log` left behind
