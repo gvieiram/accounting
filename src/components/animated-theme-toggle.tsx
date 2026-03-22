@@ -5,10 +5,13 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useMessages } from "@/stores/use-content-store";
 
 export const AnimatedThemeToggle = ({ className }: { className?: string }) => {
 	const { resolvedTheme, setTheme } = useTheme();
 	const [mounted, setMounted] = useState(false);
+	const messages = useMessages();
+	const a11y = messages.common.a11y;
 
 	useEffect(() => setMounted(true), []);
 
@@ -27,7 +30,7 @@ export const AnimatedThemeToggle = ({ className }: { className?: string }) => {
 			onClick={() => setTheme(isDark ? "light" : "dark")}
 			className={cn("px-2.5", className)}
 			variant="outline"
-			aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
+			aria-label={isDark ? a11y.themeLight : a11y.themeDark}
 		>
 			<SolarSwitch isDark={isDark} />
 		</Button>

@@ -16,20 +16,19 @@ export const common = {
 		},
 		services: {
 			label: "Serviços",
-			href: "#services",
+			href: "#servicos",
 		},
 		about: {
 			label: "Sobre",
-			href: "#about",
+			href: "#sobre",
 		},
 		contact: {
 			label: "Contato",
-			href: "#contact",
+			href: "#contato",
 		},
-		// plans: "Planos",
 	},
 	forms: {
-		placeholders: {
+		labels: {
 			name: "Nome",
 			email: "E-mail",
 			phone: "Telefone",
@@ -37,7 +36,10 @@ export const common = {
 		},
 	},
 	a11y: {
-		toggleMenu: "Toggle menu",
+		toggleMenu: "Alternar menu",
+		closeBanner: "Fechar banner",
+		themeLight: "Ativar modo claro",
+		themeDark: "Ativar modo escuro",
 		footerNav: "Links do rodapé",
 		testimonialsScroll: "Depoimentos em rolagem",
 		photoOf: (name: string) => `Foto de ${name}`,

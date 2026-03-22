@@ -11,6 +11,8 @@ import { Providers } from "@/components/providers";
 import "./globals.css";
 import { LandmarkIcon } from "lucide-react";
 import { Header } from "@/components/header";
+import { company } from "@/content/company";
+import { messages } from "@/content/messages";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
 	variable: "--font-plus-jakarta",
@@ -39,9 +41,11 @@ const inter = Inter({
 	weight: ["500"],
 });
 
+const siteMetadata = messages.home.metadata;
+
 export const metadata: Metadata = {
-	title: "Accounting",
-	description: "Professional accounting services",
+	title: siteMetadata.title,
+	description: siteMetadata.description,
 };
 
 export default function RootLayout({
@@ -60,12 +64,15 @@ export default function RootLayout({
 					{children}
 					<Banner
 						icon={<LandmarkIcon />}
-						title="Imposto de Renda 2026"
-						description="Prazo até 30 de maio. Não deixe para a última hora!"
-						storageKey="ir-2026"
+						title={messages.home.banner.title}
+						description={messages.home.banner.description}
+						storageKey={messages.home.banner.storageKey}
+						dismissLabel={messages.common.a11y.closeBanner}
 						cta={{
-							label: "Declarar agora",
-							href: "https://wa.me/5511999999999?text=Olá! Gostaria de saber sobre a declaração do IR 2026",
+							label: messages.home.banner.cta.label,
+							href: company.links.whatsappUrl(
+								messages.home.banner.cta.whatsappText,
+							),
 							external: true,
 						}}
 						position="bottom"

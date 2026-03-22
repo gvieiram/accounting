@@ -251,7 +251,7 @@ export function AboutSection() {
 		<section
 			aria-labelledby="about-heading"
 			className="mx-auto w-full max-w-5xl overflow-hidden px-4 py-24 md:py-32"
-			id="about"
+			id="sobre"
 		>
 			<MissionBlock
 				badge={about.badge}

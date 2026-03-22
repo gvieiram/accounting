@@ -113,7 +113,7 @@ export function StackedFeatures({ features }: StackedFeaturesProps) {
 	const total = features.length;
 
 	return (
-		<section ref={containerRef} className="mt-24 md:mt-52">
+		<section id="servicos" ref={containerRef} className="mt-24 md:mt-52">
 			{features.map((feature, i) => {
 				const targetScale = 1 - (total - i) * 0.05;
 				const isLast = i === total - 1;

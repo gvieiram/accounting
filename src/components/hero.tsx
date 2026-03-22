@@ -1,6 +1,7 @@
 import { ArrowRightIcon, PhoneCallIcon, SparklesIcon } from "lucide-react";
 import { LogoCloud } from "@/components/logo-cloud";
 import { Button } from "@/components/ui/button";
+import { company } from "@/content/company";
 import { messages } from "@/content/messages";
 import { cn } from "@/lib/utils";
 
@@ -67,14 +68,26 @@ export function HeroSection() {
 				</p>
 
 				<div className="fade-in slide-in-from-bottom-10 flex animate-in flex-row flex-wrap items-center justify-center gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out">
-					<Button className="rounded-full" size="lg" variant="secondary">
-						{/* TODO: Trocar poara o ícone do whatsapp */}
-						<PhoneCallIcon className="mr-2 size-4" />
-						{messages.home.hero.secondaryCta.label}
+					<Button
+						asChild
+						className="rounded-full"
+						size="lg"
+						variant="secondary"
+					>
+						<a
+							href={company.links.whatsappUrl(messages.home.cta.whatsappText)}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<PhoneCallIcon className="mr-2 size-4" />
+							{messages.home.hero.secondaryCta.label}
+						</a>
 					</Button>
-					<Button className="rounded-full" size="lg">
-						{messages.home.hero.primaryCta.label}
-						<ArrowRightIcon className="ms-2 size-4" />
+					<Button asChild className="rounded-full" size="lg">
+						<a href={messages.home.hero.primaryCta.href}>
+							{messages.home.hero.primaryCta.label}
+							<ArrowRightIcon className="ms-2 size-4" />
+						</a>
 					</Button>
 				</div>
 			</div>
@@ -92,19 +105,8 @@ export function LogosSection() {
 				</span>
 			</h2>
 			<div className="relative z-10 mx-auto max-w-4xl">
-				<LogoCloud logos={logos} />
+				<LogoCloud logos={messages.home.logos.clients} />
 			</div>
 		</section>
 	);
 }
-
-const logos = [
-	{ src: "/logos/clients/nvidia-wordmark.svg", alt: "Nvidia Logo" },
-	{ src: "/logos/clients/supabase-wordmark.svg", alt: "Supabase Logo" },
-	{ src: "/logos/clients/openai-wordmark.svg", alt: "OpenAI Logo" },
-	{ src: "/logos/clients/turso-wordmark.svg", alt: "Turso Logo" },
-	{ src: "/logos/clients/vercel-wordmark.svg", alt: "Vercel Logo" },
-	{ src: "/logos/clients/github-wordmark.svg", alt: "GitHub Logo" },
-	{ src: "/logos/clients/claude-wordmark.svg", alt: "Claude AI Logo" },
-	{ src: "/logos/clients/clerk-wordmark.svg", alt: "Clerk Logo" },
-];

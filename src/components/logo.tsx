@@ -153,7 +153,7 @@ export function Logo({
 								subtitleClassName,
 							)}
 						>
-							Empresarial
+							{company.brand.subtitle}
 						</motion.span>
 					</motion.div>
 				)}

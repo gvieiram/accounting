@@ -29,7 +29,7 @@ export function CtaSection() {
 						<div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
 							<Button
 								asChild
-								className="bg-[#25D366] text-white hover:bg-[#25D366]/90"
+								className="bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp/90"
 								size="lg"
 							>
 								<a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
@@ -60,23 +60,27 @@ export function CtaSection() {
 					>
 						<Input
 							type="text"
-							placeholder={cta.form.namePlaceholder}
+							placeholder={cta.form.nameLabel}
+							aria-label={cta.form.nameLabel}
 							required
 							className={formFieldClassName}
 						/>
 						<Input
 							type="email"
-							placeholder={cta.form.emailPlaceholder}
+							placeholder={cta.form.emailLabel}
+							aria-label={cta.form.emailLabel}
 							required
 							className={formFieldClassName}
 						/>
 						<Input
 							type="tel"
-							placeholder={cta.form.phonePlaceholder}
+							placeholder={cta.form.phoneLabel}
+							aria-label={cta.form.phoneLabel}
 							className={formFieldClassName}
 						/>
 						<Textarea
-							placeholder={cta.form.messagePlaceholder}
+							placeholder={cta.form.messageLabel}
+							aria-label={cta.form.messageLabel}
 							rows={3}
 							className={formFieldClassName}
 						/>

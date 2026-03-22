@@ -9,7 +9,7 @@ type Logo = {
 };
 
 type LogoCloudProps = React.ComponentProps<"div"> & {
-	logos: Logo[];
+	logos: readonly Logo[];
 };
 
 export function LogoCloud({ className, logos, ...props }: LogoCloudProps) {

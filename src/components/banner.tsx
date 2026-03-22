@@ -18,6 +18,7 @@ type BannerProps = {
 	description?: string;
 	cta?: BannerCta;
 	dismissible?: boolean;
+	dismissLabel?: string;
 	storageKey?: string;
 	position?: "bottom" | "top";
 	className?: string;
@@ -29,6 +30,7 @@ export function Banner({
 	description,
 	cta,
 	dismissible = true,
+	dismissLabel,
 	storageKey = "banner",
 	position = "bottom",
 	className,
@@ -88,7 +90,7 @@ export function Banner({
 							variant="ghost"
 							size="icon-xs"
 							onClick={handleDismiss}
-							aria-label="Fechar banner"
+							aria-label={dismissLabel}
 							className="shrink-0"
 						>
 							<XIcon />
