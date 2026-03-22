@@ -1,5 +1,6 @@
-import { InstagramIcon, LinkedinIcon, MessageCircleIcon } from "lucide-react";
+import { InstagramIcon, LinkedinIcon } from "lucide-react";
 import Link from "next/link";
+import { WhatsAppIcon } from "@/components/icons/whatsapp-icon";
 import { Logo } from "@/components/logo";
 import { Separator } from "@/components/ui/separator";
 import { company } from "@/content/company";
@@ -25,7 +26,7 @@ const socialLinks = [
 	{
 		label: "WhatsApp",
 		href: company.links.whatsappUrl(messages.home.cta.whatsappText),
-		icon: MessageCircleIcon,
+		icon: WhatsAppIcon,
 	},
 ];
 

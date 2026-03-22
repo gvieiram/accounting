@@ -1,8 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { MessageCircleIcon } from "lucide-react";
-
+import { WhatsAppIcon } from "@/components/icons/whatsapp-icon";
 import { Button } from "@/components/ui/button";
 import { useCompany, useMessages } from "@/stores/use-content-store";
 
@@ -85,7 +84,7 @@ export function CtaSection() {
 							className="h-14 rounded-full bg-whatsapp px-8 text-lg text-whatsapp-foreground transition-transform hover:scale-[1.02] hover:bg-whatsapp/90"
 						>
 							<a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-								<MessageCircleIcon className="size-5" />
+								<WhatsAppIcon className="size-5" />
 								{messages.common.actions.talkOnWhatsapp}
 							</a>
 						</Button>
