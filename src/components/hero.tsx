@@ -53,18 +53,18 @@ export function HeroSection() {
 
 				<h1
 					className={cn(
-						"fade-in slide-in-from-bottom-10 animate-in text-balance fill-mode-backwards text-center text-4xl tracking-tight delay-100 duration-500 ease-out md:text-5xl lg:text-6xl",
+						"fade-in slide-in-from-bottom-10 animate-in text-balance fill-mode-backwards text-center text-3xl tracking-tight delay-100 duration-500 ease-out sm:text-4xl md:text-5xl lg:text-6xl",
 						"text-shadow-[0_0px_50px_theme(--color-foreground/.2)]",
 					)}
 				>
 					{titleLines[0]}
-					<br />
+					<br className="hidden md:block" />
 					{titleLines[1]?.trim()}
 				</h1>
 
 				<p className="fade-in slide-in-from-bottom-10 mx-auto max-w-lg animate-in fill-mode-backwards text-center text-base text-foreground/80 tracking-wider delay-200 duration-500 ease-out sm:text-lg md:text-xl">
 					{descriptionLines[0]}
-					<br />
+					<br className="hidden md:block" />
 					{descriptionLines[1]?.trim()}
 				</p>
 
