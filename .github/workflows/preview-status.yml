@@ -1,0 +1,178 @@
+name: Preview Status
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  preview-status:
+    name: Dokploy Preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: Track preview deployment
+        uses: actions/github-script@v7
+        env:
+          DOKPLOY_URL: ${{ secrets.DOKPLOY_URL }}
+          DOKPLOY_TOKEN: ${{ secrets.DOKPLOY_TOKEN }}
+          DOKPLOY_APP_ID: ${{ secrets.DOKPLOY_APP_ID }}
+        with:
+          script: |
+            const MARKER = "<!-- dokploy-preview -->";
+            const PR = context.payload.pull_request.number;
+            const BASE_URL = process.env.DOKPLOY_URL;
+            const API = `${BASE_URL}/api`;
+            const TOKEN = process.env.DOKPLOY_TOKEN;
+            const headers = { "x-api-key": TOKEN };
+            const appId = process.env.DOKPLOY_APP_ID;
+            const branch = context.payload.pull_request.head.ref;
+
+            if (!BASE_URL || !TOKEN || !appId) {
+              core.warning("Missing DOKPLOY_URL, DOKPLOY_TOKEN, or DOKPLOY_APP_ID secrets");
+              return;
+            }
+
+            async function dokployGet(endpoint) {
+              const res = await fetch(`${API}/${endpoint}`, { headers });
+              if (!res.ok) {
+                const text = await res.text().catch(() => "");
+                throw new Error(`Dokploy ${endpoint} returned ${res.status}: ${text}`);
+              }
+              return res.json();
+            }
+
+            function buildComment({ status, host, updatedAt, dashboardUrl }) {
+              const icons = { idle: "🔨", running: "🔨", done: "✅", error: "❌" };
+              const labels = { idle: "Building", running: "Building", done: "Ready", error: "Failed" };
+              const icon = icons[status] || "⏳";
+              const label = labels[status] || "Waiting";
+              const time = updatedAt
+                ? new Date(updatedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "America/Sao_Paulo" })
+                : "—";
+              const previewLink = status === "done" && host
+                ? `[Visit Preview](https://${host})`
+                : "—";
+              const logsLink = dashboardUrl
+                ? `[Inspect](${dashboardUrl})`
+                : "—";
+
+              return [
+                MARKER,
+                `### ${icon} Preview Deployment`,
+                "",
+                "| Name | Status | Preview | Logs | Updated (BRT) |",
+                "|------|--------|---------|------|---------------|",
+                `| **${branch}** | ${icon} ${label} | ${previewLink} | ${logsLink} | ${time} |`,
+                "",
+                `> Built by [Dokploy](https://dokploy.com) • PR #${PR}`,
+              ].join("\n");
+            }
+
+            // Fetch app metadata for dashboard link
+            let dashboardUrl = null;
+            try {
+              const app = await dokployGet(`application.one?applicationId=${appId}`);
+              const projectId = app?.environment?.project?.projectId;
+              if (projectId) {
+                dashboardUrl = `${BASE_URL}/dashboard/project/${projectId}/services/application/${appId}?tab=preview-deployments`;
+              }
+            } catch (err) {
+              core.warning(`Could not fetch app metadata: ${err.message}`);
+            }
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: PR,
+            });
+            const existing = comments.find((c) => c.body?.includes(MARKER));
+
+            // Post initial "waiting" comment
+            const waitingBody = buildComment({ status: null, host: null, updatedAt: null, dashboardUrl });
+            let commentId;
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body: waitingBody,
+              });
+              commentId = existing.id;
+            } else {
+              const { data: created } = await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: PR,
+                body: waitingBody,
+              });
+              commentId = created.id;
+            }
+
+            // Poll Dokploy for preview status
+            const maxAttempts = 30;
+            const interval = 15_000;
+
+            for (let attempt = 0; attempt < maxAttempts; attempt++) {
+              await new Promise((r) => setTimeout(r, interval));
+
+              try {
+                const previews = await dokployGet(`previewDeployment.all?applicationId=${appId}`);
+                core.info(`Attempt ${attempt + 1}/${maxAttempts}: found ${Array.isArray(previews) ? previews.length : 0} previews`);
+
+                if (!Array.isArray(previews)) {
+                  core.warning(`Unexpected response type: ${typeof previews}`);
+                  core.info(`Response: ${JSON.stringify(previews).slice(0, 500)}`);
+                  continue;
+                }
+
+                const preview = previews.find(
+                  (p) => String(p.pullRequestNumber) === String(PR)
+                );
+
+                if (!preview) {
+                  core.info(`Attempt ${attempt + 1}/${maxAttempts}: no preview for PR #${PR} yet`);
+                  continue;
+                }
+
+                let host = null;
+                if (preview.domain?.host) {
+                  host = preview.domain.host;
+                } else if (preview.domainId) {
+                  try {
+                    const domain = await dokployGet(`domain.one?domainId=${preview.domainId}`);
+                    host = domain?.host;
+                  } catch {}
+                }
+
+                const status = preview.previewStatus;
+                core.info(`Attempt ${attempt + 1}/${maxAttempts}: status=${status}, host=${host}`);
+
+                const body = buildComment({ status, host, updatedAt: preview.createdAt, dashboardUrl });
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: commentId,
+                  body,
+                });
+
+                if (status === "done" || status === "error") {
+                  if (status === "error") core.setFailed("Preview deployment failed");
+                  return;
+                }
+              } catch (err) {
+                core.warning(`Poll error: ${err.message}`);
+              }
+            }
+
+            // Timeout
+            const timeoutBody = buildComment({ status: "error", host: null, updatedAt: new Date().toISOString(), dashboardUrl });
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: commentId,
+              body: timeoutBody,
+            });
+            core.setFailed("Preview deployment timed out after 7.5 minutes");
