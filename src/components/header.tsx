@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { MouseEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -100,7 +101,9 @@ export function Header() {
 			})}
 		>
 			<nav className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-4">
-				<Logo />
+				<Link href="/">
+					<Logo />
+				</Link>
 				<div className="hidden items-center gap-2 md:flex">
 					{links.map((link) => (
 						<a
