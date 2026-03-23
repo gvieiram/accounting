@@ -30,8 +30,16 @@ export function Header() {
 		e.preventDefault();
 		const target = document.querySelector(href);
 		if (target) {
-			target.scrollIntoView({ behavior: "smooth" });
+			const prefersReducedMotion = window.matchMedia(
+				"(prefers-reduced-motion: reduce)",
+			).matches;
+			target.scrollIntoView({
+				behavior: prefersReducedMotion ? "auto" : "smooth",
+			});
 			history.pushState(null, "", href);
+			if (target instanceof HTMLElement) {
+				target.focus({ preventScroll: true });
+			}
 		}
 		setOpen(false);
 	}
