@@ -26,6 +26,9 @@ function smoothScrollTo(target: Element, duration: number) {
 		return;
 	}
 
+	const html = document.documentElement;
+	html.style.scrollBehavior = "auto";
+
 	const start = window.scrollY;
 	const distance = targetTop - start;
 	let startTime: number | null = null;
@@ -39,6 +42,8 @@ function smoothScrollTo(target: Element, duration: number) {
 
 		if (progress < 1) {
 			requestAnimationFrame(step);
+		} else {
+			html.style.scrollBehavior = "";
 		}
 	}
 
