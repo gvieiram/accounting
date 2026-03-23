@@ -4,13 +4,14 @@ import type { MouseEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { HomeLink } from "@/components/home-link";
+import { WhatsAppIcon } from "@/components/icons/whatsapp-icon";
 import { Logo } from "@/components/logo";
 import { MenuToggleIcon } from "@/components/menu-toggle-icon";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { useScroll } from "@/hooks/use-scroll";
 import { cn } from "@/lib/utils";
-import { useMessages } from "@/stores/use-content-store";
+import { useCompany, useMessages } from "@/stores/use-content-store";
 
 const SCROLL_PADDING = 56;
 
@@ -55,8 +56,10 @@ function smoothScrollTo(target: Element, duration: number) {
 
 export function Header() {
 	const messages = useMessages();
+	const company = useCompany();
 	const [open, setOpen] = useState(false);
 	const scrolled = useScroll(10);
+	const whatsappUrl = company.links.whatsappUrl(messages.home.cta.whatsappText);
 
 	const links = messages.home.header.links;
 
@@ -122,8 +125,11 @@ export function Header() {
 							{link.label}
 						</a>
 					))}
-					<Button variant="outline">{messages.common.actions.login}</Button>
-					<Button>{messages.common.actions.start}</Button>
+					<Button asChild>
+						<a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+							{messages.common.actions.start}
+						</a>
+					</Button>
 				</div>
 				<div className="flex items-center gap-2 md:hidden">
 					<Button
@@ -159,12 +165,12 @@ export function Header() {
 						</a>
 					))}
 				</div>
-				<div className="flex flex-col gap-2">
-					<Button variant="outline" className="w-full bg-transparent">
-						{messages.common.actions.login}
-					</Button>
-					<Button className="w-full">{messages.common.actions.start}</Button>
-				</div>
+				<Button asChild className="w-full">
+					<a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+						<WhatsAppIcon className="size-4" />
+						{messages.common.actions.start}
+					</a>
+				</Button>
 			</MobileMenu>
 		</header>
 	);

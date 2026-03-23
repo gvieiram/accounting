@@ -250,7 +250,7 @@ export function AboutSection() {
 	return (
 		<section
 			aria-labelledby="about-heading"
-			className="mx-auto w-full max-w-5xl overflow-hidden px-4 py-24 md:py-32"
+			className="mx-auto w-full max-w-5xl overflow-hidden px-4 pt-8 pb-24 md:pt-12 md:pb-32"
 			id="sobre"
 		>
 			<MissionBlock

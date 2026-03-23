@@ -1,4 +1,4 @@
-import { ArrowRightIcon, PhoneCallIcon, SparklesIcon } from "lucide-react";
+import { ArrowRightIcon, SparklesIcon } from "lucide-react";
 import { LogoCloud } from "@/components/logo-cloud";
 import { Button } from "@/components/ui/button";
 import { company } from "@/content/company";
@@ -40,7 +40,8 @@ export function HeroSection() {
 				<a
 					className={cn(
 						"group mx-auto flex w-fit items-center gap-3 rounded-full border bg-card px-3 py-1 shadow",
-						"fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards transition-all delay-500 duration-500 ease-out",
+						"fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards delay-500 duration-500 ease-out",
+						"transition-transform duration-200 hover:scale-[1.03]",
 					)}
 					href={messages.home.hero.kickerHref}
 				>
@@ -68,25 +69,14 @@ export function HeroSection() {
 				</p>
 
 				<div className="fade-in slide-in-from-bottom-10 flex animate-in flex-row flex-wrap items-center justify-center gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out">
-					<Button
-						asChild
-						className="rounded-full"
-						size="lg"
-						variant="secondary"
-					>
+					<Button asChild className="group rounded-full" size="lg">
 						<a
 							href={company.links.whatsappUrl(messages.home.cta.whatsappText)}
 							target="_blank"
 							rel="noopener noreferrer"
 						>
-							<PhoneCallIcon className="mr-2 size-4" />
-							{messages.home.hero.secondaryCta.label}
-						</a>
-					</Button>
-					<Button asChild className="rounded-full" size="lg">
-						<a href={messages.home.hero.primaryCta.href}>
 							{messages.home.hero.primaryCta.label}
-							<ArrowRightIcon className="ms-2 size-4" />
+							<ArrowRightIcon className="ms-2 size-4 transition-transform duration-200 group-hover:translate-x-1" />
 						</a>
 					</Button>
 				</div>

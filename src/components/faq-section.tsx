@@ -16,12 +16,12 @@ export function FaqSection() {
 	const whatsappUrl = company.links.whatsappUrl(faq.whatsappFallback.text);
 
 	return (
-		<section className="mx-auto w-full max-w-3xl px-6 py-20 md:px-8 md:py-32">
+		<section className="mx-auto w-full max-w-4xl px-6 py-20 md:px-8 lg:py-14">
 			<div className="flex flex-col gap-6">
-				<h2 className="font-heading font-semibold text-3xl md:text-4xl">
+				<h2 className="text-center font-heading text-3xl tracking-tight md:text-4xl lg:text-5xl">
 					{faq.title}
 				</h2>
-				<p className="text-muted-foreground">{faq.description}</p>
+				<p className="text-center text-muted-foreground">{faq.description}</p>
 				<div className="-space-y-px rounded-lg bg-card dark:bg-card/50">
 					<Accordion collapsible defaultValue="item-1" type="single">
 						{faq.items.map((item) => (
@@ -40,16 +40,19 @@ export function FaqSection() {
 						))}
 					</Accordion>
 				</div>
-				<p className="text-center text-muted-foreground text-sm">
-					{faq.whatsappFallback.prefix}{" "}
-					<Link
-						href={whatsappUrl}
-						target="_blank"
-						rel="noopener noreferrer"
-						className="text-primary hover:underline"
-					>
-						{faq.whatsappFallback.linkLabel}
-					</Link>
+				<p className="flex flex-col items-center text-center text-muted-foreground text-sm">
+					<span>{faq.whatsappFallback.firstLine}</span>
+					<span>
+						{faq.whatsappFallback.secondLinePrefix}
+						<Link
+							href={whatsappUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="font-medium text-primary hover:underline"
+						>
+							{faq.whatsappFallback.linkLabel}
+						</Link>
+					</span>
 				</p>
 			</div>
 		</section>

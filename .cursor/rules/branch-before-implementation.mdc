@@ -1,0 +1,48 @@
+---
+description: Always create a git branch before starting any implementation work
+alwaysApply: true
+---
+
+# Branch Before Implementation
+
+Never start writing code on the current branch. A dedicated branch must exist before any implementation begins.
+
+## Decision Flow
+
+### 1. User provided a Linear task link or ID
+
+Extract the task identifier (e.g. `DUO-42`) and title, then **create the branch automatically** following the naming convention:
+
+```
+feat/<DUO-42>/<short-description>
+fix/<DUO-42>/<short-description>
+chore/<DUO-42>/<short-description>
+```
+
+Pick the prefix (`feat`, `fix`, `chore`) based on the task type. The `<short-description>` **must always be in English**, using kebab-case — even if the task title is in Portuguese, translate it.
+
+```
+# ❌ BAD
+feat/DUO-42/secao-sobre-nos
+
+# ✅ GOOD
+feat/DUO-42/about-section
+```
+
+### 2. No Linear task context
+
+Ask the user for the Linear task link before proceeding:
+
+> "Qual é o link ou ID da task no Linear para essa implementação?"
+
+### 3. Uncertain whether a new branch is needed
+
+If already on a feature branch or unsure whether the work belongs on a new branch, ask:
+
+> "Quer que eu crie uma nova branch para essa implementação?"
+
+## Rules
+
+- **Check `git branch --show-current`** at the start — if on `main` or `master`, a new branch is mandatory.
+- **Never commit implementation work directly to `main`/`master`.**
+- After creating the branch, confirm to the user before writing any code.

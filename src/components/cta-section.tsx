@@ -81,7 +81,7 @@ export function CtaSection() {
 					>
 						<Button
 							asChild
-							className="h-14 rounded-full bg-whatsapp px-8 text-lg text-whatsapp-foreground transition-transform hover:scale-[1.02] hover:bg-whatsapp/90"
+							className="h-14 rounded-full bg-whatsapp px-8 text-lg text-whatsapp-foreground transition-transform hover:scale-[1.02] hover:bg-whatsapp/90 has-[>svg]:px-8"
 						>
 							<a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
 								<WhatsAppIcon className="size-5" />

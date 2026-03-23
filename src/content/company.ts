@@ -19,7 +19,6 @@ export const company = {
 	},
 	social: {
 		instagram: "#",
-		linkedin: "",
 	},
 	links: {
 		whatsappUrl,

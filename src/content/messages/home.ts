@@ -337,8 +337,9 @@ export const home = {
 		],
 		whatsappFallback: {
 			text: "Olá! Não encontrei o que procurava nas perguntas frequentes. Podem me ajudar?",
+			firstLine: "Não encontrou o que procura?",
+			secondLinePrefix: "Fale com ",
 			linkLabel: "nosso time",
-			prefix: "Não encontrou o que procura? Fale com ",
 		},
 	},
 	cta: {
@@ -350,6 +351,7 @@ export const home = {
 	footer: {
 		ariaLabelHome: `${company.brand.name} - Página inicial`,
 		copyright: `© 2026 ${company.brand.name}. Todos os direitos reservados.`,
+		developedBy: "Desenvolvido por Gustavo Vieira Martins",
 	},
 	header: {
 		links: [

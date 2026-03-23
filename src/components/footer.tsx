@@ -1,4 +1,4 @@
-import { InstagramIcon, LinkedinIcon } from "lucide-react";
+import { InstagramIcon } from "lucide-react";
 import Link from "next/link";
 import { HomeLink } from "@/components/home-link";
 import { WhatsAppIcon } from "@/components/icons/whatsapp-icon";
@@ -18,11 +18,6 @@ const socialLinks = [
 		label: "Instagram",
 		href: company.social.instagram,
 		icon: InstagramIcon,
-	},
-	{
-		label: "LinkedIn",
-		href: company.social.linkedin,
-		icon: LinkedinIcon,
 	},
 	{
 		label: "WhatsApp",
@@ -67,9 +62,14 @@ export function Footer() {
 					</div>
 				</div>
 				<Separator className="my-6" />
-				<p className="text-center text-muted-foreground text-sm">
-					{messages.home.footer.copyright}
-				</p>
+				<div className="flex flex-col items-center gap-1 text-center text-sm">
+					<p className="text-muted-foreground">
+						{messages.home.footer.copyright}
+					</p>
+					<p className="text-muted-foreground/60">
+						{messages.home.footer.developedBy}
+					</p>
+				</div>
 			</div>
 		</footer>
 	);

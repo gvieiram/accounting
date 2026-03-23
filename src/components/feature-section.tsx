@@ -36,9 +36,18 @@ export type FeatureCardData = {
 
 type StackedFeaturesProps = {
 	features: FeatureCardData[];
+	showImages?: boolean;
 };
 
-function FeatureCardContent({ feature }: { feature: FeatureCardData }) {
+type FeatureCardContentProps = {
+	feature: FeatureCardData;
+	showImages?: boolean;
+};
+
+function FeatureCardContent({
+	feature,
+	showImages = false,
+}: FeatureCardContentProps) {
 	return (
 		<>
 			<div className="flex flex-1 flex-col gap-5 md:gap-8">
@@ -57,7 +66,7 @@ function FeatureCardContent({ feature }: { feature: FeatureCardData }) {
 				</p>
 
 				<div className="flex flex-col gap-4 md:flex-row md:items-start md:gap-8">
-					{feature.illustration && (
+					{showImages && feature.illustration && (
 						<div className="hidden md:block md:w-2/5 md:shrink-0">
 							<div className="relative aspect-4/3 overflow-hidden rounded-xl">
 								<Image
@@ -90,12 +99,7 @@ function FeatureCardContent({ feature }: { feature: FeatureCardData }) {
 			</div>
 
 			<div className="flex justify-end">
-				<Button
-					variant={feature.cta.variant ?? "default"}
-					size="sm"
-					className="md:h-10 md:px-6 md:text-sm"
-					asChild
-				>
+				<Button variant={feature.cta.variant ?? "default"} size="lg" asChild>
 					<a href={feature.cta.href}>{feature.cta.label}</a>
 				</Button>
 			</div>
@@ -103,7 +107,10 @@ function FeatureCardContent({ feature }: { feature: FeatureCardData }) {
 	);
 }
 
-export function StackedFeatures({ features }: StackedFeaturesProps) {
+export function StackedFeatures({
+	features,
+	showImages = false,
+}: StackedFeaturesProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const { scrollYProgress } = useScroll({
 		target: containerRef,
@@ -124,6 +131,7 @@ export function StackedFeatures({ features }: StackedFeaturesProps) {
 						key={feature.badge}
 						index={i}
 						feature={feature}
+						showImages={showImages}
 						progress={scrollYProgress}
 						range={[i / total, 1]}
 						targetScale={targetScale}
@@ -138,6 +146,7 @@ export function StackedFeatures({ features }: StackedFeaturesProps) {
 type StackedCardProps = {
 	index: number;
 	feature: FeatureCardData;
+	showImages?: boolean;
 	progress: MotionValue<number>;
 	range: [number, number];
 	targetScale: number;
@@ -147,6 +156,7 @@ type StackedCardProps = {
 function StackedCard({
 	index,
 	feature,
+	showImages,
 	progress,
 	range,
 	targetScale,
@@ -184,7 +194,7 @@ function StackedCard({
 						feature.accentClassName || "bg-background",
 					)}
 				>
-					<FeatureCardContent feature={feature} />
+					<FeatureCardContent feature={feature} showImages={showImages} />
 				</motion.div>
 			</motion.div>
 		</div>
