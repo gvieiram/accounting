@@ -1,5 +1,6 @@
 import { InstagramIcon, LinkedinIcon } from "lucide-react";
 import Link from "next/link";
+import { HomeLink } from "@/components/home-link";
 import { WhatsAppIcon } from "@/components/icons/whatsapp-icon";
 import { Logo } from "@/components/logo";
 import { Separator } from "@/components/ui/separator";
@@ -35,9 +36,9 @@ export function Footer() {
 		<footer className="w-full border-t">
 			<div className="mx-auto w-full max-w-5xl px-4 py-8">
 				<div className="flex flex-col items-center gap-6 md:flex-row md:items-center md:justify-between">
-					<Link href="/" aria-label={messages.home.footer.ariaLabelHome}>
+					<HomeLink aria-label={messages.home.footer.ariaLabelHome}>
 						<Logo size="lg" animated={false} />
-					</Link>
+					</HomeLink>
 					<nav
 						className="flex flex-wrap justify-center gap-x-6 gap-y-2"
 						aria-label={messages.common.a11y.footerNav}

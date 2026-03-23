@@ -191,6 +191,17 @@
 }
 
 @layer base {
+	html {
+		scroll-behavior: smooth;
+		scroll-padding-top: 3.5rem;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+	}
+
 	* {
 		border-color: var(--border);
 	}
