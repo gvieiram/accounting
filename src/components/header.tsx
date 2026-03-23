@@ -125,13 +125,12 @@ export function Header() {
 							{link.label}
 						</a>
 					))}
-					<Button asChild>
-						<a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-							<WhatsAppIcon className="size-4" />
-							{messages.common.actions.talkToUs}
-						</a>
-					</Button>
-				</div>
+				<Button asChild>
+					<a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+						{messages.common.actions.talkToUs}
+					</a>
+				</Button>
+			</div>
 				<div className="flex items-center gap-2 md:hidden">
 					<Button
 						size="icon"
