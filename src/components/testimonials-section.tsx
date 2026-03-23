@@ -46,6 +46,7 @@ function TestimonialsColumn({
 					<React.Fragment key={index}>
 						{testimonials.map(({ text, image, name, role }) => (
 							<motion.li
+								// biome-ignore lint/suspicious/noArrayIndexKey: duplicated list for infinite scroll needs index prefix
 								key={`${index}-${name}`}
 								aria-hidden={index === 1 ? "true" : "false"}
 								tabIndex={index === 1 ? -1 : 0}

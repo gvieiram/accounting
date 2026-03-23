@@ -130,6 +130,7 @@ export function Logo({
 					>
 						{LETTERS.map((letter, i) => (
 							<motion.span
+								// biome-ignore lint/suspicious/noArrayIndexKey: static list with duplicate chars needs index for unique keys
 								key={`${letter.char}-${i}`}
 								variants={letterVariants}
 								custom={letter.delay}
