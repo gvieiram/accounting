@@ -1,8 +1,6 @@
 name: Preview Status
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
   issue_comment:
     types: [created, edited]
 
@@ -11,34 +9,17 @@ permissions:
   pull-requests: read
 
 jobs:
-  preview:
+  gate:
     name: Dokploy Preview Gate
     if: |
-      github.event_name == 'pull_request' ||
-      (
-        github.event_name == 'issue_comment' &&
-        github.event.issue.pull_request &&
-        contains(github.event.comment.user.login, 'dokploy')
-      )
+      github.event.issue.pull_request &&
+      contains(github.event.comment.user.login, 'dokploy')
     runs-on: ubuntu-latest
     steps:
       - name: Update preview status
         uses: actions/github-script@v7
         with:
           script: |
-            if (context.eventName === "pull_request") {
-              await github.rest.repos.createCommitStatus({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                sha: context.payload.pull_request.head.sha,
-                state: "pending",
-                context: "Dokploy Preview",
-                description: "Waiting for preview deployment...",
-              });
-              core.info("Set pending status");
-              return;
-            }
-
             const body = context.payload.comment.body || "";
             if (!body.includes("Preview Deployment")) return;
 
