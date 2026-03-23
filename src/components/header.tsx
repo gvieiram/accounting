@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatedThemeToggle } from "@/components/animated-theme-toggle";
 import { Logo } from "@/components/logo";
 import { MenuToggleIcon } from "@/components/menu-toggle-icon";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -47,12 +46,10 @@ export function Header() {
 							{link.label}
 						</a>
 					))}
-					<AnimatedThemeToggle />
 					<Button variant="outline">{messages.common.actions.login}</Button>
 					<Button>{messages.common.actions.start}</Button>
 				</div>
 				<div className="flex items-center gap-2 md:hidden">
-					<AnimatedThemeToggle />
 					<Button
 						size="icon"
 						variant="outline"

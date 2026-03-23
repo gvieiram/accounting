@@ -4,7 +4,6 @@ import { FaqSection } from "@/components/faq-section";
 import { StackedFeatures } from "@/components/feature-section";
 import { Footer } from "@/components/footer";
 import { HeroSection, LogosSection } from "@/components/hero";
-import { TestimonialsSection } from "@/components/testimonials-section";
 import { messages } from "@/content/messages";
 
 const features = messages.home.features;
@@ -17,7 +16,6 @@ export default function Home() {
 				<LogosSection />
 				<StackedFeatures features={features} />
 				<AboutSection />
-				<TestimonialsSection />
 				<FaqSection />
 				<CtaSection />
 			</main>
