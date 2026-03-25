@@ -10,28 +10,11 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  statuses: write
-
 jobs:
   ci:
     name: Lint & Build
     runs-on: ubuntu-latest
     steps:
-      - name: Set preview pending status
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v8
-        with:
-          script: |
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: context.payload.pull_request.head.sha,
-              state: "pending",
-              context: "Dokploy Preview",
-              description: "Waiting for preview deployment...",
-            });
-
       - uses: actions/checkout@v6
 
       - uses: pnpm/action-setup@v5
