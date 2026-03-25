@@ -43,3 +43,5 @@ next-env.d.ts
 # docs
 docs/plans/**
 docs/assets/**
+docs/design/**
+.env*.local

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Context
 
-Institutional site and future digital platform for **DuoHub Empresarial**, a Brazilian accounting/consulting firm serving micro and small businesses (MEI, ME, EPP), startups, and freelancers.
+Institutional site and future digital platform for **DuoHub Gestão Contábil**, a Brazilian accounting/consulting firm serving micro and small businesses (MEI, ME, EPP), startups, and freelancers.
 
 ## Commands
 

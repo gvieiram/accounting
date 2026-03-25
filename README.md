@@ -1,6 +1,6 @@
 <div align="center">
 
-# DuoHub Empresarial
+# DuoHub Gestão Contábil
 
 **The digital front door for a new generation of Brazilian accounting.**
 
@@ -19,7 +19,7 @@ Built with Next.js 16 · React 19 · Tailwind CSS v4 · Framer Motion
 
 ## What is this?
 
-Institutional website and future digital platform for **DuoHub Empresarial** — a Brazilian accounting and consulting firm serving micro and small businesses (MEI, ME, EPP), startups, and freelancers.
+Institutional website and future digital platform for **DuoHub Gestão Contábil** — a Brazilian accounting and consulting firm serving micro and small businesses (MEI, ME, EPP), startups, and freelancers.
 
 This is not a template. It is a production system built with intentional architecture, strict content separation, full dark mode, and a design language that refuses to look like every other accounting site on the internet.
 
@@ -181,6 +181,6 @@ Feature branch → PR → CI (lint + typecheck + build) → Merge → Dev deploy
 
 <div align="center">
 
-**DuoHub Empresarial** — Accounting that actually gets it.
+**DuoHub Gestão Contábil** — Accounting that actually gets it.
 
 </div>

@@ -6,13 +6,13 @@ function whatsappUrl(text: string) {
 
 export const company = {
 	brand: {
-		name: "DuoHub Empresarial",
+		name: "DuoHub Gestão Contábil",
 		displayName: "DuoHub",
 		displayNameProps: {
 			duo: "Duo",
 			hub: "Hub",
 		},
-		subtitle: "Empresarial",
+		subtitle: "Gestão Contábil",
 	},
 	contacts: {
 		whatsappNumber,

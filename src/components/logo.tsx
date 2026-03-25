@@ -3,6 +3,7 @@
 import { motion, type Variants } from "framer-motion";
 import { company } from "@/content/company";
 import { cn } from "@/lib/utils";
+import { useFlag } from "@/stores/use-flags-store";
 
 const EASING: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
 
@@ -109,6 +110,7 @@ export function Logo({
 	animated = true,
 }: LogoProps) {
 	const { logo, text, subtitle } = SIZE_PRESETS[size];
+	const { isLogoTextCentered } = useFlag();
 
 	return (
 		<motion.div
@@ -120,7 +122,9 @@ export function Logo({
 			<motion.div variants={logoVariants}>
 				<LogoIcon size={logo} />
 			</motion.div>
-			<div className="flex flex-col">
+			<div
+				className={cn("flex flex-col", isLogoTextCentered && "items-center")}
+			>
 				<motion.div variants={textRevealVariants} className="overflow-hidden">
 					<span
 						className={cn(
@@ -149,7 +153,7 @@ export function Logo({
 						<motion.span
 							variants={subtitleVariants}
 							className={cn(
-								"block select-none font-medium font-subtitle text-primary uppercase tracking-[0.45em]",
+								"block select-none font-medium font-subtitle text-primary uppercase tracking-[0.28em]",
 								subtitle,
 								subtitleClassName,
 							)}

@@ -14,8 +14,13 @@
 		"format": "biome format --write"
 	},
 	"dependencies": {
+		"@flags-sdk/vercel": "^1.2.1",
+		"@vercel/toolbar": "^0.2.2",
+		"@vercel/analytics": "^2.0.1",
+		"@vercel/speed-insights": "^2.0.0",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
+		"flags": "^4.0.5",
 		"framer-motion": "^12.38.0",
 		"lucide-react": "^0.577.0",
 		"next": "16.2.1",
