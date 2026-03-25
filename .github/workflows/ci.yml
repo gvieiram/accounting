@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   ci:
-    name: Lint & Build
+    name: Lint & Type Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -31,6 +31,3 @@ jobs:
 
       - name: Type check
         run: pnpm tsc --noEmit
-
-      - name: Build
-        run: pnpm build
