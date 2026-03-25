@@ -59,11 +59,12 @@ function CredentialsVariant() {
 							<span className="font-medium text-foreground/80 text-sm tracking-tight">
 								{item.label}
 							</span>
-							{"description" in item && item.description && (
-								<span className="text-muted-foreground text-xs">
-									{item.description}
-								</span>
-							)}
+							{"description" in item &&
+								typeof item.description === "string" && (
+									<span className="text-muted-foreground text-xs">
+										{item.description}
+									</span>
+								)}
 						</div>
 					</div>
 				);
