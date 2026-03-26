@@ -3,7 +3,7 @@ import { company } from "../company";
 
 export const home = {
 	metadata: {
-		title: `${company.brand.name} — Contabilidade Digital para Micro e Pequenas Empresas`,
+		title: "DuoHub | Contabilidade Digital para MEI, ME e Startups",
 		description:
 			"Gestão contábil, fiscal e tributária com tecnologia e atendimento especializado. Plataforma 100% digital para MEI, ME e startups.",
 	},

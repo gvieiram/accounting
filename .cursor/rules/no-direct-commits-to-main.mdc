@@ -1,0 +1,36 @@
+---
+description: Never commit directly to main or master branch
+alwaysApply: true
+---
+
+# No Direct Commits to Main
+
+**Never** create commits on `main` or `master`. All changes must go through a feature branch and be merged via PR.
+
+## Before Every Commit
+
+Run `git branch --show-current`. If the result is `main` or `master`, **STOP** — do not commit.
+
+1. Stash or stage the changes
+2. Create a feature branch following the naming convention
+3. Only then commit on the new branch
+
+## Forbidden Operations on Main
+
+- `git commit` (any form)
+- `git merge` (local merges into main)
+- `git cherry-pick`
+- `git revert` (create a revert branch instead)
+
+## If You Catch Yourself on Main
+
+```bash
+# Stash work, create branch, re-apply
+git stash
+git checkout -b feat/<DUO-XX>/<description>
+git stash pop
+```
+
+## No Exceptions
+
+Even "quick fixes" or "one-line changes" must go through a branch. There are no changes small enough to justify committing directly to main.
