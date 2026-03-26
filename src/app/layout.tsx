@@ -11,6 +11,7 @@ import {
 	Plus_Jakarta_Sans,
 } from "next/font/google";
 import { Banner } from "@/components/banner";
+import { JsonLd } from "@/components/json-ld";
 import { Providers } from "@/components/providers";
 import "./globals.css";
 import { LandmarkIcon } from "lucide-react";
@@ -18,6 +19,10 @@ import { Header } from "@/components/header";
 import { company } from "@/content/company";
 import { messages } from "@/content/messages";
 import { resolveAll } from "@/lib/flags";
+import {
+	getLocalBusinessSchema,
+	getWebSiteSchema,
+} from "@/lib/structured-data";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
 	variable: "--font-plus-jakarta",
@@ -46,11 +51,39 @@ const inter = Inter({
 	weight: ["500"],
 });
 
-const siteMetadata = messages.home.metadata;
+const { title, description } = messages.home.metadata;
 
 export const metadata: Metadata = {
-	title: siteMetadata.title,
-	description: siteMetadata.description,
+	metadataBase: new URL(company.siteUrl),
+	title,
+	description,
+	alternates: {
+		canonical: "/",
+	},
+	openGraph: {
+		title,
+		description,
+		url: "/",
+		siteName: company.brand.name,
+		locale: "pt_BR",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title,
+		description,
+	},
+	robots: {
+		index: true,
+		follow: true,
+		googleBot: {
+			index: true,
+			follow: true,
+			"max-video-preview": -1,
+			"max-image-preview": "large",
+			"max-snippet": -1,
+		},
+	},
 };
 
 export default async function RootLayout({
@@ -64,6 +97,10 @@ export default async function RootLayout({
 
 	return (
 		<html lang="pt-BR" suppressHydrationWarning>
+			<head>
+				<JsonLd data={getWebSiteSchema()} />
+				<JsonLd data={getLocalBusinessSchema()} />
+			</head>
 			<body
 				suppressHydrationWarning
 				className={`${plusJakartaSans.variable} ${marcellus.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable} ${inter.variable} antialiased`}
