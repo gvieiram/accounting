@@ -85,10 +85,6 @@ export const home = {
 						"Gestão de colaboradores, encargos e obrigações trabalhistas.",
 				},
 			],
-			cta: {
-				label: "Conheça nossos serviços",
-				href: "#contato",
-			},
 			illustration: "/illustrations/services.png",
 			illustrationAlt: "Ilustração de documentos financeiros organizados",
 		},
@@ -115,10 +111,6 @@ export const home = {
 						"Sem burocracia desnecessária — resolvemos com rapidez e eficiência.",
 				},
 			],
-			cta: {
-				label: "Fale com um especialista",
-				href: "#contato",
-			},
 			illustration: "/illustrations/why-choose-us.png",
 			illustrationAlt:
 				"Ilustração de um computador com um gráfico de satisfação dos clientes",
@@ -146,8 +138,11 @@ export const home = {
 				},
 			],
 			cta: {
-				label: "Começar agora",
-				href: "#contato",
+				label: "Fale com um especialista",
+				href: company.links.whatsappUrl(
+					"Olá! Gostaria de falar com um especialista da DuoHub.",
+				),
+				external: true,
 			},
 			illustration: "/illustrations/results.png",
 			illustrationAlt: "Ilustração de um gráfico de resultados financeiros",

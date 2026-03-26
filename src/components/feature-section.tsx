@@ -21,6 +21,7 @@ type FeatureSectionCta = {
 	label: string;
 	href: string;
 	variant?: "default" | "secondary" | "outline";
+	external?: boolean;
 };
 
 export type FeatureCardData = {
@@ -28,7 +29,7 @@ export type FeatureCardData = {
 	title: string;
 	description: string;
 	bullets: Bullet[];
-	cta: FeatureSectionCta;
+	cta?: FeatureSectionCta;
 	accentClassName?: string;
 	illustration?: string;
 	illustrationAlt?: string;
@@ -98,11 +99,21 @@ function FeatureCardContent({
 				</div>
 			</div>
 
-			<div className="flex justify-end">
-				<Button variant={feature.cta.variant ?? "default"} size="lg" asChild>
-					<a href={feature.cta.href}>{feature.cta.label}</a>
-				</Button>
-			</div>
+			{feature.cta && (
+				<div className="flex justify-end">
+					<Button variant={feature.cta.variant ?? "default"} size="lg" asChild>
+						<a
+							href={feature.cta.href}
+							{...(feature.cta.external && {
+								target: "_blank",
+								rel: "noopener noreferrer",
+							})}
+						>
+							{feature.cta.label}
+						</a>
+					</Button>
+				</div>
+			)}
 		</>
 	);
 }
