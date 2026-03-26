@@ -89,22 +89,6 @@ export default function OgImage() {
 				>
 					{messages.home.metadata.description}
 				</span>
-
-				<div
-					style={{
-						display: "flex",
-						marginTop: "24px",
-						padding: "14px 36px",
-						borderRadius: "999px",
-						background: "#d9988a",
-						color: "#1a3a37",
-						fontSize: 20,
-						fontWeight: 600,
-						letterSpacing: "0.5px",
-					}}
-				>
-					{messages.common.actions.talkOnWhatsapp}
-				</div>
 			</div>
 
 			<div
