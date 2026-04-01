@@ -4,7 +4,11 @@ import { company } from "@/content/company";
 import { messages } from "@/content/messages";
 import { cn } from "@/lib/utils";
 
-export function HeroSection() {
+export function HeroSection({
+	disableKicker = true,
+}: {
+	disableKicker?: boolean;
+}) {
 	const titleLines = messages.home.hero.title.split("\n");
 	const descriptionLines = messages.home.hero.description.split("\n");
 
@@ -36,19 +40,21 @@ export function HeroSection() {
 					<div className="absolute inset-y-0 right-8 w-px bg-linear-to-b from-transparent via-border/50 to-border/50 md:right-12" />
 				</div>
 
-				<a
-					className={cn(
-						"group mx-auto flex w-fit items-center gap-3 rounded-full border bg-card px-3 py-1 shadow",
-						"fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards delay-500 duration-500 ease-out",
-						"transition-transform duration-200 hover:scale-[1.03]",
-					)}
-					href={messages.home.hero.kickerHref}
-				>
-					<SparklesIcon className="size-3 text-muted-foreground" />
-					<span className="text-xs">{messages.home.hero.kicker}</span>
-					<span className="block h-5 border-l" />
-					<ArrowRightIcon className="size-3 duration-150 ease-out group-hover:translate-x-1" />
-				</a>
+				{!disableKicker && (
+					<a
+						className={cn(
+							"group mx-auto flex w-fit items-center gap-3 rounded-full border bg-card px-3 py-1 shadow",
+							"fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards delay-500 duration-500 ease-out",
+							"transition-transform duration-200 hover:scale-[1.03]",
+						)}
+						href={messages.home.hero.kickerHref}
+					>
+						<SparklesIcon className="size-3 text-muted-foreground" />
+						<span className="text-xs">{messages.home.hero.kicker}</span>
+						<span className="block h-5 border-l" />
+						<ArrowRightIcon className="size-3 duration-150 ease-out group-hover:translate-x-1" />
+					</a>
+				)}
 
 				<h1
 					className={cn(

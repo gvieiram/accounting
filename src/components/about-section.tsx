@@ -3,7 +3,7 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import {
 	CheckIcon,
-	Eye,
+	Compass,
 	HeartHandshake,
 	Lightbulb,
 	RefreshCw,
@@ -20,7 +20,7 @@ const easeOut = [0.25, 0.46, 0.45, 0.94] as const;
 
 // biome-ignore-start lint/style/useNamingConvention: keys match Lucide names in content
 const iconMap = {
-	Eye,
+	Compass,
 	HeartHandshake,
 	Lightbulb,
 	RefreshCw,

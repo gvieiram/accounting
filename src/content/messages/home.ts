@@ -9,7 +9,7 @@ export const home = {
 	},
 	banner: {
 		title: "Imposto de Renda 2026",
-		description: "Prazo até 30 de maio. Não deixe para a última hora!",
+		description: "Prazo até 29 de maio. Não deixe para a última hora!",
 		storageKey: "ir-2026",
 		cta: {
 			label: "Declarar agora",
@@ -39,16 +39,16 @@ export const home = {
 		credentials: {
 			items: [
 				{
-					icon: "shieldCheck" as const,
-					label: "CRC Ativo",
+					icon: "briefcaseBusiness" as const,
+					label: "Para Prestadores de Serviço",
 				},
 				{
 					icon: "calendar" as const,
-					label: "Desde 2025",
+					label: "Desde 2024",
 				},
 				{
-					icon: "monitor" as const,
-					label: "100% Digital",
+					icon: "trendingUp" as const,
+					label: "Orientação Estratégica",
 				},
 			],
 		},
@@ -90,15 +90,15 @@ export const home = {
 		},
 		{
 			badge: "Por que nos escolher",
-			title: "Tecnologia e proximidade em cada detalhe",
+			title: "Atendimento próximo com quem entende do seu segmento",
 			description:
-				"Combinamos uma plataforma digital moderna com atendimento humano e próximo. Você acompanha tudo online e conta com especialistas sempre disponíveis.",
+				"Na DuoHub, você não é mais um número. Acreditamos que uma boa contabilidade começa com um atendimento próximo, onde cada cliente recebe atenção real e orientação pensada para o momento do seu negócio. Aqui, você fala direto com quem entende, sem respostas genéricas.",
 			// accentClassName: "bg-muted border-muted",
 			bullets: [
 				{
-					title: "Plataforma 100% digital",
+					title: "Especialistas em prestadores de serviço",
 					description:
-						"Acompanhe sua contabilidade em tempo real, de qualquer lugar.",
+						"Conhecemos a fundo a realidade do seu segmento e as obrigações que importam para você.",
 				},
 				{
 					title: "Atendimento personalizado",
@@ -199,9 +199,10 @@ export const home = {
 				icon: "RefreshCw",
 			},
 			{
-				title: "Honestidade radical",
-				description: "Falamos o que você precisa ouvir, não o que quer ouvir",
-				icon: "Eye",
+				title: "Olhar estratégico",
+				description:
+					"Mais do que cumprir obrigações: orientação para o seu negócio crescer",
+				icon: "Compass",
 			},
 		],
 	},
@@ -281,38 +282,38 @@ export const home = {
 		description:
 			"Tire suas dúvidas sobre nossos serviços de contabilidade. Se não encontrar o que procura, entre em contato.",
 		items: [
+			// {
+			// 	id: "item-1",
+			// 	question: "Como funciona a contabilidade digital da DuoHub?",
+			// 	answer:
+			// 		"Nossa plataforma permite que você acompanhe toda a gestão contábil da sua empresa em tempo real. Cuidamos da escrituração, obrigações fiscais e tributárias, enquanto você acessa relatórios e documentos de qualquer lugar. Combinamos tecnologia com atendimento humano para oferecer a melhor experiência.",
+			// },
 			{
 				id: "item-1",
-				question: "Como funciona a contabilidade digital da DuoHub?",
-				answer:
-					"Nossa plataforma permite que você acompanhe toda a gestão contábil da sua empresa em tempo real. Cuidamos da escrituração, obrigações fiscais e tributárias, enquanto você acessa relatórios e documentos de qualquer lugar. Combinamos tecnologia com atendimento humano para oferecer a melhor experiência.",
-			},
-			{
-				id: "item-2",
 				question: "Quais documentos preciso para abrir minha empresa?",
 				answer:
 					"Para a abertura de empresa, geralmente precisamos de: RG e CPF dos sócios, comprovante de endereço, definição da atividade econômica (CNAE) e do tipo societário. Nossa equipe orienta você em cada etapa e cuida de toda a documentação junto aos órgãos competentes.",
 			},
+			// {
+			// 	id: "item-3",
+			// 	question: "Qual o prazo para regularizar minha situação fiscal?",
+			// 	answer:
+			// 		"O prazo varia conforme a complexidade da situação. Pendências simples podem ser resolvidas em poucos dias, enquanto casos mais complexos podem levar algumas semanas. Após uma análise inicial gratuita, informamos o prazo estimado e o plano de ação.",
+			// },
 			{
-				id: "item-3",
-				question: "Qual o prazo para regularizar minha situação fiscal?",
-				answer:
-					"O prazo varia conforme a complexidade da situação. Pendências simples podem ser resolvidas em poucos dias, enquanto casos mais complexos podem levar algumas semanas. Após uma análise inicial gratuita, informamos o prazo estimado e o plano de ação.",
-			},
-			{
-				id: "item-4",
+				id: "item-2",
 				question: "Vocês atendem MEI?",
 				answer:
 					"Sim! Atendemos desde MEI até empresas de médio porte. Para o MEI, oferecemos um plano especial que inclui a declaração anual (DASN-SIMEI), controle de faturamento e orientação para desenquadramento quando necessário.",
 			},
 			{
-				id: "item-5",
+				id: "item-3",
 				question: "Como funciona o atendimento por WhatsApp?",
 				answer:
 					"Nosso atendimento por WhatsApp é rápido e direto. Você pode enviar documentos, tirar dúvidas e receber orientações em tempo real. Para questões mais complexas, agendamos uma reunião virtual. O WhatsApp é nosso canal principal de comunicação com os clientes.",
 			},
 			{
-				id: "item-6",
+				id: "item-4",
 				question: "Quanto custa o serviço de contabilidade?",
 				answer:
 					"Os valores variam de acordo com o porte da empresa, regime tributário e serviços contratados. Oferecemos planos a partir de R$ 199/mês para MEI e valores personalizados para empresas maiores. Entre em contato para receber uma proposta sob medida.",

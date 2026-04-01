@@ -1,6 +1,10 @@
 "use client";
 
-import { CalendarIcon, MonitorIcon, ShieldCheckIcon } from "lucide-react";
+import {
+	BriefcaseBusinessIcon,
+	CalendarIcon,
+	TrendingUpIcon,
+} from "lucide-react";
 import { InfiniteSlider } from "@/components/infinite-slider";
 import { messages } from "@/content/messages";
 import { cn } from "@/lib/utils";
@@ -12,9 +16,9 @@ type SocialProofSectionProps = {
 };
 
 const credentialIcons = {
-	shieldCheck: ShieldCheckIcon,
+	briefcaseBusiness: BriefcaseBusinessIcon,
 	calendar: CalendarIcon,
-	monitor: MonitorIcon,
+	trendingUp: TrendingUpIcon,
 } as const;
 
 function ClientsVariant() {
