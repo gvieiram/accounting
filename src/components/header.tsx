@@ -1,10 +1,10 @@
 "use client";
 
+import { SiWhatsapp } from "@icons-pack/react-simple-icons";
 import type { MouseEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { HomeLink } from "@/components/home-link";
-import { WhatsAppIcon } from "@/components/icons/whatsapp-icon";
 import { Logo } from "@/components/logo";
 import { MenuToggleIcon } from "@/components/menu-toggle-icon";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -167,7 +167,7 @@ export function Header() {
 				</div>
 				<Button asChild className="w-full">
 					<a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-						<WhatsAppIcon className="size-4" />
+						<SiWhatsapp className="size-4" color="currentColor" />
 						{messages.common.actions.start}
 					</a>
 				</Button>

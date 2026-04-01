@@ -1,7 +1,6 @@
-import { InstagramIcon } from "lucide-react";
+import { SiInstagram, SiWhatsapp } from "@icons-pack/react-simple-icons";
 import Link from "next/link";
 import { HomeLink } from "@/components/home-link";
-import { WhatsAppIcon } from "@/components/icons/whatsapp-icon";
 import { Logo } from "@/components/logo";
 import { Separator } from "@/components/ui/separator";
 import { company } from "@/content/company";
@@ -17,12 +16,12 @@ const socialLinks = [
 	{
 		label: "Instagram",
 		href: company.social.instagram,
-		icon: InstagramIcon,
+		icon: SiInstagram,
 	},
 	{
 		label: "WhatsApp",
 		href: company.links.whatsappUrl(messages.home.cta.whatsappText),
-		icon: WhatsAppIcon,
+		icon: SiWhatsapp,
 	},
 ];
 
@@ -56,7 +55,7 @@ export function Footer() {
 								className="text-muted-foreground transition-colors hover:text-foreground"
 								aria-label={label}
 							>
-								<Icon className="size-5" />
+								<Icon className="size-5" color="currentColor" />
 							</a>
 						))}
 					</div>

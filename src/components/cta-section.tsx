@@ -1,7 +1,7 @@
 "use client";
 
+import { SiWhatsapp } from "@icons-pack/react-simple-icons";
 import { motion, useReducedMotion } from "framer-motion";
-import { WhatsAppIcon } from "@/components/icons/whatsapp-icon";
 import { Button } from "@/components/ui/button";
 import { useCompany, useMessages } from "@/stores/use-content-store";
 
@@ -84,7 +84,7 @@ export function CtaSection() {
 							className="h-14 rounded-full bg-whatsapp px-8 text-lg text-whatsapp-foreground transition-transform hover:scale-[1.02] hover:bg-whatsapp/90 has-[>svg]:px-8"
 						>
 							<a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-								<WhatsAppIcon className="size-5" />
+								<SiWhatsapp className="size-5" color="currentColor" />
 								{messages.common.actions.talkOnWhatsapp}
 							</a>
 						</Button>

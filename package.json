@@ -15,6 +15,7 @@
 	},
 	"dependencies": {
 		"@flags-sdk/vercel": "^1.2.1",
+		"@icons-pack/react-simple-icons": "^13.13.0",
 		"@vercel/analytics": "^2.0.1",
 		"@vercel/speed-insights": "^2.0.0",
 		"@vercel/toolbar": "^0.2.2",
@@ -22,7 +23,7 @@
 		"clsx": "^2.1.1",
 		"flags": "^4.0.5",
 		"framer-motion": "^12.38.0",
-		"lucide-react": "^0.577.0",
+		"lucide-react": "^1.7.0",
 		"next": "16.2.1",
 		"next-themes": "^0.4.6",
 		"radix-ui": "^1.4.3",
