@@ -19,7 +19,15 @@ export const socialProofType = defineFlag<string>({
 	adapter: vercelAdapter(),
 });
 
+export const irpfBanner = defineFlag<Record<string, unknown>>({
+	key: "irpf-banner",
+	description: "IRPF 2026 promotional banner (JSON)",
+	defaultValue: {},
+	adapter: vercelAdapter(),
+});
+
 export const allFlags = {
 	isLogoTextCentered,
 	socialProofType,
+	irpfBanner,
 };

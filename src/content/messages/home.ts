@@ -7,15 +7,6 @@ export const home = {
 		description:
 			"Gestão contábil, fiscal e tributária com tecnologia e atendimento especializado. Plataforma 100% digital para MEI, ME e startups.",
 	},
-	banner: {
-		title: "Imposto de Renda 2026",
-		description: "Prazo até 29 de maio. Não deixe para a última hora!",
-		storageKey: "ir-2026",
-		cta: {
-			label: "Declarar agora",
-			whatsappText: "Olá! Gostaria de saber sobre a declaração do IR 2026",
-		},
-	},
 	hero: {
 		kicker: "Plataforma 100% digital",
 		kickerHref: "#servicos",

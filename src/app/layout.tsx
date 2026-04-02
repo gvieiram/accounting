@@ -14,11 +14,11 @@ import { Banner } from "@/components/banner";
 import { JsonLd } from "@/components/json-ld";
 import { Providers } from "@/components/providers";
 import "./globals.css";
-import { LandmarkIcon } from "lucide-react";
 import { Header } from "@/components/header";
 import { company } from "@/content/company";
 import { messages } from "@/content/messages";
-import { resolveAll } from "@/lib/flags";
+import { getBannerIcon } from "@/lib/banner-icons";
+import { resolveAll, resolveBanner } from "@/lib/flags";
 import {
 	getLocalBusinessSchema,
 	getWebSiteSchema,
@@ -94,6 +94,7 @@ export default async function RootLayout({
 	const shouldInjectToolbar = process.env.NODE_ENV === "development";
 
 	const flagValues = await resolveAll();
+	const banner = resolveBanner(flagValues.irpfBanner);
 
 	return (
 		<html lang="pt-BR" suppressHydrationWarning>
@@ -108,21 +109,24 @@ export default async function RootLayout({
 				<Providers flags={flagValues}>
 					<Header />
 					{children}
-					<Banner
-						icon={<LandmarkIcon />}
-						title={messages.home.banner.title}
-						description={messages.home.banner.description}
-						storageKey={messages.home.banner.storageKey}
-						dismissLabel={messages.common.a11y.closeBanner}
-						cta={{
-							label: messages.home.banner.cta.label,
-							href: company.links.whatsappUrl(
-								messages.home.banner.cta.whatsappText,
-							),
-							external: true,
-						}}
-						position="bottom"
-					/>
+					{banner && (
+						<Banner
+							icon={getBannerIcon(banner.icon)}
+							title={banner.title}
+							description={banner.description}
+							storageKey={banner.storageKey}
+							dismissLabel={messages.common.a11y.closeBanner}
+							cta={{
+								label: banner.cta?.label ?? messages.common.actions.talkToUs,
+								href: company.links.whatsappUrl(
+									banner.cta?.whatsappText ??
+										messages.common.banner.defaultWhatsappText,
+								),
+								external: true,
+							}}
+							position={banner.position}
+						/>
+					)}
 				</Providers>
 				{shouldInjectToolbar && <VercelToolbar />}
 				<Analytics />

@@ -35,6 +35,9 @@ export const common = {
 			message: "Mensagem (opcional)",
 		},
 	},
+	banner: {
+		defaultWhatsappText: "Olá! Gostaria de mais informações.",
+	},
 	a11y: {
 		toggleMenu: "Alternar menu",
 		closeBanner: "Fechar banner",
