@@ -170,10 +170,14 @@ export function UsersTable({ users, currentUserId }: UsersTableProps) {
 							</DropdownMenu>
 						</div>
 					</TableHead>
-					<TableHead>{labels.columns.lastAccess}</TableHead>
-					<TableHead>{labels.columns.createdAt}</TableHead>
-					<TableHead className="sr-only w-12">
-						{labels.columns.actions}
+					<TableHead className="hidden whitespace-nowrap md:table-cell">
+						{labels.columns.lastAccess}
+					</TableHead>
+					<TableHead className="hidden whitespace-nowrap lg:table-cell">
+						{labels.columns.createdAt}
+					</TableHead>
+					<TableHead className="w-12">
+						<span className="sr-only">{labels.columns.actions}</span>
 					</TableHead>
 				</TableRow>
 			</TableHeader>
@@ -194,10 +198,10 @@ export function UsersTable({ users, currentUserId }: UsersTableProps) {
 						<TableRow key={`${row.kind}:${row.id}`}>
 							<TableCell>
 								<div className="flex items-center gap-3">
-									<Avatar aria-hidden="true">
+									<Avatar aria-hidden="true" className="shrink-0">
 										<AvatarFallback>{resolveInitials(row)}</AvatarFallback>
 									</Avatar>
-									<div className="grid leading-tight">
+									<div className="grid min-w-0 leading-tight">
 										<span className="truncate font-medium">
 											{resolveDisplayName(row)}
 										</span>
@@ -209,10 +213,10 @@ export function UsersTable({ users, currentUserId }: UsersTableProps) {
 									</div>
 								</div>
 							</TableCell>
-							<TableCell>
+							<TableCell className="whitespace-nowrap">
 								<StatusBadge row={row} labels={labels.statusBadge} />
 							</TableCell>
-							<TableCell>
+							<TableCell className="hidden whitespace-nowrap md:table-cell">
 								{row.lastAccessAt ? (
 									formatDate(row.lastAccessAt)
 								) : (
@@ -221,7 +225,9 @@ export function UsersTable({ users, currentUserId }: UsersTableProps) {
 									</span>
 								)}
 							</TableCell>
-							<TableCell>{formatDate(row.createdAt)}</TableCell>
+							<TableCell className="hidden whitespace-nowrap lg:table-cell">
+								{formatDate(row.createdAt)}
+							</TableCell>
 							<TableCell className="text-right">
 								<UserRowMenu
 									row={row}
@@ -249,17 +255,17 @@ function SkeletonRows({ count }: { count: number }) {
 				>
 					<TableCell>
 						<div className="flex items-center gap-3">
-							<Skeleton className="size-8 rounded-full" />
+							<Skeleton className="size-8 shrink-0 rounded-full" />
 							<Skeleton className="h-4 w-40" />
 						</div>
 					</TableCell>
 					<TableCell>
 						<Skeleton className="h-5 w-16 rounded-full" />
 					</TableCell>
-					<TableCell>
+					<TableCell className="hidden md:table-cell">
 						<Skeleton className="h-4 w-24" />
 					</TableCell>
-					<TableCell>
+					<TableCell className="hidden lg:table-cell">
 						<Skeleton className="h-4 w-24" />
 					</TableCell>
 					<TableCell />
