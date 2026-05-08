@@ -86,12 +86,35 @@ model User {
   updatedAt     DateTime  @updatedAt
   revokedAt     DateTime?
 
-  accounts    Account[]
-  sessions    Session[]
-  userClients UserClient[]
-  auditLogs   AuditLog[]   @relation("AuditLogActor")
+  accounts         Account[]
+  sessions         Session[]
+  userClients      UserClient[]
+  auditLogs        AuditLog[]   @relation("AuditLogActor")
+  invitationsSent  Invitation[] @relation("InvitationInvitedBy")
 
   @@index([email])
+  @@index([revokedAt])
+}
+
+model Invitation {
+  id          String    @id @default(cuid())
+  email       String
+  name        String?
+  role        UserRole  @default(ADMIN)
+  tokenHash   String    @unique
+  expiresAt   DateTime
+  invitedById String
+  acceptedAt  DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  invitedBy User @relation("InvitationInvitedBy", fields: [invitedById], references: [id], onDelete: Restrict)
+
+  @@index([email])
+  @@index([tokenHash])
+  @@index([expiresAt])
+  @@index([acceptedAt])
   @@index([revokedAt])
 }
 
@@ -246,6 +269,10 @@ enum AuditAction {
   MAGIC_LINK_SENT
   MAGIC_LINK_USED
   USER_INVITED
+  USER_INVITE_RESENT
+  USER_INVITE_CANCELLED
+  USER_INVITE_ACCEPTED
+  USER_REACTIVATED
   USER_REVOKED
   CLIENT_CREATED
   CLIENT_UPDATED

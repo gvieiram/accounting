@@ -48,9 +48,32 @@ export const admin = {
 			title: "Nenhum usuário cadastrado",
 			description: "Convide o primeiro administrador.",
 		},
+		emptyForFilter: {
+			noMatch: "Nenhum usuário corresponde ao filtro selecionado.",
+		},
+		filter: {
+			label: "Filtrar por status",
+			active: "Ativos",
+			invited: "Convites",
+			revoked: "Revogados",
+		},
+		statusBadge: {
+			active: "Ativo",
+			invited: "Convidado",
+			expired: "Convite expirado",
+			revoked: "Revogado",
+		},
+		rowMenu: {
+			label: "Ações",
+			revoke: "Revogar acesso",
+			reactivate: "Reativar acesso",
+			resendInvite: "Reenviar convite",
+			cancelInvite: "Cancelar convite",
+		},
 		inviteDialog: {
 			title: "Convidar administrador",
-			description: "Vamos enviar um magic link para o e-mail informado.",
+			description:
+				"Enviaremos um convite por e-mail. A pessoa precisa aceitar em até 24 horas para ter acesso.",
 			emailLabel: "E-mail",
 			nameLabel: "Nome",
 			submit: "Convidar",
@@ -63,6 +86,25 @@ export const admin = {
 			confirm: "Revogar acesso",
 			cancel: "Cancelar",
 			success: "Acesso revogado.",
+		},
+		reactivateDialog: {
+			title: "Reativar acesso?",
+			description: (email: string) =>
+				`${email} poderá entrar novamente pelo /login.`,
+			confirm: "Reativar acesso",
+			cancel: "Cancelar",
+			success: "Acesso reativado.",
+		},
+		cancelInviteDialog: {
+			title: "Cancelar convite?",
+			description: (email: string) =>
+				`O link enviado para ${email} deixará de funcionar.`,
+			confirm: "Cancelar convite",
+			cancel: "Voltar",
+			success: "Convite cancelado.",
+		},
+		resendInvite: {
+			success: "Convite reenviado.",
 		},
 		errors: {
 			duplicateEmail: "Já existe um administrador com este e-mail.",

@@ -18,3 +18,21 @@ export const revokeUserSchema = z.object({
 });
 
 export type RevokeUserInput = z.infer<typeof revokeUserSchema>;
+
+export const reactivateUserSchema = z.object({
+	userId: z.string().min(1),
+});
+
+export type ReactivateUserInput = z.infer<typeof reactivateUserSchema>;
+
+export const invitationIdSchema = z.object({
+	invitationId: z.string().min(1),
+});
+
+export type InvitationIdInput = z.infer<typeof invitationIdSchema>;
+
+export const acceptInvitationSchema = z.object({
+	token: z.string().min(1),
+});
+
+export type AcceptInvitationInput = z.infer<typeof acceptInvitationSchema>;
