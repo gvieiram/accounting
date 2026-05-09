@@ -69,7 +69,13 @@ type HeaderProps = {
 // pages. Keeping the chrome would also make `/login` look like a regular
 // landing page section and confuse users with brand nav while they're
 // trying to authenticate.
-const HIDDEN_PATH_PREFIXES = ["/admin", "/app", "/login", "/post-login"];
+const HIDDEN_PATH_PREFIXES = [
+	"/admin",
+	"/app",
+	"/login",
+	"/post-login",
+	"/invite",
+];
 
 export function Header({ isLogoCentered = false }: HeaderProps) {
 	const pathname = usePathname();
