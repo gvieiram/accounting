@@ -29,9 +29,23 @@ export const common = {
 			required: "Campo obrigatório",
 			invalidEmail: "E-mail inválido",
 		},
+		submit: {
+			sending: "Enviando...",
+		},
 	},
 	banner: {
 		defaultWhatsappText: "Olá! Gostaria de mais informações.",
+	},
+	status: {
+		active: "Ativo",
+		revoked: "Revogado",
+	},
+	terms: {
+		createdAt: "Cadastrado em",
+		lastAccess: "Último acesso",
+		actions: "Ações",
+		optional: "(opcional)",
+		never: "Nunca acessou",
 	},
 	a11y: {
 		toggleMenu: "Alternar menu",

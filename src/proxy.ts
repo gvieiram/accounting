@@ -1,14 +1,15 @@
+import { getSessionCookie } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
 
-// Better Auth derives the session cookie name from `auth.context.authCookies
-// .sessionToken.name`. We hardcode it here because the proxy runs at the Edge
-// runtime and cannot import the auth instance (which pulls Prisma, Resend,
-// etc.). If the cookie configuration ever changes (e.g. enabling cross-domain
-// cookies which adds a `__Secure-` prefix), update both places.
-const SESSION_COOKIE_NAME = "better-auth.session_token";
-
 export function proxy(request: NextRequest) {
-	if (request.cookies.has(SESSION_COOKIE_NAME)) {
+	// `getSessionCookie` knows about the `__Secure-` prefix Better Auth applies
+	// automatically on HTTPS (i.e. every Vercel deploy: preview *and* prod).
+	// Hardcoding the bare `better-auth.session_token` name caused an
+	// /admin → /login → /admin loop after magic-link verify: the cookie was
+	// actually set as `__Secure-better-auth.session_token`, the proxy never
+	// found it, but `auth.api.getSession()` inside the layouts/login page
+	// *did* find it and bounced the user back to /admin — ERR_TOO_MANY_REDIRECTS.
+	if (getSessionCookie(request)) {
 		return NextResponse.next();
 	}
 

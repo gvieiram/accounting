@@ -11,6 +11,7 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/components/ui/sidebar";
 
 type NavItem = {
@@ -31,6 +32,11 @@ export function NavSecondary({
 	items: NavItem[];
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
 	const pathname = usePathname() ?? "";
+	const { isMobile, setOpenMobile } = useSidebar();
+
+	function handleNavigate() {
+		if (isMobile) setOpenMobile(false);
+	}
 
 	return (
 		<SidebarGroup {...props}>
@@ -46,7 +52,7 @@ export function NavSecondary({
 									isActive={active}
 									tooltip={item.title}
 								>
-									<Link href={item.url}>
+									<Link href={item.url} onClick={handleNavigate}>
 										<item.icon />
 										<span>{item.title}</span>
 									</Link>

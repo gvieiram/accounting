@@ -10,6 +10,7 @@ const globalForRatelimit = globalThis as unknown as {
 	magicLinkRateLimitByEmail: Ratelimit | undefined;
 	magicLinkRateLimitByIp: Ratelimit | undefined;
 	magicLinkRateLimitGlobal: Ratelimit | undefined;
+	inviteAcceptRateLimitByIp: Ratelimit | undefined;
 };
 
 function createRedis(): Redis {
@@ -89,6 +90,23 @@ export const magicLinkRateLimitGlobal =
 
 if (process.env.NODE_ENV !== "production") {
 	globalForRatelimit.magicLinkRateLimitGlobal = magicLinkRateLimitGlobal;
+}
+
+function createInviteAcceptRateLimitByIp(): Ratelimit {
+	return new Ratelimit({
+		redis,
+		limiter: Ratelimit.slidingWindow(20, "1 h"),
+		analytics: true,
+		prefix: "ratelimit:invite-accept:ip",
+	});
+}
+
+export const inviteAcceptRateLimitByIp =
+	globalForRatelimit.inviteAcceptRateLimitByIp ??
+	createInviteAcceptRateLimitByIp();
+
+if (process.env.NODE_ENV !== "production") {
+	globalForRatelimit.inviteAcceptRateLimitByIp = inviteAcceptRateLimitByIp;
 }
 
 type MagicLinkLimiter = {

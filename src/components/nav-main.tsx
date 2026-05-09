@@ -19,6 +19,7 @@ import {
 	SidebarMenuSub,
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
+	useSidebar,
 } from "@/components/ui/sidebar";
 import { useMessages } from "@/stores/use-content-store";
 
@@ -39,6 +40,11 @@ function isItemActive(pathname: string, href: string): boolean {
 export function NavMain({ items }: { items: NavItem[] }) {
 	const pathname = usePathname() ?? "";
 	const messages = useMessages();
+	const { isMobile, setOpenMobile } = useSidebar();
+
+	function handleNavigate() {
+		if (isMobile) setOpenMobile(false);
+	}
 
 	return (
 		<SidebarGroup>
@@ -55,7 +61,7 @@ export function NavMain({ items }: { items: NavItem[] }) {
 									tooltip={item.title}
 									isActive={active}
 								>
-									<Link href={item.url}>
+									<Link href={item.url} onClick={handleNavigate}>
 										<item.icon />
 										<span>{item.title}</span>
 									</Link>
@@ -78,7 +84,10 @@ export function NavMain({ items }: { items: NavItem[] }) {
 																asChild
 																isActive={subActive}
 															>
-																<Link href={subItem.url}>
+																<Link
+																	href={subItem.url}
+																	onClick={handleNavigate}
+																>
 																	<span>{subItem.title}</span>
 																</Link>
 															</SidebarMenuSubButton>

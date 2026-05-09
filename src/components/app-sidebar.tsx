@@ -95,15 +95,19 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
  * mobile-only trigger; see `src/app/admin/layout.tsx`.
  */
 function SidebarHeaderBrand() {
-	const { state } = useSidebar();
+	const { state, isMobile, setOpenMobile } = useSidebar();
 	const isCollapsed = state === "collapsed";
+
+	function handleNavigate() {
+		if (isMobile) setOpenMobile(false);
+	}
 
 	return (
 		<div
 			className={cn("flex items-center gap-2", isCollapsed && "flex-col gap-1")}
 		>
 			<SidebarMenuButton size="lg" asChild className="flex-1">
-				<Link href="/admin">
+				<Link href="/admin" onClick={handleNavigate}>
 					<Logo
 						animated={false}
 						showSubtitle={false}

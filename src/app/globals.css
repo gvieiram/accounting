@@ -4,28 +4,30 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-	--background: hsl(0 0% 99%);
-	--foreground: hsl(0 0% 9%);
+	--background: oklch(1 0 0);
+	--foreground: oklch(0.145 0 0);
 
-	--card: hsl(0 0% 99%);
-	--card-foreground: hsl(0 0% 9%);
+	--card: oklch(1 0 0);
+	--card-foreground: oklch(0.145 0 0);
 
-	--popover: hsl(0 0% 99%);
-	--popover-foreground: hsl(0 0% 32%);
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.145 0 0);
 
 	--primary: hsl(173 34% 23%); /* #274f4a */
 	--primary-foreground: hsl(0 0% 100%);
 
 	--secondary: hsl(11 52% 92%);
 	--secondary-foreground: hsl(173 34% 23%);
+	/* --secondary-foreground: oklch(0.205 0 0); */
 
-	--muted: hsl(0 0% 93%);
-	--muted-foreground: hsl(0 0% 45%);
+	--muted: oklch(0.97 0 0);
+	--muted-foreground: oklch(0.556 0 0);
 
-	--accent: hsl(0 0% 93%);
-	--accent-foreground: hsl(0 0% 12%);
+	--accent: oklch(0.97 0 0);
+	--accent-foreground: oklch(0.205 0 0);
+
 	--highlight: hsl(11 51% 69.6%); /* #d9988a */
-	--highlight-foreground: hsl(0 0% 100%);
+	--highlight-foreground: oklch(0.985 0 0); /* #fafafa */
 
 	--destructive: hsl(0 84.2% 60.2%);
 	--destructive-foreground: hsl(0 0% 98%);
@@ -39,19 +41,19 @@
 	--info: hsl(173 34% 30%);
 	--info-foreground: hsl(0 0% 100%);
 
-	--border: hsl(0 0% 87%);
-	--input: hsl(0 0% 96%);
+	--border: oklch(0.922 0 0);
+	--input: oklch(0.922 0 0);
 	--ring: hsl(173 34% 23%);
 	--radius: 0.5rem;
 
-	--sidebar: hsl(173 34% 23%);
-	--sidebar-foreground: hsl(0 0% 100%);
-	--sidebar-accent: hsl(173 30% 18%);
-	--sidebar-accent-foreground: hsl(0 0% 100%);
-	--sidebar-border: hsl(173 25% 30%);
-	--sidebar-ring: hsl(11 51% 69.6%);
-	--sidebar-primary: hsl(11 51% 69.6%);
-	--sidebar-primary-foreground: hsl(0 0% 100%);
+	--sidebar: oklch(0.985 0 0);
+	--sidebar-foreground: oklch(0.145 0 0);
+	--sidebar-primary: hsl(11 51% 69.6%); /* Terracota — active item */
+	--sidebar-primary-foreground: oklch(0.985 0 0);
+	--sidebar-accent: oklch(0.97 0 0);
+	--sidebar-accent-foreground: oklch(0.205 0 0);
+	--sidebar-border: oklch(0.922 0 0);
+	--sidebar-ring: oklch(0.708 0 0);
 
 	--stack-1: hsl(173 8% 92%);
 	--stack-2: hsl(173 10% 87%);
@@ -65,68 +67,6 @@
 
 	--whatsapp: hsl(142 70% 49%);
 	--whatsapp-foreground: hsl(0 0% 100%);
-}
-
-/*
- * Admin theme — shadcn "neutral" palette (new-york v4).
- *
- * The marketing site uses the DuoHub brand palette (Dark Teal + Terracota).
- * The admin area should look like a stock shadcn dashboard — neutral grays
- * and blacks — so it feels like a tool rather than a brand expression.
- *
- * Apply to a wrapping element on every admin route (and the admin login):
- *   <div className="theme-admin"> ... </div>
- *
- * Values are copied verbatim (oklch) from the canonical shadcn manual:
- *   https://ui.shadcn.com/docs/installation/manual
- * Do NOT translate to hsl — keeping oklch makes diffs against future
- * shadcn upgrades trivial.
- *
- * The only addition beyond the canonical palette is `--highlight`, which
- * is a DuoHub-specific variable consumed by the shared <Logo> component
- * (the "Hub" letters use it). We fold it into the same neutral as
- * `--primary` so the logo renders fully neutral inside the admin shell.
- */
-.theme-admin {
-	--background: oklch(1 0 0);
-	--foreground: oklch(0.145 0 0);
-
-	--card: oklch(1 0 0);
-	--card-foreground: oklch(0.145 0 0);
-
-	--popover: oklch(1 0 0);
-	--popover-foreground: oklch(0.145 0 0);
-
-	--primary: oklch(0.205 0 0);
-	--primary-foreground: oklch(0.985 0 0);
-
-	--secondary: oklch(0.97 0 0);
-	--secondary-foreground: oklch(0.205 0 0);
-
-	--muted: oklch(0.97 0 0);
-	--muted-foreground: oklch(0.556 0 0);
-
-	--accent: oklch(0.97 0 0);
-	--accent-foreground: oklch(0.205 0 0);
-
-	/* DuoHub-only variable — see comment block above. */
-	--highlight: oklch(0.205 0 0);
-	--highlight-foreground: oklch(0.985 0 0);
-
-	--destructive: oklch(0.577 0.245 27.325);
-
-	--border: oklch(0.922 0 0);
-	--input: oklch(0.922 0 0);
-	--ring: oklch(0.708 0 0);
-
-	--sidebar: oklch(0.985 0 0);
-	--sidebar-foreground: oklch(0.145 0 0);
-	--sidebar-primary: oklch(0.205 0 0);
-	--sidebar-primary-foreground: oklch(0.985 0 0);
-	--sidebar-accent: oklch(0.97 0 0);
-	--sidebar-accent-foreground: oklch(0.205 0 0);
-	--sidebar-border: oklch(0.922 0 0);
-	--sidebar-ring: oklch(0.708 0 0);
 }
 
 .dark {

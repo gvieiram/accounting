@@ -27,10 +27,7 @@ export default async function AdminLayout({
 	};
 
 	return (
-		// `theme-admin` swaps the brand palette (Dark Teal + Terracota) for
-		// the stock shadcn neutral palette inside the admin shell. See
-		// `src/app/globals.css`.
-		<div className="theme-admin contents">
+		<div className="contents">
 			<SidebarProvider>
 				<AppSidebar user={user} />
 				<SidebarInset>
