@@ -12,15 +12,16 @@ export type AuditWriteInput = {
 	resourceType?: string;
 	resourceId?: string;
 	metadata?: Record<string, unknown>;
+	headers?: Headers;
 	request?: Request;
 	ipAddress?: string | null;
 	userAgent?: string | null;
 };
 
 async function write(input: AuditWriteInput): Promise<void> {
-	const fromRequest = extractRequestContext(input.request);
-	const ipAddress = input.ipAddress ?? fromRequest.ipAddress;
-	const userAgent = input.userAgent ?? fromRequest.userAgent;
+	const fromSource = extractRequestContext(input.headers ?? input.request);
+	const ipAddress = input.ipAddress ?? fromSource.ipAddress;
+	const userAgent = input.userAgent ?? fromSource.userAgent;
 
 	try {
 		await db.auditLog.create({
