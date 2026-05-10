@@ -22,7 +22,7 @@ Each PR has its own self-contained plan file. They are designed to be executed *
 | 2 | `2026-05-02-f1a-pr2-auth.md` | Better Auth + magic link + Postgres test setup + `/api/test/last-magic-link` + login UI. | ~22 |
 | 3 | `2026-05-02-f1a-pr3-shell.md` | `/admin` middleware, layout, sidebar, header, dashboard placeholder. | ~13 |
 | 4 | `2026-05-02-f1a-pr4-users.md` | `/admin/users` (list + invite + revoke) with audit + Robot E2E. Adds `lib/date.ts`. | ~16 |
-| 5 | `2026-05-02-f1a-pr5-clients.md` | `/admin/clients` CRUD with matriz/filial, ViaCEP, audit + Robot E2E. | ~20 |
+| 5 | `2026-05-10-f1a-pr5-clients-v3.md` | `/admin/clients` CRUD with matriz/filial, ViaCEP, audit (cascade archive, CPF/CNPJ checksum, no E2E — Vitest + smoke manual). Supersedes the 2026-05-02 v1 and 2026-05-10 v2 drafts. | ~13 |
 
 **Total estimated tasks:** ~83 across all five PRs.
 

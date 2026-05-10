@@ -1,5 +1,7 @@
 # F1a · PR5 — Client CRUD with Matriz/Filial + ViaCEP
 
+> ⚠️ **SUPERSEDED** by [`2026-05-10-f1a-pr5-clients-v3.md`](./2026-05-10-f1a-pr5-clients-v3.md) on 2026-05-10. Kept for reference only (extended snippets and Robot Framework discussion). Do not use as the implementation guide — v3 locks in the current decisions (no E2E, cascade archive, CPF/CNPJ checksum, URL filters, Zod 4 `z.enum`).
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build the full Client CRUD: list with filters, create, edit, archive (soft-delete), with ViaCEP autofill and matriz/filial hierarchy via `parentClientId`. AuditLog: `CLIENT_CREATED`, `CLIENT_UPDATED` (with diff), `CLIENT_DELETED`. This is the largest PR — split it across multiple work sessions.

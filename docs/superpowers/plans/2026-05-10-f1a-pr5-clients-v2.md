@@ -1,5 +1,7 @@
 # F1a · PR5 — Client CRUD with Matriz/Filial + ViaCEP (v2)
 
+> ⚠️ **SUPERSEDED** by [`2026-05-10-f1a-pr5-clients-v3.md`](./2026-05-10-f1a-pr5-clients-v3.md) on 2026-05-10. Do not use this document for implementation. The v3 canonical plan locks in 12 decisions (cascade archive, CPF/CNPJ checksum, URL-driven filters, Zod 4 `z.enum`, no E2E, etc.) and includes the snippets this version omitted.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build the full Client CRUD: list with filters, create, edit, archive (soft-delete), with ViaCEP autofill and matriz/filial hierarchy. This version refines the Audit Log system to automatically capture context in Server Actions.
