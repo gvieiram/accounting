@@ -32,6 +32,12 @@ export const common = {
 		submit: {
 			sending: "Enviando...",
 		},
+		masks: {
+			cpf: "000.000.000-00",
+			cnpj: "00.000.000/0000-00",
+			cep: "00000-000",
+			phone: "(00) 00000-0000",
+		},
 	},
 	banner: {
 		defaultWhatsappText: "Olá! Gostaria de mais informações.",
@@ -46,6 +52,10 @@ export const common = {
 		actions: "Ações",
 		optional: "(opcional)",
 		never: "Nunca acessou",
+		notInformed: "Não informado",
+		matriz: "Matriz",
+		filial: "Filial",
+		standalone: "Independente",
 	},
 	a11y: {
 		toggleMenu: "Alternar menu",

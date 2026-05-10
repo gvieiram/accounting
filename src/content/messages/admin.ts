@@ -1,3 +1,9 @@
+import type {
+	ClientStatus,
+	ClientType,
+	TaxRegime,
+} from "@/generated/prisma/enums";
+
 export const admin = {
 	nav: {
 		sectionLabel: "Geral",
@@ -112,4 +118,121 @@ export const admin = {
 			selfRevoke: "Você não pode revogar seu próprio acesso.",
 		},
 	},
-} as const;
+	clients: {
+		title: "Clientes",
+		subtitle: "Cadastro de clientes PF e PJ.",
+		new: "Novo cliente",
+		edit: "Editar cliente",
+		columns: {
+			client: "Cliente",
+			document: "Documento",
+			type: "Tipo",
+			regime: "Regime",
+			status: "Status",
+			createdAt: "Cadastrado em",
+		},
+		empty: {
+			title: "Nenhum cliente cadastrado",
+			description: "Cadastre o primeiro cliente.",
+		},
+		emptyForFilter: {
+			noMatch: "Nenhum cliente corresponde aos filtros.",
+		},
+		filter: {
+			search: "Buscar por nome, fantasia, e-mail ou documento",
+			type: "Tipo",
+			status: "Status",
+			archived: "Mostrar arquivados",
+			allTypes: "Todos",
+			allStatuses: "Todos",
+		},
+		form: {
+			sections: {
+				identification: "Identificação",
+				taxation: "Tributação",
+				primaryContact: "Contato principal",
+				address: "Endereço",
+				additionalContacts: "Contatos adicionais",
+				hierarchy: "Hierarquia",
+				notes: "Notas internas",
+			},
+			fields: {
+				type: "Tipo de pessoa",
+				name: "Nome completo",
+				tradeName: "Nome fantasia",
+				document: "Documento (CPF / CNPJ)",
+				taxRegime: "Regime tributário",
+				email: "E-mail",
+				phone: "Telefone",
+				cep: "CEP",
+				street: "Logradouro",
+				number: "Número",
+				complement: "Complemento",
+				neighborhood: "Bairro",
+				city: "Cidade",
+				state: "UF",
+				parentClientId: "Matriz",
+				notes: "Notas internas",
+			},
+			hints: {
+				cepLookup: "Buscando endereço…",
+				cnpjRootMustMatch:
+					"A filial precisa compartilhar a raiz do CNPJ (8 dígitos) com a matriz.",
+			},
+			submit: {
+				create: "Cadastrar cliente",
+				update: "Salvar alterações",
+				saving: "Salvando…",
+			},
+		},
+		archiveDialog: {
+			title: "Arquivar cliente?",
+			description: (n: number) =>
+				n > 0
+					? `Esta matriz tem ${n} filial(is) ativa(s); todas serão arquivadas junto.`
+					: "O cliente poderá ser restaurado depois pela equipe.",
+			confirm: "Arquivar",
+			cancel: "Voltar",
+			success: "Cliente arquivado.",
+		},
+		errors: {
+			duplicateDocument: "Já existe um cliente com este documento.",
+			invalidCpf: "CPF inválido.",
+			invalidCnpj: "CNPJ inválido.",
+			parentNotMatriz: "O cliente selecionado já é uma filial.",
+			parentArchived: "A matriz selecionada está arquivada.",
+			parentTypeMismatch: "Filial só pode pertencer a uma matriz PJ.",
+			cnpjRootMismatch:
+				"O CNPJ da filial precisa compartilhar a raiz com a matriz.",
+			generic: "Não foi possível concluir. Tente novamente.",
+		},
+	},
+	enums: {
+		clientType: {
+			// biome-ignore lint/style/useNamingConvention: keys must match Prisma enum values
+			PF: "Pessoa Física",
+			// biome-ignore lint/style/useNamingConvention: keys must match Prisma enum values
+			PJ: "Pessoa Jurídica",
+		} satisfies Record<ClientType, string>,
+		taxRegime: {
+			// biome-ignore lint/style/useNamingConvention: keys must match Prisma enum values
+			MEI: "MEI",
+			// biome-ignore lint/style/useNamingConvention: keys must match Prisma enum values
+			SIMPLES_NACIONAL: "Simples Nacional",
+			// biome-ignore lint/style/useNamingConvention: keys must match Prisma enum values
+			LUCRO_PRESUMIDO: "Lucro Presumido",
+			// biome-ignore lint/style/useNamingConvention: keys must match Prisma enum values
+			LUCRO_REAL: "Lucro Real",
+		} satisfies Record<TaxRegime, string>,
+		clientStatus: {
+			// biome-ignore lint/style/useNamingConvention: keys must match Prisma enum values
+			ACTIVE: "Ativo",
+			// biome-ignore lint/style/useNamingConvention: keys must match Prisma enum values
+			PROSPECT: "Prospect",
+			// biome-ignore lint/style/useNamingConvention: keys must match Prisma enum values
+			INACTIVE: "Inativo",
+			// biome-ignore lint/style/useNamingConvention: keys must match Prisma enum values
+			CHURNED: "Churn",
+		} satisfies Record<ClientStatus, string>,
+	},
+};
