@@ -300,4 +300,20 @@ describe("computeDiff", () => {
 		expect(metadata.key.from).toBeUndefined();
 		expect(metadata.key.to).toBe("value");
 	});
+
+	it("treats null and undefined as different (explicit clear vs absent)", () => {
+		const before = { field: null } as Record<string, unknown>;
+		const after = { field: undefined } as Record<string, unknown>;
+		const { changedFields } = computeDiff(before, after);
+		expect(changedFields).toContain("field");
+	});
+
+	it("serialises object values to a stable string in metadata", () => {
+		const before = { addr: { city: "SP", state: "SP" } };
+		const after = { addr: { city: "RJ", state: "RJ" } };
+		const { changedFields, metadata } = computeDiff(before, after);
+		expect(changedFields).toContain("addr");
+		expect(typeof metadata.addr.from).toBe("string");
+		expect(typeof metadata.addr.to).toBe("string");
+	});
 });

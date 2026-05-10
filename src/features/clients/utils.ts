@@ -140,9 +140,12 @@ function truncate(value: unknown, max = AUDIT_DIFF_FIELD_TRUNCATE): unknown {
 	if (typeof value === "string" && value.length > max) {
 		return `${value.slice(0, max)}…`;
 	}
+	// Objects/arrays always serialize to a stable string in the audit metadata,
+	// regardless of size — keeps consumers from seeing a mixed object|string
+	// shape that depends on payload length.
 	if (Array.isArray(value) || (value && typeof value === "object")) {
 		const s = stableStringify(value);
-		return s.length > max ? `${s.slice(0, max)}…` : value;
+		return s.length > max ? `${s.slice(0, max)}…` : s;
 	}
 	return value;
 }
