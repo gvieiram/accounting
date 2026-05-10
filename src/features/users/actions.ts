@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 import { sendInviteEmail } from "@/features/auth/emails/dispatch";
+import { extractRequestContext } from "@/lib/audit/extract-request-context";
 import { auditLog } from "@/lib/audit/log";
 import { requireAdmin } from "@/lib/auth/helpers";
 import {
@@ -254,10 +255,7 @@ export async function acceptInvitationAction(
 	if (!parsed.success) return { success: false, error: "Token inválido." };
 
 	const reqHeaders = await headers();
-	const ipAddress =
-		reqHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-		reqHeaders.get("x-real-ip")?.trim() ??
-		null;
+	const { ipAddress } = extractRequestContext(reqHeaders);
 	const limit = await inviteAcceptRateLimitByIp.limit(ipAddress ?? "unknown");
 	if (!limit.success) {
 		return {
