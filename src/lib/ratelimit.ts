@@ -11,6 +11,7 @@ const globalForRatelimit = globalThis as unknown as {
 	magicLinkRateLimitByIp: Ratelimit | undefined;
 	magicLinkRateLimitGlobal: Ratelimit | undefined;
 	inviteAcceptRateLimitByIp: Ratelimit | undefined;
+	viaCepRateLimitByUser: Ratelimit | undefined;
 };
 
 function createRedis(): Redis {
@@ -107,6 +108,22 @@ export const inviteAcceptRateLimitByIp =
 
 if (process.env.NODE_ENV !== "production") {
 	globalForRatelimit.inviteAcceptRateLimitByIp = inviteAcceptRateLimitByIp;
+}
+
+function createViaCepRateLimitByUser(): Ratelimit {
+	return new Ratelimit({
+		redis,
+		limiter: Ratelimit.slidingWindow(10, "1 m"),
+		analytics: true,
+		prefix: "ratelimit:viacep",
+	});
+}
+
+export const viaCepRateLimitByUser =
+	globalForRatelimit.viaCepRateLimitByUser ?? createViaCepRateLimitByUser();
+
+if (process.env.NODE_ENV !== "production") {
+	globalForRatelimit.viaCepRateLimitByUser = viaCepRateLimitByUser;
 }
 
 type MagicLinkLimiter = {
