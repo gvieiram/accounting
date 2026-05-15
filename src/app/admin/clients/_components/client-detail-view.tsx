@@ -12,6 +12,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { ArchiveClientButton } from "@/app/admin/clients/_components/archive-client-button";
+import { UnarchiveClientButton } from "@/app/admin/clients/_components/unarchive-client-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -59,6 +60,9 @@ function DetailHeader({ client }: { client: ClientRecord }) {
 	const activeBranches = client.branches.filter(
 		(branch) => branch.archivedAt === null,
 	);
+	const archivedBranches = client.branches.filter(
+		(branch) => branch.archivedAt !== null,
+	);
 	const isOnActiveShelf = client.archivedAt === null;
 
 	return (
@@ -100,7 +104,12 @@ function DetailHeader({ client }: { client: ClientRecord }) {
 						clientId={client.id}
 						branchCount={activeBranches.length}
 					/>
-				) : null}
+				) : (
+					<UnarchiveClientButton
+						clientId={client.id}
+						archivedBranchCount={archivedBranches.length}
+					/>
+				)}
 				<Button asChild variant="default">
 					<Link href={`/admin/clients/${client.id}?edit=1`} scroll={false}>
 						<PencilIcon aria-hidden="true" className="size-4" />

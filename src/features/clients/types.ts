@@ -6,6 +6,7 @@ export type {
 	ArchiveClientInput,
 	ClientFormData,
 	ClientFormInput,
+	UnarchiveClientInput,
 } from "./schemas";
 
 // ---------------------------------------------------------------------------

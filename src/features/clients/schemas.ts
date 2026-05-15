@@ -164,6 +164,16 @@ export const archiveClientSchema = z.object({
 export type ArchiveClientInput = z.infer<typeof archiveClientSchema>;
 
 // ---------------------------------------------------------------------------
+// unarchiveClientSchema
+// ---------------------------------------------------------------------------
+
+export const unarchiveClientSchema = z.object({
+	clientId: z.string().min(1),
+});
+
+export type UnarchiveClientInput = z.infer<typeof unarchiveClientSchema>;
+
+// ---------------------------------------------------------------------------
 // searchMatrizCandidatesSchema
 // ---------------------------------------------------------------------------
 

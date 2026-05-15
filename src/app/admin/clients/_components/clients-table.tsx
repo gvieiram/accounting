@@ -33,6 +33,7 @@ import { formatDate } from "@/lib/date";
 import { cn } from "@/lib/utils";
 import { useMessages } from "@/stores/use-content-store";
 import { ArchiveClientButton } from "./archive-client-button";
+import { UnarchiveClientButton } from "./unarchive-client-button";
 
 type ClientsTableProps = {
 	clients: ClientListItem[];
@@ -261,6 +262,7 @@ function ClientTableRow({
 				<RowActions
 					clientId={client.id}
 					branchCount={client.activeBranchesCount}
+					isArchived={client.archivedAt !== null}
 					viewLabel={labels.viewDetails}
 					editLabel={labels.edit}
 				/>
@@ -363,6 +365,7 @@ function ClientCard({
 					<RowActions
 						clientId={client.id}
 						branchCount={client.activeBranchesCount}
+						isArchived={client.archivedAt !== null}
 						viewLabel={labels.viewDetails}
 						editLabel={labels.edit}
 					/>
@@ -427,6 +430,7 @@ function StatusBadge({ status }: { status: ClientListItem["status"] }) {
 type RowActionsProps = {
 	clientId: string;
 	branchCount: number;
+	isArchived: boolean;
 	viewLabel: string;
 	editLabel: string;
 };
@@ -434,6 +438,7 @@ type RowActionsProps = {
 function RowActions({
 	clientId,
 	branchCount,
+	isArchived,
 	viewLabel,
 	editLabel,
 }: RowActionsProps) {
@@ -465,7 +470,14 @@ function RowActions({
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
-			<ArchiveClientButton clientId={clientId} branchCount={branchCount} />
+			{isArchived ? (
+				<UnarchiveClientButton
+					clientId={clientId}
+					archivedBranchCount={branchCount}
+				/>
+			) : (
+				<ArchiveClientButton clientId={clientId} branchCount={branchCount} />
+			)}
 		</div>
 	);
 }

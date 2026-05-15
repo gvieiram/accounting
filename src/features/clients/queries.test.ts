@@ -56,6 +56,7 @@ describe("listClients", () => {
 				status: true,
 				createdAt: true,
 				parentClientId: true,
+				archivedAt: true,
 				_count: {
 					select: {
 						branches: { where: { archivedAt: null } },

@@ -3,6 +3,7 @@ import {
 	additionalContactSchema,
 	archiveClientSchema,
 	clientSchema,
+	unarchiveClientSchema,
 } from "./schemas";
 
 // ---------------------------------------------------------------------------
@@ -478,6 +479,27 @@ describe("archiveClientSchema", () => {
 
 	it("rejects missing clientId", () => {
 		const result = archiveClientSchema.safeParse({});
+		expect(result.success).toBe(false);
+	});
+});
+
+// ---------------------------------------------------------------------------
+// unarchiveClientSchema
+// ---------------------------------------------------------------------------
+
+describe("unarchiveClientSchema", () => {
+	it("accepts a non-empty clientId", () => {
+		const result = unarchiveClientSchema.safeParse({ clientId: "abc123" });
+		expect(result.success).toBe(true);
+	});
+
+	it("rejects empty clientId", () => {
+		const result = unarchiveClientSchema.safeParse({ clientId: "" });
+		expect(result.success).toBe(false);
+	});
+
+	it("rejects missing clientId", () => {
+		const result = unarchiveClientSchema.safeParse({});
 		expect(result.success).toBe(false);
 	});
 });

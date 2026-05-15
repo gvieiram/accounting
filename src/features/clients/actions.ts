@@ -13,6 +13,7 @@ import {
 	archiveClientSchema,
 	clientSchema,
 	searchMatrizCandidatesSchema,
+	unarchiveClientSchema,
 } from "./schemas";
 import type { ClientFormData, ParentClientCandidate } from "./types";
 import { cnpjRoot, computeDiff } from "./utils";
@@ -363,6 +364,100 @@ export async function archiveClientAction(
 		return { success: true };
 	} catch (error) {
 		console.error("[clients] archive failed", error);
+		return { success: false, error: labels.generic };
+	}
+}
+
+export async function unarchiveClientAction(
+	input: unknown,
+): Promise<ActionResult> {
+	const session = await requireAdmin();
+	const parsed = unarchiveClientSchema.safeParse(input);
+	if (!parsed.success) return { success: false, error: labels.invalidData };
+
+	const reqHeaders = await headers();
+	const { clientId } = parsed.data;
+
+	try {
+		const restored = await db.$transaction(async (tx) => {
+			const target = await tx.client.findUnique({
+				where: { id: clientId },
+				select: {
+					id: true,
+					legalName: true,
+					archivedAt: true,
+					parentClientId: true,
+				},
+			});
+
+			if (!target) return { kind: "notFound" } as const;
+			if (!target.archivedAt) return { kind: "alreadyActive" } as const;
+
+			if (target.parentClientId !== null) {
+				const parent = await tx.client.findUnique({
+					where: { id: target.parentClientId },
+					select: { id: true, archivedAt: true },
+				});
+				if (parent?.archivedAt) {
+					return { kind: "parentArchived" } as const;
+				}
+			}
+
+			const branches =
+				target.parentClientId === null
+					? await tx.client.findMany({
+							where: { parentClientId: clientId, archivedAt: { not: null } },
+							select: { id: true },
+						})
+					: [];
+			const cascadedBranchIds = branches.map((branch) => branch.id);
+
+			await tx.client.update({
+				where: { id: clientId },
+				data: { archivedAt: null },
+			});
+
+			if (cascadedBranchIds.length > 0) {
+				await tx.client.updateMany({
+					where: {
+						id: { in: cascadedBranchIds },
+						archivedAt: { not: null },
+					},
+					data: { archivedAt: null },
+				});
+			}
+
+			return { kind: "ok", target, cascadedBranchIds } as const;
+		});
+
+		if (restored.kind === "notFound") {
+			return { success: false, error: labels.notFound };
+		}
+		if (restored.kind === "parentArchived") {
+			return { success: false, error: labels.parentStillArchived };
+		}
+		if (restored.kind === "alreadyActive") {
+			return { success: true };
+		}
+
+		await auditLog.write({
+			action: "CLIENT_RESTORED",
+			actorId: session.user.id,
+			actorEmail: session.user.email,
+			resourceType: "Client",
+			resourceId: clientId,
+			metadata: {
+				legalName: restored.target.legalName,
+				cascadedBranchIds: restored.cascadedBranchIds,
+			},
+			headers: reqHeaders,
+		});
+
+		revalidatePath("/admin/clients");
+		revalidatePath(`/admin/clients/${clientId}`);
+		return { success: true };
+	} catch (error) {
+		console.error("[clients] unarchive failed", error);
 		return { success: false, error: labels.generic };
 	}
 }

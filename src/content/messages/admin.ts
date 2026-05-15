@@ -280,6 +280,16 @@ export const admin = {
 			cancel: "Voltar",
 			success: "Cliente arquivado.",
 		},
+		unarchiveDialog: {
+			title: "Desarquivar cliente?",
+			description: (n: number) =>
+				n > 0
+					? `Esta matriz tem ${n} filial(is) arquivada(s); todas serão restauradas junto.`
+					: "O cliente voltará para a lista ativa.",
+			confirm: "Desarquivar",
+			cancel: "Voltar",
+			success: "Cliente desarquivado.",
+		},
 		errors: {
 			invalidData: "Dados inválidos.",
 			notFound: "Cliente não encontrado.",
@@ -289,6 +299,8 @@ export const admin = {
 			parentNotFound: "Matriz não encontrada.",
 			parentNotMatriz: "O cliente selecionado já é uma filial.",
 			parentArchived: "A matriz selecionada está arquivada.",
+			parentStillArchived:
+				"A matriz deste cliente ainda está arquivada. Desarquive a matriz primeiro.",
 			parentTypeMismatch: "Filial só pode pertencer a uma matriz PJ.",
 			cnpjRootMismatch:
 				"O CNPJ da filial precisa compartilhar a raiz com a matriz.",

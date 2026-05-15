@@ -277,6 +277,7 @@ enum AuditAction {
   CLIENT_CREATED
   CLIENT_UPDATED
   CLIENT_DELETED
+  CLIENT_RESTORED
 }
 
 model AuditLog {

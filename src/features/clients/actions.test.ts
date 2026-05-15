@@ -44,8 +44,12 @@ vi.mock("next/headers", () => ({
 	headers: async () => mockHeaders,
 }));
 
-const { archiveClientAction, createClientAction, updateClientAction } =
-	await import("./actions");
+const {
+	archiveClientAction,
+	createClientAction,
+	unarchiveClientAction,
+	updateClientAction,
+} = await import("./actions");
 
 const SESSION = {
 	user: { id: "admin_1", email: "admin@duohub.com", name: "Admin" },
@@ -468,5 +472,140 @@ describe("archiveClientAction", () => {
 		expect(result).toEqual({ success: true });
 		expect(txClient.findMany).not.toHaveBeenCalled();
 		expect(txClient.updateMany).not.toHaveBeenCalled();
+	});
+});
+
+describe("unarchiveClientAction", () => {
+	function setupTransaction({
+		target,
+		parent,
+		branches = [],
+	}: {
+		target: unknown;
+		parent?: unknown;
+		branches?: Array<{ id: string }>;
+	}) {
+		const txClient = {
+			findUnique: vi.fn().mockImplementation(async ({ where }) => {
+				if (
+					parent !== undefined &&
+					where?.id === (parent as { id?: string })?.id
+				)
+					return parent;
+				return target;
+			}),
+			findMany: vi.fn().mockResolvedValue(branches),
+			update: vi.fn().mockResolvedValue({}),
+			updateMany: vi.fn().mockResolvedValue({ count: branches.length }),
+		};
+		transactionMock.mockImplementation(async (fn) => fn({ client: txClient }));
+		return txClient;
+	}
+
+	it("rejects invalid input", async () => {
+		const result = await unarchiveClientAction({ clientId: "" });
+		expect(result).toEqual({ success: false, error: expect.any(String) });
+	});
+
+	it("returns notFound when target does not exist", async () => {
+		setupTransaction({ target: null });
+		const result = await unarchiveClientAction({ clientId: "missing" });
+		expect(result.success).toBe(false);
+	});
+
+	it("is idempotent for an already active client", async () => {
+		const txClient = setupTransaction({
+			target: {
+				id: "client_1",
+				legalName: "Ativo",
+				archivedAt: null,
+				parentClientId: null,
+			},
+		});
+
+		const result = await unarchiveClientAction({ clientId: "client_1" });
+
+		expect(result).toEqual({ success: true });
+		expect(txClient.update).not.toHaveBeenCalled();
+		expect(auditWriteMock).not.toHaveBeenCalled();
+	});
+
+	it("cascades archived branches and audits with branch ids", async () => {
+		const txClient = setupTransaction({
+			target: {
+				id: "matriz_1",
+				legalName: "Matriz Ltda",
+				archivedAt: new Date(),
+				parentClientId: null,
+			},
+			branches: [{ id: "filial_1" }, { id: "filial_2" }],
+		});
+
+		const result = await unarchiveClientAction({ clientId: "matriz_1" });
+
+		expect(result).toEqual({ success: true });
+		expect(txClient.findMany).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: { parentClientId: "matriz_1", archivedAt: { not: null } },
+			}),
+		);
+		expect(txClient.updateMany).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: {
+					id: { in: ["filial_1", "filial_2"] },
+					archivedAt: { not: null },
+				},
+				data: { archivedAt: null },
+			}),
+		);
+		expect(auditWriteMock).toHaveBeenCalledWith(
+			expect.objectContaining({
+				action: "CLIENT_RESTORED",
+				resourceId: "matriz_1",
+				metadata: expect.objectContaining({
+					cascadedBranchIds: ["filial_1", "filial_2"],
+				}),
+			}),
+		);
+	});
+
+	it("blocks restoring a branch whose matriz is still archived", async () => {
+		setupTransaction({
+			target: {
+				id: "filial_1",
+				legalName: "Filial Ltda",
+				archivedAt: new Date(),
+				parentClientId: "matriz_1",
+			},
+			parent: { id: "matriz_1", archivedAt: new Date() },
+		});
+
+		const result = await unarchiveClientAction({ clientId: "filial_1" });
+
+		expect(result.success).toBe(false);
+	});
+
+	it("restores a branch when its matriz is active", async () => {
+		const txClient = setupTransaction({
+			target: {
+				id: "filial_1",
+				legalName: "Filial Ltda",
+				archivedAt: new Date(),
+				parentClientId: "matriz_1",
+			},
+			parent: { id: "matriz_1", archivedAt: null },
+		});
+
+		const result = await unarchiveClientAction({ clientId: "filial_1" });
+
+		expect(result).toEqual({ success: true });
+		expect(txClient.findMany).not.toHaveBeenCalled();
+		expect(txClient.updateMany).not.toHaveBeenCalled();
+		expect(txClient.update).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: { id: "filial_1" },
+				data: { archivedAt: null },
+			}),
+		);
 	});
 });

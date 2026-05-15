@@ -22,6 +22,7 @@ export type ClientListItem = {
 	status: ClientStatus;
 	createdAt: Date;
 	parentClientId: string | null;
+	archivedAt: Date | null;
 	activeBranchesCount: number;
 };
 
@@ -91,6 +92,7 @@ export async function listClients(
 			status: true,
 			createdAt: true,
 			parentClientId: true,
+			archivedAt: true,
 			_count: {
 				select: {
 					branches: { where: { archivedAt: null } },
@@ -111,6 +113,7 @@ export async function listClients(
 		status: client.status,
 		createdAt: client.createdAt,
 		parentClientId: client.parentClientId,
+		archivedAt: client.archivedAt,
 		activeBranchesCount: client._count.branches,
 	}));
 }
