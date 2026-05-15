@@ -13,11 +13,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import { getBreadcrumbs } from "@/lib/admin/breadcrumbs";
 import { useMessages } from "@/stores/use-content-store";
+import { useBreadcrumbOverrides } from "./breadcrumb-overrides";
 
 export function AdminBreadcrumb() {
 	const pathname = usePathname() ?? "";
 	const messages = useMessages();
-	const items = getBreadcrumbs(pathname, messages);
+	const overrides = useBreadcrumbOverrides();
+	const items = getBreadcrumbs(pathname, messages, overrides);
 
 	if (items.length === 0) return null;
 

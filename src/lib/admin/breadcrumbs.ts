@@ -25,6 +25,7 @@ export type BreadcrumbItem = {
 export function getBreadcrumbs(
 	pathname: string,
 	msgs: typeof Messages,
+	overrides: Record<string, string> = {},
 ): BreadcrumbItem[] {
 	const segments = pathname.split("/").filter(Boolean);
 	if (segments[0] !== "admin") return [];
@@ -43,7 +44,7 @@ export function getBreadcrumbs(
 		if (!segment) continue;
 		acc = `${acc}/${segment}`;
 		const isLast = i === segments.length - 1;
-		const label = resolveSegmentLabel(segment, msgs);
+		const label = overrides[segment] ?? resolveSegmentLabel(segment, msgs);
 		items.push(isLast ? { label } : { label, href: acc });
 	}
 
@@ -54,6 +55,6 @@ function resolveSegmentLabel(segment: string, msgs: typeof Messages): string {
 	const map = msgs.admin.breadcrumb.segments;
 	// Type-safe lookup with fallback to the raw segment so unknown
 	// segments are still readable (e.g. `clients/abc-123` → "abc-123"
-	// until we hook up dynamic resolvers later).
+	// until a page registers a dynamic label override).
 	return (map as Record<string, string | undefined>)[segment] ?? segment;
 }

@@ -4,6 +4,7 @@ import type { ClientStatus, ClientType } from "@/generated/prisma/enums";
 export type {
 	AdditionalContactInput,
 	ArchiveClientInput,
+	ClientFormData,
 	ClientFormInput,
 } from "./schemas";
 

@@ -1,3 +1,5 @@
+import "@/lib/zod-config";
+
 import { z } from "zod";
 import {
 	CLIENT_STATUSES,
@@ -148,7 +150,8 @@ export const clientSchema = z
 		}
 	});
 
-export type ClientFormInput = z.infer<typeof clientSchema>;
+export type ClientFormInput = z.input<typeof clientSchema>;
+export type ClientFormData = z.output<typeof clientSchema>;
 
 // ---------------------------------------------------------------------------
 // archiveClientSchema
@@ -159,3 +162,16 @@ export const archiveClientSchema = z.object({
 });
 
 export type ArchiveClientInput = z.infer<typeof archiveClientSchema>;
+
+// ---------------------------------------------------------------------------
+// searchMatrizCandidatesSchema
+// ---------------------------------------------------------------------------
+
+export const searchMatrizCandidatesSchema = z.object({
+	search: z.string().max(200).default(""),
+	excludeId: z.string().min(1).optional(),
+});
+
+export type SearchMatrizCandidatesInput = z.infer<
+	typeof searchMatrizCandidatesSchema
+>;

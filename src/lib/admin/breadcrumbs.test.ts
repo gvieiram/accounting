@@ -53,12 +53,33 @@ describe("getBreadcrumbs", () => {
 		]);
 	});
 
-	it("propagates raw dynamic segments (e.g. id) until a resolver is wired", () => {
+	it("propagates raw dynamic segments (e.g. id) when no override is provided", () => {
 		const items = getBreadcrumbs("/admin/clients/abc-123", mockMessages);
 		expect(items).toEqual([
 			{ label: "Dashboard", href: "/admin" },
 			{ label: "Clientes", href: "/admin/clients" },
 			{ label: "abc-123" },
+		]);
+	});
+
+	it("substitutes a dynamic segment with the matching override label", () => {
+		const items = getBreadcrumbs("/admin/clients/abc-123", mockMessages, {
+			"abc-123": "Empresa Acme Ltda",
+		});
+		expect(items).toEqual([
+			{ label: "Dashboard", href: "/admin" },
+			{ label: "Clientes", href: "/admin/clients" },
+			{ label: "Empresa Acme Ltda" },
+		]);
+	});
+
+	it("ignores overrides that do not match any segment in the path", () => {
+		const items = getBreadcrumbs("/admin/clients", mockMessages, {
+			"abc-123": "Empresa Acme Ltda",
+		});
+		expect(items).toEqual([
+			{ label: "Dashboard", href: "/admin" },
+			{ label: "Clientes" },
 		]);
 	});
 
