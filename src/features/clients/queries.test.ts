@@ -6,6 +6,7 @@ import { CLIENTS_PAGE_SIZE } from "./constants";
 const clientFindManyMock = vi.fn();
 const clientFindUniqueMock = vi.fn();
 const clientCountMock = vi.fn();
+const clientGroupByMock = vi.fn();
 
 vi.mock("server-only", () => ({}));
 
@@ -15,12 +16,18 @@ vi.mock("@/lib/db", () => ({
 			findMany: clientFindManyMock,
 			findUnique: clientFindUniqueMock,
 			count: clientCountMock,
+			groupBy: clientGroupByMock,
 		},
 	},
 }));
 
-const { countActiveBranches, getClient, listClients, listMatrizCandidates } =
-	await import("./queries");
+const {
+	countActiveBranches,
+	countClientsByStatus,
+	getClient,
+	listClients,
+	listMatrizCandidates,
+} = await import("./queries");
 
 beforeEach(() => {
 	clientFindManyMock.mockReset();
@@ -29,6 +36,8 @@ beforeEach(() => {
 	clientFindUniqueMock.mockResolvedValue(null);
 	clientCountMock.mockReset();
 	clientCountMock.mockResolvedValue(0);
+	clientGroupByMock.mockReset();
+	clientGroupByMock.mockResolvedValue([]);
 });
 
 describe("listClients", () => {
@@ -208,6 +217,68 @@ describe("countActiveBranches", () => {
 
 		expect(clientCountMock).toHaveBeenCalledWith({
 			where: { parentClientId: "matriz_1", archivedAt: null },
+		});
+	});
+});
+
+describe("countClientsByStatus", () => {
+	it("queries the active shelf grouped by status and the archived count in parallel", async () => {
+		await countClientsByStatus();
+
+		expect(clientGroupByMock).toHaveBeenCalledWith({
+			by: ["status"],
+			where: { archivedAt: null },
+			_count: { _all: true },
+		});
+		expect(clientCountMock).toHaveBeenCalledWith({
+			where: { archivedAt: { not: null } },
+		});
+	});
+
+	it("returns all-zero counts when there are no clients", async () => {
+		clientGroupByMock.mockResolvedValueOnce([]);
+		clientCountMock.mockResolvedValueOnce(0);
+
+		await expect(countClientsByStatus()).resolves.toEqual({
+			active: 0,
+			prospect: 0,
+			inactive: 0,
+			churned: 0,
+			archived: 0,
+		});
+	});
+
+	it("maps each Prisma status row to the matching counter", async () => {
+		clientGroupByMock.mockResolvedValueOnce([
+			{ status: "ACTIVE", _count: { _all: 12 } },
+			{ status: "PROSPECT", _count: { _all: 3 } },
+			{ status: "INACTIVE", _count: { _all: 1 } },
+			{ status: "CHURNED", _count: { _all: 5 } },
+		]);
+		clientCountMock.mockResolvedValueOnce(7);
+
+		await expect(countClientsByStatus()).resolves.toEqual({
+			active: 12,
+			prospect: 3,
+			inactive: 1,
+			churned: 5,
+			archived: 7,
+		});
+	});
+
+	it("leaves a counter at zero when its status is missing from the groupBy result", async () => {
+		clientGroupByMock.mockResolvedValueOnce([
+			{ status: "ACTIVE", _count: { _all: 4 } },
+			// PROSPECT, INACTIVE, CHURNED intentionally absent
+		]);
+		clientCountMock.mockResolvedValueOnce(0);
+
+		await expect(countClientsByStatus()).resolves.toEqual({
+			active: 4,
+			prospect: 0,
+			inactive: 0,
+			churned: 0,
+			archived: 0,
 		});
 	});
 });

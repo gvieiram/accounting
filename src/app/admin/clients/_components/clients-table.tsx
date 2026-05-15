@@ -26,6 +26,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { orderClients } from "@/features/clients/list-utils";
 import type { ClientListItem } from "@/features/clients/queries";
 import { formatDocument } from "@/features/clients/utils";
 import { formatDate } from "@/lib/date";
@@ -500,27 +501,4 @@ function EmptyState({
 			)}
 		</div>
 	);
-}
-
-function orderClients(clients: ClientListItem[]): ClientListItem[] {
-	const byParent = new Map<string | null, ClientListItem[]>();
-	for (const client of clients) {
-		const list = byParent.get(client.parentClientId) ?? [];
-		list.push(client);
-		byParent.set(client.parentClientId, list);
-	}
-
-	const roots = byParent.get(null) ?? [];
-	const result: ClientListItem[] = [];
-
-	for (const root of roots) {
-		result.push(root);
-		result.push(...(byParent.get(root.id) ?? []));
-	}
-
-	for (const client of clients) {
-		if (!result.includes(client)) result.push(client);
-	}
-
-	return result;
 }

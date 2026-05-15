@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { type FieldErrors, useForm, useFormContext } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 
 import {
@@ -55,6 +55,13 @@ import {
 	CLIENT_TYPES,
 	TAX_REGIMES,
 } from "@/features/clients/constants";
+import {
+	CLIENT_FORM_TAB_ORDER,
+	type ClientFormTabId,
+	computeErrorsByTab,
+	countFormErrors,
+	firstTabWithError,
+} from "@/features/clients/form-tabs";
 import { clientSchema } from "@/features/clients/schemas";
 import type {
 	ClientFormInput,
@@ -102,45 +109,6 @@ const defaultValues: ClientFormInput = {
 	internalNotes: undefined,
 };
 
-type TabId = "identification" | "contact" | "address" | "hierarchy" | "extras";
-
-const TAB_ORDER: TabId[] = [
-	"identification",
-	"contact",
-	"address",
-	"hierarchy",
-	"extras",
-];
-
-// Field-name → tab mapping. Keys are top-level error keys from
-// react-hook-form; nested arrays (e.g. additionalContacts) only emit the
-// root key in `errors`, so the lookup stays flat.
-const FIELD_TO_TAB: Record<string, TabId> = {
-	type: "identification",
-	document: "identification",
-	legalName: "identification",
-	tradeName: "identification",
-	status: "identification",
-	contactName: "contact",
-	primaryEmail: "contact",
-	primaryPhone: "contact",
-	additionalContacts: "contact",
-	zipCode: "address",
-	street: "address",
-	number: "address",
-	complement: "address",
-	neighborhood: "address",
-	city: "address",
-	state: "address",
-	parentClientId: "hierarchy",
-	parentDocument: "hierarchy",
-	taxRegime: "extras",
-	stateRegistration: "extras",
-	cityRegistration: "extras",
-	segment: "extras",
-	internalNotes: "extras",
-};
-
 export type ClientFormSheetProps = {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
@@ -164,7 +132,7 @@ export function ClientFormSheet({
 }: ClientFormSheetProps) {
 	const messages = useMessages();
 	const [isPending, startTransition] = useTransition();
-	const [activeTab, setActiveTab] = useState<TabId>("identification");
+	const [activeTab, setActiveTab] = useState<ClientFormTabId>("identification");
 	const [dismissDialogOpen, setDismissDialogOpen] = useState(false);
 	const tabsContainerRef = useRef<HTMLDivElement>(null);
 
@@ -209,7 +177,7 @@ export function ClientFormSheet({
 	const isPj = type === ClientType.PJ;
 
 	const visibleTabs = useMemo(() => {
-		return TAB_ORDER.filter((id) => {
+		return CLIENT_FORM_TAB_ORDER.filter((id) => {
 			if (id === "hierarchy" && !isPj) return false;
 			return true;
 		});
@@ -221,11 +189,11 @@ export function ClientFormSheet({
 	);
 
 	const errorCount = useMemo(
-		() => countErrors(form.formState.errors),
+		() => countFormErrors(form.formState.errors),
 		[form.formState.errors],
 	);
 
-	const firstTabWithError = visibleTabs.find((tab) => errorsByTab[tab] > 0);
+	const firstErrorTab = firstTabWithError(form.formState.errors, visibleTabs);
 
 	function submit(values: ClientFormInput) {
 		startTransition(async () => {
@@ -248,11 +216,8 @@ export function ClientFormSheet({
 		});
 	}
 
-	function handleInvalid(errors: FieldErrors<ClientFormInput>) {
-		const firstErrorKey = Object.keys(errors)[0];
-		const targetTab = firstErrorKey
-			? (FIELD_TO_TAB[firstErrorKey] ?? "identification")
-			: "identification";
+	function handleInvalid(errors: Parameters<typeof firstTabWithError>[0]) {
+		const targetTab = firstTabWithError(errors) ?? "identification";
 		setActiveTab(targetTab);
 	}
 
@@ -304,7 +269,9 @@ export function ClientFormSheet({
 							>
 								<Tabs
 									value={activeTab}
-									onValueChange={(value) => setActiveTab(value as TabId)}
+									onValueChange={(value) =>
+										setActiveTab(value as ClientFormTabId)
+									}
 									className="min-w-0 gap-6"
 									ref={tabsContainerRef}
 								>
@@ -365,10 +332,10 @@ export function ClientFormSheet({
 									: "sr-only text-muted-foreground sm:not-sr-only",
 							)}
 						>
-							{errorCount > 0 && firstTabWithError
+							{errorCount > 0 && firstErrorTab
 								? messages.admin.clients.form.errorSummary(
 										errorCount,
-										tabLabels[firstTabWithError],
+										tabLabels[firstErrorTab],
 									)
 								: null}
 						</div>
@@ -688,29 +655,4 @@ function PhoneInputField({
 			)}
 		/>
 	);
-}
-
-// ---------------------------------------------------------------------------
-// Error helpers
-// ---------------------------------------------------------------------------
-
-function computeErrorsByTab(
-	errors: FieldErrors<ClientFormInput>,
-): Record<TabId, number> {
-	const counts: Record<TabId, number> = {
-		identification: 0,
-		contact: 0,
-		address: 0,
-		hierarchy: 0,
-		extras: 0,
-	};
-	for (const key of Object.keys(errors)) {
-		const tab = FIELD_TO_TAB[key];
-		if (tab) counts[tab] += 1;
-	}
-	return counts;
-}
-
-function countErrors(errors: FieldErrors<ClientFormInput>): number {
-	return Object.keys(errors).length;
 }

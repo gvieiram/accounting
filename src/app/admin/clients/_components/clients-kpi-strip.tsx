@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { messages } from "@/content/messages";
+import { buildKpiHref } from "@/features/clients/list-utils";
 import type { ClientStatusCounts } from "@/features/clients/queries";
 import type { ClientListFilters } from "@/features/clients/types";
 import { cn } from "@/lib/utils";
@@ -39,7 +40,7 @@ export function ClientsKpiStrip({ counts, filters }: ClientsKpiStripProps) {
 			key: "active",
 			label: labels.active,
 			value: counts.active,
-			href: buildHref("ACTIVE", false, status === "ACTIVE" && !isArchived),
+			href: buildKpiHref("ACTIVE", false, status === "ACTIVE" && !isArchived),
 			active: status === "ACTIVE" && !isArchived,
 			tone: "neutral",
 		},
@@ -47,7 +48,11 @@ export function ClientsKpiStrip({ counts, filters }: ClientsKpiStripProps) {
 			key: "prospect",
 			label: labels.prospect,
 			value: counts.prospect,
-			href: buildHref("PROSPECT", false, status === "PROSPECT" && !isArchived),
+			href: buildKpiHref(
+				"PROSPECT",
+				false,
+				status === "PROSPECT" && !isArchived,
+			),
 			active: status === "PROSPECT" && !isArchived,
 			tone: "accent",
 		},
@@ -55,7 +60,11 @@ export function ClientsKpiStrip({ counts, filters }: ClientsKpiStripProps) {
 			key: "inactive",
 			label: labels.inactive,
 			value: counts.inactive,
-			href: buildHref("INACTIVE", false, status === "INACTIVE" && !isArchived),
+			href: buildKpiHref(
+				"INACTIVE",
+				false,
+				status === "INACTIVE" && !isArchived,
+			),
 			active: status === "INACTIVE" && !isArchived,
 			tone: "warning",
 		},
@@ -63,7 +72,7 @@ export function ClientsKpiStrip({ counts, filters }: ClientsKpiStripProps) {
 			key: "archived",
 			label: labels.archived,
 			value: counts.archived,
-			href: buildHref(undefined, true, isArchived),
+			href: buildKpiHref(undefined, true, isArchived),
 			active: isArchived,
 			tone: "muted",
 		},
@@ -100,17 +109,4 @@ export function ClientsKpiStrip({ counts, filters }: ClientsKpiStripProps) {
 			))}
 		</div>
 	);
-}
-
-function buildHref(
-	status: "ACTIVE" | "PROSPECT" | "INACTIVE" | undefined,
-	archived: boolean,
-	isAlreadyActive: boolean,
-): string {
-	if (isAlreadyActive) return "/admin/clients";
-	const params = new URLSearchParams();
-	if (archived) params.set("archived", "1");
-	if (status) params.set("status", status);
-	const query = params.toString();
-	return query ? `/admin/clients?${query}` : "/admin/clients";
 }
