@@ -1,7 +1,35 @@
 // @vitest-environment node
 
 import { describe, expect, it } from "vitest";
-import { extractRequestContext } from "./extract-request-context";
+import { extractRequestContext, looksLikeIp } from "./extract-request-context";
+
+describe("looksLikeIp", () => {
+	it.each([
+		"203.0.113.1",
+		"10.0.0.1",
+		"0.0.0.0",
+		"255.255.255.255",
+		"::1",
+		"2001:db8::1",
+		"fe80::1",
+	])("accepts %s", (input) => {
+		expect(looksLikeIp(input)).toBe(true);
+	});
+
+	it.each([
+		"",
+		"   ",
+		"not-an-ip",
+		"999.999.999.999",
+		"203.0.113",
+		"203.0.113.1.5",
+		"<script>",
+		"deadbeef",
+		"a".repeat(46),
+	])("rejects %s", (input) => {
+		expect(looksLikeIp(input)).toBe(false);
+	});
+});
 
 describe("extractRequestContext — Request source", () => {
 	it("returns nulls when no request is provided", () => {
@@ -54,6 +82,20 @@ describe("extractRequestContext — Request source", () => {
 	it("returns null when the first hop in x-forwarded-for is empty", () => {
 		const req = new Request("https://example.com", {
 			headers: { "x-forwarded-for": ", 10.0.0.1" },
+		});
+		expect(extractRequestContext(req).ipAddress).toBeNull();
+	});
+
+	it("rejects a spoofed non-IP first hop in x-forwarded-for", () => {
+		const req = new Request("https://example.com", {
+			headers: { "x-forwarded-for": "not-an-ip, 203.0.113.1" },
+		});
+		expect(extractRequestContext(req).ipAddress).toBeNull();
+	});
+
+	it("rejects a malformed IPv4 in x-real-ip", () => {
+		const req = new Request("https://example.com", {
+			headers: { "x-real-ip": "999.999.999.999" },
 		});
 		expect(extractRequestContext(req).ipAddress).toBeNull();
 	});
