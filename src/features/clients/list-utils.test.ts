@@ -15,6 +15,7 @@ function makeClient(
 		status: "ACTIVE",
 		createdAt: new Date("2025-01-01T00:00:00Z"),
 		parentClientId: null,
+		archivedAt: null,
 		activeBranchesCount: 0,
 		...overrides,
 	};
