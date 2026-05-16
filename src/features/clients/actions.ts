@@ -403,10 +403,20 @@ export async function unarchiveClientAction(
 				}
 			}
 
+			// Cascade is timestamp-scoped: archiveClientAction stamps the matriz
+			// and all branches it cascade-archives with the SAME `new Date()`.
+			// Filiais archived independently (before or after that cascade) carry
+			// a different `archivedAt` and must stay archived — otherwise an
+			// admin restoring a matriz would silently resurrect filiais that
+			// were intentionally closed earlier.
+			const cascadeTimestamp = target.archivedAt;
 			const branches =
 				target.parentClientId === null
 					? await tx.client.findMany({
-							where: { parentClientId: clientId, archivedAt: { not: null } },
+							where: {
+								parentClientId: clientId,
+								archivedAt: cascadeTimestamp,
+							},
 							select: { id: true },
 						})
 					: [];
@@ -421,7 +431,7 @@ export async function unarchiveClientAction(
 				await tx.client.updateMany({
 					where: {
 						id: { in: cascadedBranchIds },
-						archivedAt: { not: null },
+						archivedAt: cascadeTimestamp,
 					},
 					data: { archivedAt: null },
 				});

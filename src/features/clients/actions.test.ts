@@ -531,11 +531,12 @@ describe("unarchiveClientAction", () => {
 	});
 
 	it("cascades archived branches and audits with branch ids", async () => {
+		const cascadeTimestamp = new Date("2026-04-01T12:00:00Z");
 		const txClient = setupTransaction({
 			target: {
 				id: "matriz_1",
 				legalName: "Matriz Ltda",
-				archivedAt: new Date(),
+				archivedAt: cascadeTimestamp,
 				parentClientId: null,
 			},
 			branches: [{ id: "filial_1" }, { id: "filial_2" }],
@@ -546,14 +547,17 @@ describe("unarchiveClientAction", () => {
 		expect(result).toEqual({ success: true });
 		expect(txClient.findMany).toHaveBeenCalledWith(
 			expect.objectContaining({
-				where: { parentClientId: "matriz_1", archivedAt: { not: null } },
+				where: {
+					parentClientId: "matriz_1",
+					archivedAt: cascadeTimestamp,
+				},
 			}),
 		);
 		expect(txClient.updateMany).toHaveBeenCalledWith(
 			expect.objectContaining({
 				where: {
 					id: { in: ["filial_1", "filial_2"] },
-					archivedAt: { not: null },
+					archivedAt: cascadeTimestamp,
 				},
 				data: { archivedAt: null },
 			}),
@@ -564,6 +568,52 @@ describe("unarchiveClientAction", () => {
 				resourceId: "matriz_1",
 				metadata: expect.objectContaining({
 					cascadedBranchIds: ["filial_1", "filial_2"],
+				}),
+			}),
+		);
+	});
+
+	it("leaves explicitly-archived filiais untouched when restoring a matriz", async () => {
+		// A filial archived before the matriz (different timestamp) must NOT be
+		// resurrected when the matriz is restored — that filial was closed
+		// explicitly, not by cascade.
+		const cascadeTimestamp = new Date("2026-04-01T12:00:00Z");
+		const txClient = setupTransaction({
+			target: {
+				id: "matriz_1",
+				legalName: "Matriz Ltda",
+				archivedAt: cascadeTimestamp,
+				parentClientId: null,
+			},
+			// Findmany is filtered by archivedAt === cascadeTimestamp, so the
+			// pre-archived filial isn't returned. Simulate that here:
+			branches: [{ id: "filial_cascade" }],
+		});
+
+		const result = await unarchiveClientAction({ clientId: "matriz_1" });
+
+		expect(result).toEqual({ success: true });
+		expect(txClient.findMany).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: {
+					parentClientId: "matriz_1",
+					archivedAt: cascadeTimestamp,
+				},
+			}),
+		);
+		expect(txClient.updateMany).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: {
+					id: { in: ["filial_cascade"] },
+					archivedAt: cascadeTimestamp,
+				},
+			}),
+		);
+		expect(auditWriteMock).toHaveBeenCalledWith(
+			expect.objectContaining({
+				action: "CLIENT_RESTORED",
+				metadata: expect.objectContaining({
+					cascadedBranchIds: ["filial_cascade"],
 				}),
 			}),
 		);
