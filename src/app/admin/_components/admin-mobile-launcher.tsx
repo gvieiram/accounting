@@ -22,7 +22,7 @@ export function AdminMobileLauncher() {
 			type="button"
 			onClick={() => setOpenMobile(true)}
 			className={cn(
-				"-translate-x-1/2 fixed bottom-4 left-1/2 z-40",
+				"fixed bottom-4 left-1/2 z-40 -translate-x-1/2",
 				"flex items-center gap-2 rounded-full px-4 py-2.5",
 				"bg-sidebar text-sidebar-foreground shadow-lg ring-1 ring-border/60",
 				"backdrop-blur supports-[backdrop-filter]:bg-sidebar/90",
