@@ -15,22 +15,13 @@ export const admin = {
 	shell: {
 		logout: "Sair",
 		toggleSidebar: "Alternar menu lateral",
+		menu: "Menu",
 		loading: "Carregando",
 	},
 	dashboard: {
 		title: "Dashboard",
 		welcome: (firstName: string) => `Olá, ${firstName}`,
 		placeholder: "Em breve: indicadores e atividade recente.",
-	},
-	breadcrumb: {
-		root: "Dashboard",
-		segments: {
-			clients: "Clientes",
-			users: "Usuários",
-			settings: "Configurações",
-			new: "Novo",
-			edit: "Editar",
-		},
 	},
 	errors: {
 		pageBoundary: "Algo deu errado",

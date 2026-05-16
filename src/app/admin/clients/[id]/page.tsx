@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { BreadcrumbOverride } from "@/app/admin/_components/breadcrumb-overrides";
 import { ClientDetailView } from "@/app/admin/clients/_components/client-detail-view";
 import { EditClientSheetTrigger } from "@/app/admin/clients/_components/edit-client-sheet-trigger";
 import { getClient } from "@/features/clients/queries";
@@ -31,7 +30,6 @@ export default async function ClientDetailPage({ params }: { params: Params }) {
 
 	return (
 		<>
-			<BreadcrumbOverride segment={client.id} label={displayName} />
 			<ClientDetailView client={client} />
 			<EditClientSheetTrigger
 				clientId={client.id}
