@@ -124,6 +124,23 @@ describe("auditLog.write — request context", () => {
 		expect(call?.data.ipAddress).toBe("203.0.113.42");
 		expect(call?.data.userAgent).toBe("from-input");
 	});
+
+	it("extracts IP and User-Agent from Headers (Server Action path)", async () => {
+		const hdrs = new Headers({
+			"x-forwarded-for": "203.0.113.77",
+			"user-agent": "DuoHub-Tests/3.0",
+		});
+
+		await auditLog.write({
+			action: "USER_INVITED",
+			actorEmail: "admin@duohubcontabil.com.br",
+			headers: hdrs,
+		});
+
+		const call = auditLogCreateMock.mock.calls[0]?.[0];
+		expect(call?.data.ipAddress).toBe("203.0.113.77");
+		expect(call?.data.userAgent).toBe("DuoHub-Tests/3.0");
+	});
 });
 
 describe("auditLog.write — error swallowing", () => {

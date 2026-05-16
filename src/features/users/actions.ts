@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 import { sendInviteEmail } from "@/features/auth/emails/dispatch";
+import { extractRequestContext } from "@/lib/audit/extract-request-context";
 import { auditLog } from "@/lib/audit/log";
 import { requireAdmin } from "@/lib/auth/helpers";
 import {
@@ -25,15 +26,6 @@ import {
 export type ActionResult =
 	| { success: true }
 	| { success: false; error: string };
-
-function extractClientContext(reqHeaders: Headers) {
-	const ipAddress =
-		reqHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-		reqHeaders.get("x-real-ip")?.trim() ??
-		null;
-	const userAgent = reqHeaders.get("user-agent")?.trim() ?? null;
-	return { ipAddress, userAgent };
-}
 
 function buildAcceptUrl(rawToken: string): string {
 	const url = new URL("/invite/accept", getSiteUrl());
@@ -100,7 +92,6 @@ export async function inviteUserAction(input: unknown): Promise<ActionResult> {
 	});
 
 	const reqHeaders = await headers();
-	const { ipAddress, userAgent } = extractClientContext(reqHeaders);
 
 	await auditLog.write({
 		action: "USER_INVITED",
@@ -109,8 +100,7 @@ export async function inviteUserAction(input: unknown): Promise<ActionResult> {
 		resourceType: "Invitation",
 		resourceId: created.id,
 		metadata: { email: created.email },
-		ipAddress,
-		userAgent,
+		headers: reqHeaders,
 	});
 
 	try {
@@ -172,7 +162,6 @@ export async function resendInvitationAction(
 	});
 
 	const reqHeaders = await headers();
-	const { ipAddress, userAgent } = extractClientContext(reqHeaders);
 
 	await auditLog.write({
 		action: "USER_INVITE_RESENT",
@@ -181,8 +170,7 @@ export async function resendInvitationAction(
 		resourceType: "Invitation",
 		resourceId: updated.id,
 		metadata: { email: updated.email },
-		ipAddress,
-		userAgent,
+		headers: reqHeaders,
 	});
 
 	try {
@@ -237,7 +225,6 @@ export async function cancelInvitationAction(
 	});
 
 	const reqHeaders = await headers();
-	const { ipAddress, userAgent } = extractClientContext(reqHeaders);
 
 	await auditLog.write({
 		action: "USER_INVITE_CANCELLED",
@@ -246,8 +233,7 @@ export async function cancelInvitationAction(
 		resourceType: "Invitation",
 		resourceId: invitation.id,
 		metadata: { email: invitation.email },
-		ipAddress,
-		userAgent,
+		headers: reqHeaders,
 	});
 
 	revalidatePath("/admin/users");
@@ -269,7 +255,7 @@ export async function acceptInvitationAction(
 	if (!parsed.success) return { success: false, error: "Token inválido." };
 
 	const reqHeaders = await headers();
-	const { ipAddress, userAgent } = extractClientContext(reqHeaders);
+	const { ipAddress } = extractRequestContext(reqHeaders);
 	const limit = await inviteAcceptRateLimitByIp.limit(ipAddress ?? "unknown");
 	if (!limit.success) {
 		return {
@@ -331,8 +317,7 @@ export async function acceptInvitationAction(
 			resourceType: "Invitation",
 			resourceId: accepted.invitationId,
 			metadata: { email: accepted.user.email },
-			ipAddress,
-			userAgent,
+			headers: reqHeaders,
 		});
 	} catch (e) {
 		const code = (e as { code?: string }).code;
@@ -377,7 +362,6 @@ export async function reactivateUserAction(
 	});
 
 	const reqHeaders = await headers();
-	const { ipAddress, userAgent } = extractClientContext(reqHeaders);
 
 	await auditLog.write({
 		action: "USER_REACTIVATED",
@@ -386,8 +370,7 @@ export async function reactivateUserAction(
 		resourceType: "User",
 		resourceId: target.id,
 		metadata: { email: target.email },
-		ipAddress,
-		userAgent,
+		headers: reqHeaders,
 	});
 
 	revalidatePath("/admin/users");
@@ -435,7 +418,6 @@ export async function revokeUserAction(input: unknown): Promise<ActionResult> {
 	]);
 
 	const reqHeaders = await headers();
-	const { ipAddress, userAgent } = extractClientContext(reqHeaders);
 
 	await auditLog.write({
 		action: "USER_REVOKED",
@@ -444,8 +426,7 @@ export async function revokeUserAction(input: unknown): Promise<ActionResult> {
 		resourceType: "User",
 		resourceId: userId,
 		metadata: { email: target?.email ?? null },
-		ipAddress,
-		userAgent,
+		headers: reqHeaders,
 	});
 
 	revalidatePath("/admin/users");

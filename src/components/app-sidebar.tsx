@@ -89,10 +89,9 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
  * - expanded: logo (with wordmark) and the collapse trigger side by side
  * - collapsed: icon-only logo with the trigger stacked below it
  *
- * On mobile (`md:hidden` viewport) the in-sidebar trigger is hidden — the
- * sidebar renders as a Sheet that is closed by default, so a trigger
- * inside it would be unreachable. The page header renders its own
- * mobile-only trigger; see `src/app/admin/layout.tsx`.
+ * The in-sidebar trigger is desktop-only — on mobile the sidebar opens as
+ * a bottom drawer with its own close affordance, launched by
+ * `<AdminMobileLauncher />` (see `src/app/admin/layout.tsx`).
  */
 function SidebarHeaderBrand() {
 	const { state, isMobile, setOpenMobile } = useSidebar();

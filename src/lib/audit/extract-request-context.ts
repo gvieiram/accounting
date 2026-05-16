@@ -5,16 +5,14 @@ export type RequestContext = {
 	userAgent: string | null;
 };
 
-export function extractRequestContext(
-	request: Request | undefined,
-): RequestContext {
-	if (!request) {
-		return { ipAddress: null, userAgent: null };
-	}
+export type RequestLike = Request | Headers | undefined;
 
-	const forwardedFor = request.headers.get("x-forwarded-for");
-	const realIp = request.headers.get("x-real-ip");
-	const userAgent = request.headers.get("user-agent");
+export function extractRequestContext(source: RequestLike): RequestContext {
+	if (!source) return { ipAddress: null, userAgent: null };
+	const hdrs = source instanceof Headers ? source : source.headers;
+	const forwardedFor = hdrs.get("x-forwarded-for");
+	const realIp = hdrs.get("x-real-ip");
+	const userAgent = hdrs.get("user-agent");
 
 	let ipAddress: string | null = null;
 	if (forwardedFor) {

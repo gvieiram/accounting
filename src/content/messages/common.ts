@@ -7,6 +7,14 @@ export const common = {
 		talkToSpecialist: "Fale com um especialista",
 		scheduleConsultation: "Agendar consulta",
 		send: "Enviar",
+		save: "Salvar",
+		cancel: "Cancelar",
+		edit: "Editar",
+		add: "Adicionar",
+		remove: "Remover",
+		discard: "Descartar",
+		keepEditing: "Continuar editando",
+		back: "Voltar",
 		talkOnWhatsapp: "Falar no WhatsApp",
 		seeMore: "Ver mais",
 		seeLess: "Ver menos",
@@ -32,6 +40,12 @@ export const common = {
 		submit: {
 			sending: "Enviando...",
 		},
+		masks: {
+			cpf: "000.000.000-00",
+			cnpj: "00.000.000/0000-00",
+			cep: "00000-000",
+			phone: "(00) 00000-0000",
+		},
 	},
 	banner: {
 		defaultWhatsappText: "Olá! Gostaria de mais informações.",
@@ -46,6 +60,10 @@ export const common = {
 		actions: "Ações",
 		optional: "(opcional)",
 		never: "Nunca acessou",
+		notInformed: "Não informado",
+		matriz: "Matriz",
+		filial: "Filial",
+		standalone: "Independente",
 	},
 	a11y: {
 		toggleMenu: "Alternar menu",
@@ -57,5 +75,7 @@ export const common = {
 		photoOf: (name: string) => `Foto de ${name}`,
 		scrollToForm: "Ir para o formulário de contato",
 		toggleAccordion: "Expandir ou recolher conteúdo",
+		expandGroup: "Expandir filiais",
+		collapseGroup: "Recolher filiais",
 	},
 } as const;

@@ -138,6 +138,7 @@ describe("inviteUserAction", () => {
 				resourceType: "Invitation",
 				resourceId: "inv_1",
 				metadata: { email: "newadmin@x.com" },
+				headers: mockHeaders,
 			}),
 		);
 		expect(sendInviteEmailMock).toHaveBeenCalledWith(
@@ -375,6 +376,7 @@ describe("acceptInvitationAction", () => {
 				action: "USER_INVITE_ACCEPTED",
 				actorId: "user_new",
 				resourceId: "inv_1",
+				headers: mockHeaders,
 			}),
 		);
 	});
