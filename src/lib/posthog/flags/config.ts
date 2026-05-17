@@ -3,6 +3,22 @@ import { defineConfigFlag } from "./define";
 import { bannerConfigSchema } from "./schemas/banner";
 
 /**
+ * Toggles the admin login chooser. When enabled, the login page presents
+ * Magic Link + Apple + Google as method options. When disabled (default),
+ * the login form goes straight to the magic-link state — there are no
+ * other providers to pick from.
+ *
+ * Apple/Google buttons are visually present but inert until OAuth is
+ * wired up in F4 (client portal).
+ */
+export const isAdminLoginExtraProvidersEnabled = defineConfigFlag({
+	key: "admin-login-extra-providers",
+	description: "Mostra Apple/Google no chooser do login do admin",
+	schema: z.boolean(),
+	defaultValue: false,
+});
+
+/**
  * Centralizes the logo text vertically. Boolean visual variant.
  */
 export const isLogoTextCentered = defineConfigFlag({
@@ -38,6 +54,7 @@ export const irpfBanner = defineConfigFlag({
 });
 
 export const allFlags = {
+	isAdminLoginExtraProvidersEnabled,
 	isLogoTextCentered,
 	socialProofType,
 	irpfBanner,

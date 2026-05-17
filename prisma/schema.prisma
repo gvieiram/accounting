@@ -67,3 +67,239 @@ enum ContactStatus {
   WON
   LOST
 }
+
+// === Better Auth core (F1a) ===
+
+enum UserRole {
+  ADMIN
+  CLIENT
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  role          UserRole  @default(CLIENT)
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  revokedAt     DateTime?
+
+  accounts         Account[]
+  sessions         Session[]
+  userClients      UserClient[]
+  auditLogs        AuditLog[]   @relation("AuditLogActor")
+  invitationsSent  Invitation[] @relation("InvitationInvitedBy")
+
+  @@index([email])
+  @@index([revokedAt])
+}
+
+model Invitation {
+  id          String    @id @default(cuid())
+  email       String
+  name        String?
+  role        UserRole  @default(ADMIN)
+  tokenHash   String    @unique
+  expiresAt   DateTime
+  invitedById String
+  acceptedAt  DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  invitedBy User @relation("InvitationInvitedBy", fields: [invitedById], references: [id], onDelete: Restrict)
+
+  @@index([email])
+  @@index([tokenHash])
+  @@index([expiresAt])
+  @@index([acceptedAt])
+  @@index([revokedAt])
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  userId                String
+  providerId            String
+  accountId             String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@index([expiresAt])
+}
+
+// === Client (F1a) ===
+
+enum ClientType {
+  PF
+  PJ
+}
+
+enum TaxRegime {
+  MEI
+  SIMPLES_NACIONAL
+  LUCRO_PRESUMIDO
+  LUCRO_REAL
+}
+
+enum ClientStatus {
+  ACTIVE
+  PROSPECT
+  INACTIVE
+  CHURNED
+}
+
+model Client {
+  id String @id @default(cuid())
+
+  type      ClientType
+  legalName String
+  tradeName String?
+  document  String     @unique // CPF (PF) ou CNPJ (PJ), só dígitos
+
+  taxRegime         TaxRegime?
+  stateRegistration String?
+  cityRegistration  String?
+
+  segment String?
+
+  primaryEmail String
+  primaryPhone String
+  contactName  String
+
+  zipCode      String?
+  street       String?
+  number       String?
+  complement   String?
+  neighborhood String?
+  city         String?
+  state        String?
+
+  additionalContacts Json?
+
+  parentClientId String?
+  parentClient   Client?  @relation("ClientBranches", fields: [parentClientId], references: [id], onDelete: Restrict)
+  branches       Client[] @relation("ClientBranches")
+
+  status        ClientStatus @default(ACTIVE)
+  internalNotes String?
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  archivedAt DateTime?
+
+  userClients UserClient[]
+
+  @@index([type])
+  @@index([taxRegime])
+  @@index([status])
+  @@index([archivedAt])
+  @@index([legalName])
+  @@index([parentClientId])
+}
+
+// === N:N preparado para F4 ===
+
+enum UserClientRole {
+  OWNER
+  VIEWER
+}
+
+model UserClient {
+  id        String         @id @default(cuid())
+  userId    String
+  clientId  String
+  role      UserClientRole @default(VIEWER)
+  createdAt DateTime       @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clientId])
+  @@index([userId])
+  @@index([clientId])
+}
+
+// === Audit log (F1a) ===
+
+enum AuditAction {
+  USER_LOGIN_SUCCESS
+  USER_LOGIN_FAILED
+  USER_LOGOUT
+  USER_ACCESS_DENIED
+  MAGIC_LINK_SENT
+  MAGIC_LINK_USED
+  USER_INVITED
+  USER_INVITE_RESENT
+  USER_INVITE_CANCELLED
+  USER_INVITE_ACCEPTED
+  USER_REACTIVATED
+  USER_REVOKED
+  CLIENT_CREATED
+  CLIENT_UPDATED
+  CLIENT_DELETED
+  CLIENT_RESTORED
+}
+
+model AuditLog {
+  id String @id @default(cuid())
+
+  actorId    String?
+  actorEmail String?
+
+  action       AuditAction
+  resourceType String?
+  resourceId   String?
+
+  metadata  Json?
+  ipAddress String?
+  userAgent String?
+
+  createdAt DateTime @default(now())
+
+  actor User? @relation("AuditLogActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId, createdAt])
+  @@index([resourceType, resourceId])
+  @@index([action, createdAt])
+  @@index([createdAt])
+}

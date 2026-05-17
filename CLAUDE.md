@@ -6,11 +6,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Institutional site and future digital platform for **DuoHub Gestão Contábil**, a Brazilian accounting/consulting firm serving micro and small businesses (MEI, ME, EPP), startups, and freelancers.
 
-Product direction and technical decisions live alongside the code:
+Product direction, roadmap, architecture, security decisions, and delivery
+context live in the user's Zé Papagaio vault, not in this repository's local
+`docs/` directory.
 
-- [`docs/roadmap.md`](./docs/roadmap.md) — product phases (F0 IR page → F1 admin foundation → F2 proposals → F3 free tools → F4 client portal).
-- [`docs/architecture.md`](./docs/architecture.md) — full technical reference (stack, route structure, security). Always consult this before introducing a new capability.
-- [`docs/ci-cd.md`](./docs/ci-cd.md) — deployment pipeline.
+- **Do not consult `docs/roadmap.md`, `docs/architecture.md`, or
+  `docs/ci-cd.md` as sources of truth.** They are stale and kept only as legacy
+  project artifacts.
+- Before introducing a new capability or making a product/architecture/security
+  decision, query Zé Papagaio / the Obsidian vault at
+  `/Users/gvieiram/cofre/ai-zepapagaio`.
+- Prefer the MCP tools `vault-rag`, `vault-graph`, and `obsidian` when
+  available. If MCP is unavailable in the current session, use the local `ze`
+  CLI or read the vault files directly.
 
 ## Commands
 
@@ -54,7 +62,8 @@ Existing tests cover env validation, rate limiting, the IRPF feature (schemas, a
 - **Biome** for linting and formatting (source of truth — not ESLint/Prettier)
 - Deployed on **Vercel**
 
-**Planned for F1+** (do not introduce before the phase lands — see `docs/architecture.md`):
+**Planned for F1+** (do not introduce before confirming the phase/status in the
+Zé Papagaio vault):
 
 - **Postgres** via Neon + **Prisma** (ORM) — F1a
 - **Better Auth** (auth, admin + client roles) — F1a
@@ -225,7 +234,8 @@ Design system: **Dark Teal** (primary) + **Terracota** (accent). Defined as CSS 
 
 ## Security & Configuration
 
-For the full security model see `docs/architecture.md#segurança`. Non-negotiables any change must respect:
+For the full security model, consult the Zé Papagaio vault. Non-negotiables any
+change must respect:
 
 - **Never commit secrets.** `.env*` is ignored by default; commit only `.env.example` with empty/dummy values.
 - **Validate env vars** with `@t3-oss/env-nextjs` (introduced in F1a). Separate `server` and `client` schemas to prevent bundle leaks.
@@ -233,4 +243,4 @@ For the full security model see `docs/architecture.md#segurança`. Non-negotiabl
 - **No personal data in logs** (CPF, CNPJ, email, phone). Never include personal data in URLs or query strings.
 - **Audit log:** every sensitive action (create client, send proposal, login, etc.) writes to the `AuditLog` table. Required for accounting context and incident review.
 - **Rate limit** all public endpoints: `/api/auth/*`, lead submissions, public proposal links, free tools.
-- **Digital certificates (F1b+):** `.pfx` files and passwords use envelope encryption with a KEK stored in **Infisical**. Never store them in plaintext, never log them, never cache decrypted content on disk. Every access writes to `CertificateAccessLog`. See `docs/architecture.md#certificado-digital-f1b--f4`.
+- **Digital certificates (F1b+):** `.pfx` files and passwords use envelope encryption with a KEK stored in **Infisical**. Never store them in plaintext, never log them, never cache decrypted content on disk. Every access writes to `CertificateAccessLog`. Confirm current certificate-handling details in the Zé Papagaio vault before implementation.

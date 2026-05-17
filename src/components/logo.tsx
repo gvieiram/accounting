@@ -98,6 +98,11 @@ type LogoProps = {
 	size?: LogoSize;
 	subtitleClassName?: string;
 	showSubtitle?: boolean;
+	/**
+	 * When true, hides the brand wordmark ("DuoHub") and renders only the
+	 * SVG icon. Used by the admin sidebar in its collapsed state.
+	 */
+	iconOnly?: boolean;
 	animated?: boolean;
 	/**
 	 * When true, vertically centers the brand text with the icon.
@@ -112,6 +117,7 @@ export function Logo({
 	size = "md",
 	subtitleClassName,
 	showSubtitle = true,
+	iconOnly = false,
 	animated = true,
 	isCentered = false,
 }: LogoProps) {
@@ -127,45 +133,47 @@ export function Logo({
 			<motion.div variants={logoVariants}>
 				<LogoIcon size={logo} />
 			</motion.div>
-			<div className={cn("flex flex-col", isCentered && "items-center")}>
-				<motion.div variants={textRevealVariants} className="overflow-hidden">
-					<span
-						className={cn(
-							"flex select-none whitespace-nowrap font-logo font-semibold tracking-wide",
-							text,
-						)}
-					>
-						{LETTERS.map((letter, i) => (
-							<motion.span
-								// biome-ignore lint/suspicious/noArrayIndexKey: static list with duplicate chars needs index for unique keys
-								key={`${letter.char}-${i}`}
-								variants={letterVariants}
-								custom={letter.delay}
-								className={letter.color}
-							>
-								{letter.char}
-							</motion.span>
-						))}
-					</span>
-				</motion.div>
-				{showSubtitle && (
-					<motion.div
-						variants={subtitleWrapVariants}
-						className="overflow-hidden"
-					>
-						<motion.span
-							variants={subtitleVariants}
+			{!iconOnly && (
+				<div className={cn("flex flex-col", isCentered && "items-center")}>
+					<motion.div variants={textRevealVariants} className="overflow-hidden">
+						<span
 							className={cn(
-								"block select-none font-medium font-subtitle text-primary uppercase tracking-[0.28em]",
-								subtitle,
-								subtitleClassName,
+								"flex select-none whitespace-nowrap font-logo font-semibold tracking-wide",
+								text,
 							)}
 						>
-							{company.brand.subtitle}
-						</motion.span>
+							{LETTERS.map((letter, i) => (
+								<motion.span
+									// biome-ignore lint/suspicious/noArrayIndexKey: static list with duplicate chars needs index for unique keys
+									key={`${letter.char}-${i}`}
+									variants={letterVariants}
+									custom={letter.delay}
+									className={letter.color}
+								>
+									{letter.char}
+								</motion.span>
+							))}
+						</span>
 					</motion.div>
-				)}
-			</div>
+					{showSubtitle && (
+						<motion.div
+							variants={subtitleWrapVariants}
+							className="overflow-hidden"
+						>
+							<motion.span
+								variants={subtitleVariants}
+								className={cn(
+									"block select-none font-medium font-subtitle text-primary uppercase tracking-[0.28em]",
+									subtitle,
+									subtitleClassName,
+								)}
+							>
+								{company.brand.subtitle}
+							</motion.span>
+						</motion.div>
+					)}
+				</div>
+			)}
 		</motion.div>
 	);
 }

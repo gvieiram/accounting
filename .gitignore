@@ -50,3 +50,5 @@ docs/design/**
 
 .cursor/previews
 .previews/**
+
+.worktrees/

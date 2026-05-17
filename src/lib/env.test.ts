@@ -41,6 +41,7 @@ describe("env", () => {
 			INTERNAL_CONTACT_EMAIL: "contato@example.com",
 			UPSTASH_REDIS_REST_URL: "https://example.upstash.io",
 			UPSTASH_REDIS_REST_TOKEN: "token",
+			BETTER_AUTH_SECRET: "a".repeat(32),
 			NEXT_PUBLIC_SITE_URL: "https://example.com",
 			NEXT_PUBLIC_POSTHOG_TOKEN: "phc_test_key",
 			NEXT_PUBLIC_POSTHOG_HOST: "https://us.i.posthog.com",
@@ -68,6 +69,7 @@ describe("env", () => {
 			INTERNAL_CONTACT_EMAIL: "contato@example.com",
 			UPSTASH_REDIS_REST_URL: "https://example.upstash.io",
 			UPSTASH_REDIS_REST_TOKEN: "token",
+			BETTER_AUTH_SECRET: "a".repeat(32),
 			NEXT_PUBLIC_SITE_URL: undefined,
 			NEXT_PUBLIC_POSTHOG_TOKEN: undefined,
 			NEXT_PUBLIC_POSTHOG_HOST: undefined,
@@ -94,6 +96,7 @@ describe("env", () => {
 			INTERNAL_CONTACT_EMAIL: "contato@example.com",
 			UPSTASH_REDIS_REST_URL: "https://example.upstash.io",
 			UPSTASH_REDIS_REST_TOKEN: "token",
+			BETTER_AUTH_SECRET: "a".repeat(32),
 			NEXT_PUBLIC_VERCEL_ENV: "staging",
 			SKIP_ENV_VALIDATION: undefined,
 		};
@@ -101,6 +104,78 @@ describe("env", () => {
 		await expect(async () => {
 			await import("./env");
 		}).rejects.toThrow();
+
+		process.env = original;
+	});
+
+	it("rejects BETTER_AUTH_SECRET shorter than 32 characters", async () => {
+		vi.resetModules();
+		const original = process.env;
+		process.env = {
+			...original,
+			DATABASE_URL: "postgresql://u:p@h/d?sslmode=require",
+			DIRECT_URL: "postgresql://u:p@h/d?sslmode=require",
+			RESEND_API_KEY: "re_test_key",
+			INTERNAL_CONTACT_EMAIL: "contato@example.com",
+			UPSTASH_REDIS_REST_URL: "https://example.upstash.io",
+			UPSTASH_REDIS_REST_TOKEN: "token",
+			BETTER_AUTH_SECRET: "short",
+			INITIAL_ADMIN_EMAIL: undefined,
+			INITIAL_ADMIN_NAME: undefined,
+			SKIP_ENV_VALIDATION: undefined,
+		};
+
+		await expect(async () => {
+			await import("./env");
+		}).rejects.toThrow();
+
+		process.env = original;
+	});
+
+	it("rejects INITIAL_ADMIN_EMAIL when present but malformed", async () => {
+		vi.resetModules();
+		const original = process.env;
+		process.env = {
+			...original,
+			DATABASE_URL: "postgresql://u:p@h/d?sslmode=require",
+			DIRECT_URL: "postgresql://u:p@h/d?sslmode=require",
+			RESEND_API_KEY: "re_test_key",
+			INTERNAL_CONTACT_EMAIL: "contato@example.com",
+			UPSTASH_REDIS_REST_URL: "https://example.upstash.io",
+			UPSTASH_REDIS_REST_TOKEN: "token",
+			BETTER_AUTH_SECRET: "a".repeat(32),
+			INITIAL_ADMIN_EMAIL: "not-an-email",
+			INITIAL_ADMIN_NAME: undefined,
+			SKIP_ENV_VALIDATION: undefined,
+		};
+
+		await expect(async () => {
+			await import("./env");
+		}).rejects.toThrow();
+
+		process.env = original;
+	});
+
+	it("loads when INITIAL_ADMIN_EMAIL is absent (optional)", async () => {
+		vi.resetModules();
+		const original = process.env;
+		process.env = {
+			...original,
+			DATABASE_URL: "postgresql://u:p@h/d?sslmode=require",
+			DIRECT_URL: "postgresql://u:p@h/d?sslmode=require",
+			RESEND_API_KEY: "re_test_key",
+			INTERNAL_CONTACT_EMAIL: "contato@example.com",
+			UPSTASH_REDIS_REST_URL: "https://example.upstash.io",
+			UPSTASH_REDIS_REST_TOKEN: "token",
+			BETTER_AUTH_SECRET: "a".repeat(32),
+			INITIAL_ADMIN_EMAIL: undefined,
+			INITIAL_ADMIN_NAME: undefined,
+			SKIP_ENV_VALIDATION: undefined,
+		};
+
+		const mod = await import("./env");
+		expect(mod.env.BETTER_AUTH_SECRET.length).toBeGreaterThanOrEqual(32);
+		expect(mod.env.INITIAL_ADMIN_EMAIL).toBeUndefined();
 
 		process.env = original;
 	});

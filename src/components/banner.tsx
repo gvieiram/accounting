@@ -45,10 +45,14 @@ export function Banner({
 	>("pending");
 	const scrolled = useScroll(10);
 
+	const isHiddenPath = ["/admin", "/app", "/login", "/post-login"].some(
+		(prefix) => pathname.startsWith(prefix),
+	);
 	const isPathAllowed =
-		!enabledOnPaths || enabledOnPaths.length === 0
+		!isHiddenPath &&
+		(!enabledOnPaths || enabledOnPaths.length === 0
 			? true
-			: enabledOnPaths.includes(pathname);
+			: enabledOnPaths.includes(pathname));
 
 	const shouldShow = state === "visible" && (position === "bottom" || scrolled);
 	const isDismissing = state === "dismissing";
