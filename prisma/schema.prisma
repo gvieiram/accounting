@@ -86,11 +86,11 @@ model User {
   updatedAt     DateTime  @updatedAt
   revokedAt     DateTime?
 
-  accounts         Account[]
-  sessions         Session[]
-  userClients      UserClient[]
-  auditLogs        AuditLog[]   @relation("AuditLogActor")
-  invitationsSent  Invitation[] @relation("InvitationInvitedBy")
+  accounts        Account[]
+  sessions        Session[]
+  userClients     UserClient[]
+  auditLogs       AuditLog[]   @relation("AuditLogActor")
+  invitationsSent Invitation[] @relation("InvitationInvitedBy")
 
   @@index([email])
   @@index([revokedAt])
@@ -302,4 +302,30 @@ model AuditLog {
   @@index([resourceType, resourceId])
   @@index([action, createdAt])
   @@index([createdAt])
+}
+
+// === Proposals (F2) ===
+
+enum ProposalTemplateKey {
+  DESENQUADRAMENTO
+  REESTRUTURACAO
+  ABERTURA
+  TRANSFERENCIA
+  ENTREGA_ANUAL_MEI
+  ANALISE_CONTABIL
+}
+
+enum ProposalTemplateCategory {
+  CONTINUOUS
+  ONE_OFF
+}
+
+enum ProposalStatus {
+  DRAFT
+  PUBLISHED
+  SENT
+  ACCEPTED
+  DECLINED
+  CANCELLED
+  EXPIRED
 }
