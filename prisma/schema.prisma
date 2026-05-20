@@ -337,3 +337,40 @@ enum ProposalStatus {
   CANCELLED
   EXPIRED
 }
+
+model ProposalTemplate {
+  id       String                   @id @default(cuid())
+  key      ProposalTemplateKey      @unique
+  name     String
+  category ProposalTemplateCategory
+  isActive Boolean                  @default(true)
+
+  currentVersionId String?                  @unique
+  currentVersion   ProposalTemplateVersion? @relation("CurrentVersion", fields: [currentVersionId], references: [id], onDelete: SetNull)
+
+  versions  ProposalTemplateVersion[] @relation("TemplateVersions")
+  proposals Proposal[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProposalTemplateVersion {
+  id         String           @id @default(cuid())
+  templateId String
+  template   ProposalTemplate @relation("TemplateVersions", fields: [templateId], references: [id], onDelete: Cascade)
+
+  version        Int
+  fieldsSchema   Json
+  defaultContent Json
+
+  createdById String
+  createdBy   User     @relation("ProposalTemplateVersionsCreated", fields: [createdById], references: [id], onDelete: Restrict)
+  createdAt   DateTime @default(now())
+
+  currentOf ProposalTemplate? @relation("CurrentVersion")
+  proposals Proposal[]
+
+  @@unique([templateId, version])
+  @@index([templateId])
+}
