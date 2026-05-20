@@ -86,11 +86,14 @@ model User {
   updatedAt     DateTime  @updatedAt
   revokedAt     DateTime?
 
-  accounts        Account[]
-  sessions        Session[]
-  userClients     UserClient[]
-  auditLogs       AuditLog[]   @relation("AuditLogActor")
-  invitationsSent Invitation[] @relation("InvitationInvitedBy")
+  accounts                 Account[]
+  sessions                 Session[]
+  userClients              UserClient[]
+  auditLogs                AuditLog[]                 @relation("AuditLogActor")
+  invitationsSent          Invitation[]               @relation("InvitationInvitedBy")
+  proposalsCreated         Proposal[]                 @relation("ProposalsCreated")
+  proposalsPublished       ProposalPublishedVersion[] @relation("ProposalsPublished")
+  proposalTemplateVersions ProposalTemplateVersion[]  @relation("ProposalTemplateVersionsCreated")
 
   @@index([email])
   @@index([revokedAt])
@@ -228,6 +231,7 @@ model Client {
   archivedAt DateTime?
 
   userClients UserClient[]
+  proposals   Proposal[]
 
   @@index([type])
   @@index([taxRegime])
@@ -373,4 +377,63 @@ model ProposalTemplateVersion {
 
   @@unique([templateId, version])
   @@index([templateId])
+}
+
+model Proposal {
+  id String @id @default(cuid())
+
+  templateId        String
+  template          ProposalTemplate        @relation(fields: [templateId], references: [id], onDelete: Restrict)
+  templateVersionId String
+  templateVersion   ProposalTemplateVersion @relation(fields: [templateVersionId], references: [id], onDelete: Restrict)
+
+  clientId     String?
+  client       Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  prospectData Json?
+
+  editableContent Json @default("{}")
+
+  mainAmount      Decimal? @db.Decimal(12, 2)
+  recurringAmount Decimal? @db.Decimal(12, 2)
+  currency        String   @default("BRL")
+  commercialData  Json     @default("{}")
+
+  status    ProposalStatus @default(DRAFT)
+  expiresAt DateTime?
+
+  publicTokenHash String?   @unique
+  firstViewedAt   DateTime?
+  lastViewedAt    DateTime?
+
+  createdById String
+  createdBy   User   @relation("ProposalsCreated", fields: [createdById], references: [id], onDelete: Restrict)
+
+  cancelledAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  publishedVersions ProposalPublishedVersion[]
+
+  @@index([status, createdAt])
+  @@index([clientId])
+  @@index([status, expiresAt])
+}
+
+model ProposalPublishedVersion {
+  id         String   @id @default(cuid())
+  proposalId String
+  proposal   Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+
+  version         Int
+  templateKey     ProposalTemplateKey
+  templateVersion Int
+  snapshot        Json
+  renderedHtml    String              @db.Text
+
+  publishedById String
+  publishedBy   User     @relation("ProposalsPublished", fields: [publishedById], references: [id], onDelete: Restrict)
+  publishedAt   DateTime @default(now())
+
+  @@unique([proposalId, version])
+  @@index([proposalId])
 }
