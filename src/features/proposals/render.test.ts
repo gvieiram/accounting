@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { getNested, renderField, renderTemplate } from "../render";
-import type { FieldMetadata } from "../types";
+import { getNested, renderField, renderTemplate } from "./render";
+import type { FieldMetadata } from "./types";
 
 describe("getNested", () => {
 	it("returns top-level value", () => {

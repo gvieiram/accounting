@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatBRL, formatDateBR } from "../format";
+import { formatBRL, formatDateBR } from "./format";
 
 // Intl.NumberFormat for pt-BR emits a non-breaking space (U+00A0)
 // between the currency symbol and the digits.

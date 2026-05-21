@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
-import { allTemplates } from "../templates";
+import { allTemplates } from "./templates";
 
 /** Extracts all `{{path}}` placeholders from HTML, deduplicated. */
 function extractPlaceholders(html: string): string[] {
