@@ -51,4 +51,6 @@ docs/design/**
 .cursor/previews
 .previews/**
 
-.worktrees/
+.worktrees/**
+.superpowers/**
+docs/superpowers
