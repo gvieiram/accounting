@@ -86,11 +86,14 @@ model User {
   updatedAt     DateTime  @updatedAt
   revokedAt     DateTime?
 
-  accounts         Account[]
-  sessions         Session[]
-  userClients      UserClient[]
-  auditLogs        AuditLog[]   @relation("AuditLogActor")
-  invitationsSent  Invitation[] @relation("InvitationInvitedBy")
+  accounts                 Account[]
+  sessions                 Session[]
+  userClients              UserClient[]
+  auditLogs                AuditLog[]                 @relation("AuditLogActor")
+  invitationsSent          Invitation[]               @relation("InvitationInvitedBy")
+  proposalsCreated         Proposal[]                 @relation("ProposalsCreated")
+  proposalsPublished       ProposalPublishedVersion[] @relation("ProposalsPublished")
+  proposalTemplateVersions ProposalTemplateVersion[]  @relation("ProposalTemplateVersionsCreated")
 
   @@index([email])
   @@index([revokedAt])
@@ -228,6 +231,7 @@ model Client {
   archivedAt DateTime?
 
   userClients UserClient[]
+  proposals   Proposal[]
 
   @@index([type])
   @@index([taxRegime])
@@ -278,6 +282,14 @@ enum AuditAction {
   CLIENT_UPDATED
   CLIENT_DELETED
   CLIENT_RESTORED
+  PROPOSAL_CREATED
+  PROPOSAL_PUBLISHED
+  PROPOSAL_MARKED_SENT
+  PROPOSAL_ACCEPTED
+  PROPOSAL_DECLINED
+  PROPOSAL_CANCELLED
+  PROPOSAL_TOKEN_ROTATED
+  PROPOSAL_TEMPLATE_UPDATED
 }
 
 model AuditLog {
@@ -302,4 +314,126 @@ model AuditLog {
   @@index([resourceType, resourceId])
   @@index([action, createdAt])
   @@index([createdAt])
+}
+
+// === Proposals (F2) ===
+
+enum ProposalTemplateKey {
+  DESENQUADRAMENTO
+  REESTRUTURACAO
+  ABERTURA
+  TRANSFERENCIA
+  ENTREGA_ANUAL_MEI
+  ANALISE_CONTABIL
+}
+
+enum ProposalTemplateCategory {
+  CONTINUOUS
+  ONE_OFF
+}
+
+enum ProposalStatus {
+  DRAFT
+  PUBLISHED
+  SENT
+  ACCEPTED
+  DECLINED
+  CANCELLED
+  EXPIRED
+}
+
+model ProposalTemplate {
+  id       String                   @id @default(cuid())
+  key      ProposalTemplateKey      @unique
+  name     String
+  category ProposalTemplateCategory
+  isActive Boolean                  @default(true)
+
+  currentVersionId String?                  @unique
+  currentVersion   ProposalTemplateVersion? @relation("CurrentVersion", fields: [currentVersionId], references: [id], onDelete: SetNull)
+
+  versions  ProposalTemplateVersion[] @relation("TemplateVersions")
+  proposals Proposal[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProposalTemplateVersion {
+  id         String           @id @default(cuid())
+  templateId String
+  template   ProposalTemplate @relation("TemplateVersions", fields: [templateId], references: [id], onDelete: Cascade)
+
+  version        Int
+  fieldsSchema   Json
+  defaultContent Json
+
+  createdById String
+  createdBy   User     @relation("ProposalTemplateVersionsCreated", fields: [createdById], references: [id], onDelete: Restrict)
+  createdAt   DateTime @default(now())
+
+  currentOf ProposalTemplate? @relation("CurrentVersion")
+  proposals Proposal[]
+
+  @@unique([templateId, version])
+  @@index([templateId])
+}
+
+model Proposal {
+  id String @id @default(cuid())
+
+  templateId        String
+  template          ProposalTemplate        @relation(fields: [templateId], references: [id], onDelete: Restrict)
+  templateVersionId String
+  templateVersion   ProposalTemplateVersion @relation(fields: [templateVersionId], references: [id], onDelete: Restrict)
+
+  clientId     String?
+  client       Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  prospectData Json?
+
+  editableContent Json @default("{}")
+
+  mainAmount      Decimal? @db.Decimal(12, 2)
+  recurringAmount Decimal? @db.Decimal(12, 2)
+  currency        String   @default("BRL")
+  commercialData  Json     @default("{}")
+
+  status    ProposalStatus @default(DRAFT)
+  expiresAt DateTime?
+
+  publicTokenHash String?   @unique
+  firstViewedAt   DateTime?
+  lastViewedAt    DateTime?
+
+  createdById String
+  createdBy   User   @relation("ProposalsCreated", fields: [createdById], references: [id], onDelete: Restrict)
+
+  cancelledAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  publishedVersions ProposalPublishedVersion[]
+
+  @@index([status, createdAt])
+  @@index([clientId])
+  @@index([status, expiresAt])
+}
+
+model ProposalPublishedVersion {
+  id         String   @id @default(cuid())
+  proposalId String
+  proposal   Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+
+  version         Int
+  templateKey     ProposalTemplateKey
+  templateVersion Int
+  snapshot        Json
+  renderedHtml    String              @db.Text
+
+  publishedById String
+  publishedBy   User     @relation("ProposalsPublished", fields: [publishedById], references: [id], onDelete: Restrict)
+  publishedAt   DateTime @default(now())
+
+  @@unique([proposalId, version])
+  @@index([proposalId])
 }
