@@ -161,3 +161,112 @@ describe("saveProposalSection", () => {
 		expect(r.success).toBe(false);
 	});
 });
+
+describe("publishProposal", () => {
+	beforeEach(() => {
+		proposalFindUnique.mockReset();
+		transactionMock.mockReset();
+		clientFindUnique.mockReset();
+	});
+
+	it("publishes DRAFT, creates snapshot + renderedHtml + token", async () => {
+		proposalFindUnique.mockResolvedValue({
+			id: "p1",
+			status: "DRAFT",
+			clientId: "c1",
+			prospectData: null,
+			editableContent: {
+				summary: {
+					text: "Resumo executivo completo da proposta de desenquadramento.",
+				},
+				budget: {
+					modality: "Mensal",
+					monthlyRevenue: "Até R$ 30.000",
+					invoiceLimitDescription: "Sem limite",
+				},
+				extra: { title: "Extra", description: "Descrição" },
+				terms: {
+					validityText: "30 dias",
+					billingDay: "10",
+					noticePeriod: "30 dias",
+				},
+			},
+			mainAmount: 500,
+			recurringAmount: 400,
+			currency: "BRL",
+			commercialData: {},
+			expiresAt: new Date("2026-07-01"),
+			publicTokenHash: null,
+			template: {
+				key: "DESENQUADRAMENTO",
+				category: "CONTINUOUS",
+				currentVersion: { version: 1 },
+			},
+			templateVersion: { version: 1 },
+			client: { id: "c1", legalName: "Acme", document: "12345678000190" },
+		});
+
+		const createPV = vi.fn().mockResolvedValue({ id: "pv-1", version: 1 });
+		transactionMock.mockImplementation(async (fn) => {
+			return fn({
+				proposal: {
+					findUnique: proposalFindUnique,
+					update: proposalUpdateMock,
+				},
+				proposalPublishedVersion: {
+					count: vi.fn().mockResolvedValue(0),
+					create: createPV,
+				},
+				client: { findUnique: clientFindUnique, create: vi.fn() },
+			});
+		});
+
+		const r = await actions.publishProposal({
+			proposalId: "p1",
+			commercial: {
+				category: "CONTINUOUS",
+				recurringAmount: 400,
+				currency: "BRL",
+				expiresAt: "2026-07-01",
+			},
+		});
+		expect(r.success).toBe(true);
+		if (r.success) {
+			expect(r.data.publicUrl).toMatch(/^http:\/\/localhost:3000\/propostas\//);
+		}
+		expect(createPV).toHaveBeenCalledWith(
+			expect.objectContaining({
+				data: expect.objectContaining({
+					proposalId: "p1",
+					version: 1,
+					renderedHtml: expect.any(String),
+					snapshot: expect.objectContaining({
+						editableContent: expect.any(Object),
+					}),
+				}),
+			}),
+		);
+		expect(auditWriteMock).toHaveBeenCalledWith(
+			expect.objectContaining({ action: "PROPOSAL_PUBLISHED" }),
+		);
+	});
+
+	it("rejects publish on non-DRAFT", async () => {
+		proposalFindUnique.mockResolvedValue({
+			id: "p1",
+			status: "PUBLISHED",
+			template: { category: "CONTINUOUS" },
+			templateVersion: { version: 1 },
+		});
+		const r = await actions.publishProposal({
+			proposalId: "p1",
+			commercial: {
+				category: "CONTINUOUS",
+				recurringAmount: 400,
+				currency: "BRL",
+				expiresAt: "2026-07-01",
+			},
+		});
+		expect(r.success).toBe(false);
+	});
+});
