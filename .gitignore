@@ -44,13 +44,7 @@ next-env.d.ts
 /src/generated/prisma
 
 # docs
-docs/plans/**
-docs/assets/**
-docs/design/**
-
-.cursor/previews
-.previews/**
+!docs/plans/**
 
 .worktrees/**
 .superpowers/**
-docs/superpowers

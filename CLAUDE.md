@@ -4,18 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Context
 
-  Digital platform for **DuoHub Gestão Contábil**, a Brazilian accounting/consulting firm serving micro and small businesses (MEI, ME, EPP), startups, and freelancers.
+Digital platform for **DuoHub Gestão Contábil**, a Brazilian accounting/consulting firm serving micro and small businesses (MEI, ME, EPP), startups, and freelancers.
 
-Product direction, roadmap, architecture, security decisions, and delivery
-context live in the user's Zé Papagaio vault, not in this repository's local
-`docs/` directory.
+Product direction, roadmap, architecture, security decisions, and delivery context live in the user's Zé Papagaio vault, not in this repository's local `docs/` directory.
 
-- Before introducing a new capability or making a product/architecture/security
-  decision, query Zé Papagaio / the Obsidian vault at
-  `/Users/gvieiram/cofre/ai-zepapagaio`.
-- Prefer the MCP tools `vault-rag`, `vault-graph`, and `obsidian` when
-  available. If MCP is unavailable in the current session, use the local `ze`
-  CLI or read the vault files directly.
+- **`CLAUDE.md` is the single canonical agent instruction file.** `AGENTS.md` exists only as a pointer for agents that look for that filename.
+- Before introducing a new capability or making a product/architecture/security decision, query Zé Papagaio / the Obsidian vault at `/Users/gvieiram/cofre/ai-zepapagaio`.
+- Prefer the MCP tools `vault-rag`, `vault-graph`, and `obsidian` when available. If MCP is unavailable in the current session, use the local `ze` CLI or read the vault files directly.
+- Git worktrees for this project must be created under the repository-local `.worktrees/` directory, e.g. `/Users/gvieiram/projects/duohub/.worktrees/<branch-slug>/`. Do not use `.superpowers/` or global Superpowers worktree directories for DuoHub.
+
+### Documentation Lifecycle
+
+Repository documentation is an execution aid, not the long-term product memory.
+
+- Durable roadmap, architecture, security, and product decisions belong in the Zé Papagaio vault.
+- Feature specs and implementation plans may live in the repo while active, but they must be marked current, archived, or removed after the feature ships.
+- Stale repository docs must not be treated as source of truth. Replace them with pointers to the vault, archive them only when they still have historical value, or delete them.
+- SpecKit/Superpowers artifacts are feature harness artifacts. After implementation, persist only durable decisions to Zé Papagaio and clean up temporary execution docs.
 
 ## Commands
 
@@ -115,11 +120,11 @@ src/app/
 
 **Rendering rules (inviolable):**
 
-| Area              | Strategy        | Forbidden in this area                                             |
-| ----------------- | --------------- | ------------------------------------------------------------------ |
-| `(marketing)`     | Static / ISR    | `cookies()`, `headers()`, `noStore()`, `fetch({ cache: "no-store" })`, dynamic Server Actions |
-| `(public-app)`    | Dynamic         | *(free)*                                                           |
-| `admin`, `app`    | Dynamic, no-cache | *(free)*                                                         |
+| Area           | Strategy          | Forbidden in this area                                                                        |
+| -------------- | ----------------- | --------------------------------------------------------------------------------------------- |
+| `(marketing)`  | Static / ISR      | `cookies()`, `headers()`, `noStore()`, `fetch({ cache: "no-store" })`, dynamic Server Actions |
+| `(public-app)` | Dynamic           | _(free)_                                                                                      |
+| `admin`, `app` | Dynamic, no-cache | _(free)_                                                                                      |
 
 Marketing must remain statically renderable. Reading cookies/headers anywhere under `(marketing)` silently breaks static generation — treat it as a bug.
 
@@ -161,7 +166,7 @@ Existing top-level section components (`hero.tsx`, `about-section.tsx`, etc.) ar
 - **Queries:** Server Components fetch directly via Prisma. No client-side fetching for admin or portal data.
 - **Mutations:** Server Actions (`"use server"`) for admin and portal. Do not add REST API routes for internal CRUD.
 - **Route Handlers (`/api`):** only for Better Auth, webhooks, and truly public endpoints (e.g., lead submission from a static form in F0).
-- **Validation:** every Server Action parses input with Zod *before* any logic. No exceptions.
+- **Validation:** every Server Action parses input with Zod _before_ any logic. No exceptions.
 
 ### Auth Guard Pattern (F1+)
 
@@ -203,11 +208,11 @@ export const config = {
 
 ### Robots, Metadata, Sitemap
 
-| Area                  | `metadata.robots`                                     | In sitemap? |
-| --------------------- | ----------------------------------------------------- | ----------- |
-| `(marketing)`         | indexable (default)                                   | yes         |
-| `/admin`, `/app`      | `{ index: false, follow: false, nocache: true }`      | no          |
-| `/propostas/[token]`  | `{ index: false, follow: false }` + `Cache-Control: no-store` | no |
+| Area                 | `metadata.robots`                                             | In sitemap? |
+| -------------------- | ------------------------------------------------------------- | ----------- |
+| `(marketing)`        | indexable (default)                                           | yes         |
+| `/admin`, `/app`     | `{ index: false, follow: false, nocache: true }`              | no          |
+| `/propostas/[token]` | `{ index: false, follow: false }` + `Cache-Control: no-store` | no          |
 
 ### Page Structure
 
