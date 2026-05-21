@@ -24,34 +24,32 @@ function flattenZodPaths(schema: z.ZodTypeAny, prefix = "content"): string[] {
 }
 
 describe("template parity", () => {
-	it.each(allTemplates)(
-		"$key — placeholders, schema, and metadata stay in sync",
-		(template) => {
-			const placeholders = extractPlaceholders(template.html);
-			const schemaPaths = flattenZodPaths(template.schema).sort();
-			const metadataPaths = Object.keys(template.metadata).sort();
+	it.each(
+		allTemplates,
+	)("$key — placeholders, schema, and metadata stay in sync", (template) => {
+		const placeholders = extractPlaceholders(template.html);
+		const schemaPaths = flattenZodPaths(template.schema).sort();
+		const metadataPaths = Object.keys(template.metadata).sort();
 
-			expect(metadataPaths).toEqual(schemaPaths);
+		expect(metadataPaths).toEqual(schemaPaths);
 
-			const contentPlaceholders = placeholders
-				.filter((p) => p.startsWith("content."))
-				.sort();
-			expect(contentPlaceholders).toEqual(schemaPaths);
+		const contentPlaceholders = placeholders
+			.filter((p) => p.startsWith("content."))
+			.sort();
+		expect(contentPlaceholders).toEqual(schemaPaths);
 
-			for (const path of schemaPaths) {
-				expect(template.html).toContain(`{{${path}}}`);
-			}
-		},
-	);
+		for (const path of schemaPaths) {
+			expect(template.html).toContain(`{{${path}}}`);
+		}
+	});
 
-	it.each(allTemplates)(
-		"$key — defaultContent satisfies the schema",
-		(template) => {
-			const result = template.schema.safeParse(template.defaultContent);
-			if (!result.success) {
-				console.error(result.error.flatten());
-			}
-			expect(result.success).toBe(true);
-		},
-	);
+	it.each(
+		allTemplates,
+	)("$key — defaultContent satisfies the schema", (template) => {
+		const result = template.schema.safeParse(template.defaultContent);
+		if (!result.success) {
+			console.error(result.error.flatten());
+		}
+		expect(result.success).toBe(true);
+	});
 });

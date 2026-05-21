@@ -13,9 +13,7 @@ export function formatBRL(value: number | null | undefined): string {
 	return BRL_FORMATTER.format(value);
 }
 
-export function formatDateBR(
-	value: Date | string | null | undefined,
-): string {
+export function formatDateBR(value: Date | string | null | undefined): string {
 	if (value === null || value === undefined) return "";
 	const date = value instanceof Date ? value : new Date(value);
 	if (Number.isNaN(date.getTime())) return "";

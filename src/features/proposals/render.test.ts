@@ -31,9 +31,7 @@ describe("renderField", () => {
 	});
 
 	it("renders multiline with escape applied before <br>", () => {
-		expect(renderField("<a>\n<b>", "multiline")).toBe(
-			"&lt;a&gt;<br>&lt;b&gt;",
-		);
+		expect(renderField("<a>\n<b>", "multiline")).toBe("&lt;a&gt;<br>&lt;b&gt;");
 	});
 
 	it("renders currency as BRL", () => {
@@ -87,8 +85,7 @@ describe("renderTemplate", () => {
 	});
 
 	it("replaces multiple placeholders", () => {
-		const html =
-			"<p>{{content.greeting}}, valor {{commercial.mainAmount}}</p>";
+		const html = "<p>{{content.greeting}}, valor {{commercial.mainAmount}}</p>";
 		const data = {
 			content: { greeting: "Olá" },
 			commercial: { mainAmount: 1500 },
