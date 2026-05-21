@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import type { z } from "zod";
 
 import { Prisma } from "@/generated/prisma/client";
+import type { ProposalStatus } from "@/generated/prisma/enums";
 import { auditLog } from "@/lib/audit/log";
 import { requireAdmin } from "@/lib/auth/helpers";
 import { db } from "@/lib/db";
@@ -14,6 +15,7 @@ import { normalizeDocument } from "./normalize-document";
 import { renderTemplate } from "./render";
 import { buildRenderData } from "./render-proposal";
 import {
+	cancelProposalSchema,
 	createProposalDraftSchema,
 	proposalIdSchema,
 	publishProposalCommercialSchema,
@@ -302,4 +304,114 @@ export async function publishProposal(input: {
 			publicUrl: result.publicUrl,
 		},
 	};
+}
+
+// biome-ignore-start lint/style/useNamingConvention: keys mirror Prisma ProposalStatus enum values
+const ALLOWED_TRANSITIONS: Record<ProposalStatus, ProposalStatus[]> = {
+	DRAFT: ["PUBLISHED", "CANCELLED"],
+	PUBLISHED: ["SENT", "CANCELLED"],
+	SENT: ["ACCEPTED", "DECLINED", "CANCELLED"],
+	ACCEPTED: [],
+	DECLINED: [],
+	CANCELLED: [],
+	EXPIRED: [],
+};
+// biome-ignore-end lint/style/useNamingConvention: keys mirror Prisma ProposalStatus enum values
+
+async function transitionProposal(
+	proposalId: string,
+	to: ProposalStatus,
+	auditAction:
+		| "PROPOSAL_MARKED_SENT"
+		| "PROPOSAL_ACCEPTED"
+		| "PROPOSAL_DECLINED"
+		| "PROPOSAL_CANCELLED",
+	extraData: Record<string, unknown> = {},
+	auditMetadata: Record<string, unknown> = {},
+): Promise<ActionResult> {
+	const session = await requireAdmin();
+	const proposal = await db.proposal.findUnique({
+		where: { id: proposalId },
+		select: { id: true, status: true },
+	});
+	if (!proposal) return { success: false, error: "Proposta não encontrada" };
+	if (!ALLOWED_TRANSITIONS[proposal.status].includes(to)) {
+		return {
+			success: false,
+			error: `Transição inválida: ${proposal.status} → ${to}`,
+		};
+	}
+
+	await db.proposal.update({
+		where: { id: proposalId },
+		data: {
+			status: to,
+			cancelledAt: to === "CANCELLED" ? new Date() : undefined,
+			...extraData,
+		} as Prisma.ProposalUncheckedUpdateInput,
+	});
+
+	await auditLog.write({
+		action: auditAction,
+		actorId: session.user.id,
+		actorEmail: session.user.email,
+		resourceType: "Proposal",
+		resourceId: proposalId,
+		metadata: auditMetadata,
+		headers: await headers(),
+	});
+
+	revalidatePath(`/admin/proposals/${proposalId}`);
+	revalidatePath("/admin/proposals");
+	return { success: true };
+}
+
+export async function markProposalSent(input: {
+	proposalId: string;
+}): Promise<ActionResult> {
+	const parsed = proposalIdSchema.safeParse(input);
+	if (!parsed.success) return { success: false, error: "Dados inválidos" };
+	return transitionProposal(
+		parsed.data.proposalId,
+		"SENT",
+		"PROPOSAL_MARKED_SENT",
+	);
+}
+
+export async function acceptProposal(input: {
+	proposalId: string;
+}): Promise<ActionResult> {
+	const parsed = proposalIdSchema.safeParse(input);
+	if (!parsed.success) return { success: false, error: "Dados inválidos" };
+	return transitionProposal(
+		parsed.data.proposalId,
+		"ACCEPTED",
+		"PROPOSAL_ACCEPTED",
+	);
+}
+
+export async function declineProposal(input: {
+	proposalId: string;
+}): Promise<ActionResult> {
+	const parsed = proposalIdSchema.safeParse(input);
+	if (!parsed.success) return { success: false, error: "Dados inválidos" };
+	return transitionProposal(
+		parsed.data.proposalId,
+		"DECLINED",
+		"PROPOSAL_DECLINED",
+	);
+}
+
+export async function cancelProposal(
+	input: z.infer<typeof cancelProposalSchema>,
+): Promise<ActionResult> {
+	const parsed = cancelProposalSchema.safeParse(input);
+	if (!parsed.success) return { success: false, error: "Dados inválidos" };
+	return transitionProposal(
+		parsed.data.proposalId,
+		"CANCELLED",
+		"PROPOSAL_CANCELLED",
+		{},
+		parsed.data.reason ? { reason: parsed.data.reason } : {},
+	);
 }

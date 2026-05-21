@@ -270,3 +270,55 @@ describe("publishProposal", () => {
 		expect(r.success).toBe(false);
 	});
 });
+
+describe("transitions", () => {
+	beforeEach(() => {
+		proposalFindUnique.mockReset();
+		proposalUpdateMock.mockReset();
+	});
+
+	it("markProposalSent PUBLISHED→SENT", async () => {
+		proposalFindUnique.mockResolvedValue({ id: "p", status: "PUBLISHED" });
+		const r = await actions.markProposalSent({ proposalId: "p" });
+		expect(r.success).toBe(true);
+		expect(proposalUpdateMock).toHaveBeenCalledWith(
+			expect.objectContaining({
+				data: expect.objectContaining({ status: "SENT" }),
+			}),
+		);
+	});
+
+	it("rejects markProposalSent on DRAFT", async () => {
+		proposalFindUnique.mockResolvedValue({ id: "p", status: "DRAFT" });
+		expect((await actions.markProposalSent({ proposalId: "p" })).success).toBe(
+			false,
+		);
+	});
+
+	it("cancelProposal sets cancelledAt", async () => {
+		proposalFindUnique.mockResolvedValue({ id: "p", status: "PUBLISHED" });
+		await actions.cancelProposal({ proposalId: "p", reason: "dup" });
+		expect(proposalUpdateMock).toHaveBeenCalledWith(
+			expect.objectContaining({
+				data: expect.objectContaining({
+					status: "CANCELLED",
+					cancelledAt: expect.any(Date),
+				}),
+			}),
+		);
+	});
+
+	it("acceptProposal SENT→ACCEPTED", async () => {
+		proposalFindUnique.mockResolvedValue({ id: "p", status: "SENT" });
+		expect((await actions.acceptProposal({ proposalId: "p" })).success).toBe(
+			true,
+		);
+	});
+
+	it("declineProposal SENT→DECLINED", async () => {
+		proposalFindUnique.mockResolvedValue({ id: "p", status: "SENT" });
+		expect((await actions.declineProposal({ proposalId: "p" })).success).toBe(
+			true,
+		);
+	});
+});
