@@ -415,3 +415,44 @@ export async function cancelProposal(
 		parsed.data.reason ? { reason: parsed.data.reason } : {},
 	);
 }
+
+export async function rotateToken(input: {
+	proposalId: string;
+}): Promise<ActionResult<{ publicUrl: string }>> {
+	const session = await requireAdmin();
+	const parsed = proposalIdSchema.safeParse(input);
+	if (!parsed.success) return { success: false, error: "Dados inválidos" };
+
+	const proposal = await db.proposal.findUnique({
+		where: { id: parsed.data.proposalId },
+		select: { id: true, status: true },
+	});
+	if (!proposal) return { success: false, error: "Proposta não encontrada" };
+	if (proposal.status === "DRAFT" || proposal.status === "CANCELLED") {
+		return {
+			success: false,
+			error: "Não há token para rotacionar neste estado",
+		};
+	}
+
+	const newToken = generateToken();
+	await db.proposal.update({
+		where: { id: parsed.data.proposalId },
+		data: { publicTokenHash: hashToken(newToken) },
+	});
+
+	await auditLog.write({
+		action: "PROPOSAL_TOKEN_ROTATED",
+		actorId: session.user.id,
+		actorEmail: session.user.email,
+		resourceType: "Proposal",
+		resourceId: parsed.data.proposalId,
+		headers: await headers(),
+	});
+
+	revalidatePath(`/admin/proposals/${parsed.data.proposalId}`);
+	return {
+		success: true,
+		data: { publicUrl: `${getSiteUrl()}/propostas/${newToken}` },
+	};
+}

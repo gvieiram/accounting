@@ -322,3 +322,33 @@ describe("transitions", () => {
 		);
 	});
 });
+
+describe("rotateToken", () => {
+	beforeEach(() => {
+		proposalFindUnique.mockReset();
+		proposalUpdateMock.mockReset();
+	});
+
+	it("rotates for PUBLISHED", async () => {
+		proposalFindUnique.mockResolvedValue({ id: "p", status: "PUBLISHED" });
+		const r = await actions.rotateToken({ proposalId: "p" });
+		expect(r.success).toBe(true);
+		if (r.success) {
+			expect(r.data.publicUrl).toMatch(/^http:\/\/localhost:3000\/propostas\//);
+		}
+		expect(proposalUpdateMock).toHaveBeenCalledWith(
+			expect.objectContaining({
+				data: expect.objectContaining({
+					publicTokenHash: expect.stringMatching(/^[0-9a-f]{64}$/),
+				}),
+			}),
+		);
+	});
+
+	it("rejects rotate on DRAFT", async () => {
+		proposalFindUnique.mockResolvedValue({ id: "p", status: "DRAFT" });
+		expect((await actions.rotateToken({ proposalId: "p" })).success).toBe(
+			false,
+		);
+	});
+});
