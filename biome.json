@@ -15,7 +15,8 @@
 			"!dist",
 			"!build",
 			"!coverage",
-			"!.previews"
+			"!.previews",
+			"!src/features/proposals/templates/**/*.html"
 		]
 	},
 	"formatter": {
