@@ -4,15 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Context
 
-Institutional site and future digital platform for **DuoHub Gestão Contábil**, a Brazilian accounting/consulting firm serving micro and small businesses (MEI, ME, EPP), startups, and freelancers.
+  Digital platform for **DuoHub Gestão Contábil**, a Brazilian accounting/consulting firm serving micro and small businesses (MEI, ME, EPP), startups, and freelancers.
 
 Product direction, roadmap, architecture, security decisions, and delivery
 context live in the user's Zé Papagaio vault, not in this repository's local
 `docs/` directory.
 
-- **Do not consult `docs/roadmap.md`, `docs/architecture.md`, or
-  `docs/ci-cd.md` as sources of truth.** They are stale and kept only as legacy
-  project artifacts.
 - Before introducing a new capability or making a product/architecture/security
   decision, query Zé Papagaio / the Obsidian vault at
   `/Users/gvieiram/cofre/ai-zepapagaio`.
