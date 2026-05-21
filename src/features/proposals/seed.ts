@@ -30,27 +30,39 @@ export async function seedProposalTemplates(opts: {
 		});
 
 		if (existing) {
-			console.log(
-				`✓ Template ${t.key} already has version ${existing.version}. Skipping.`,
-			);
+			if (!template.currentVersionId) {
+				await db.proposalTemplate.update({
+					where: { id: template.id },
+					data: { currentVersionId: existing.id },
+				});
+				console.log(
+					`✓ Template ${t.key} had orphan version ${existing.version}, repaired currentVersionId.`,
+				);
+			} else {
+				console.log(
+					`✓ Template ${t.key} already has version ${existing.version}. Skipping.`,
+				);
+			}
 			continue;
 		}
 
 		const fieldsSchema = z.toJSONSchema(t.schema);
 
-		const version = await db.proposalTemplateVersion.create({
-			data: {
-				templateId: template.id,
-				version: 1,
-				fieldsSchema: fieldsSchema as object,
-				defaultContent: t.defaultContent as object,
-				createdById: systemUserId,
-			},
-		});
+		await db.$transaction(async (tx) => {
+			const version = await tx.proposalTemplateVersion.create({
+				data: {
+					templateId: template.id,
+					version: 1,
+					fieldsSchema: fieldsSchema as object,
+					defaultContent: t.defaultContent as object,
+					createdById: systemUserId,
+				},
+			});
 
-		await db.proposalTemplate.update({
-			where: { id: template.id },
-			data: { currentVersionId: version.id },
+			await tx.proposalTemplate.update({
+				where: { id: template.id },
+				data: { currentVersionId: version.id },
+			});
 		});
 
 		console.log(`✓ Seeded template ${t.key} with version 1.`);
