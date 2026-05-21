@@ -33,6 +33,13 @@ export function renderField(value: unknown, kind: FieldKind): string {
 	}
 }
 
+export function inferKindFromValue(value: unknown): FieldKind {
+	if (Array.isArray(value)) return "list";
+	if (value instanceof Date) return "date";
+	if (typeof value === "number") return "currency";
+	return "text";
+}
+
 export function renderTemplate(
 	html: string,
 	data: Record<string, unknown>,
@@ -40,7 +47,7 @@ export function renderTemplate(
 ): string {
 	return html.replace(/\{\{([\w.]+)\}\}/g, (_match, path: string) => {
 		const value = getNested(data, path);
-		const kind = metadata[path]?.kind ?? "text";
+		const kind = metadata[path]?.kind ?? inferKindFromValue(value);
 		return renderField(value, kind);
 	});
 }

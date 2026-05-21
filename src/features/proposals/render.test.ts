@@ -132,7 +132,7 @@ describe("renderTemplate", () => {
 		expect(renderTemplate(html, data, metadata)).toBe("<p></p>");
 	});
 
-	it("defaults to text kind when metadata is missing for placeholder", () => {
+	it("infers text kind from string when metadata is missing", () => {
 		const html = "<p>{{client.name}}</p>";
 		const data = {
 			content: {},
@@ -142,6 +142,42 @@ describe("renderTemplate", () => {
 		};
 		expect(renderTemplate(html, data, metadata)).toBe(
 			"<p>&lt;b&gt;Acme&lt;/b&gt;</p>",
+		);
+	});
+
+	it("infers currency from number when metadata is missing", () => {
+		const html = "<p>{{commercial.mainAmount}}</p>";
+		const data = {
+			content: {},
+			commercial: { mainAmount: 1500 },
+			client: {},
+			proposal: {},
+		};
+		const result = renderTemplate(html, data, metadata);
+		expect(result).toMatch(/R\$.*1\.500,00/);
+	});
+
+	it("infers date from Date when metadata is missing", () => {
+		const html = "<p>{{proposal.expiresAt}}</p>";
+		const data = {
+			content: {},
+			commercial: {},
+			client: {},
+			proposal: { expiresAt: new Date("2026-05-19T12:00:00Z") },
+		};
+		expect(renderTemplate(html, data, metadata)).toBe("<p>19/05/2026</p>");
+	});
+
+	it("infers list from array when metadata is missing", () => {
+		const html = "<p>{{commercial.items}}</p>";
+		const data = {
+			content: {},
+			commercial: { items: ["a", "b"] },
+			client: {},
+			proposal: {},
+		};
+		expect(renderTemplate(html, data, metadata)).toBe(
+			"<p><ul><li>a</li><li>b</li></ul></p>",
 		);
 	});
 });
