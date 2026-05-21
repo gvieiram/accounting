@@ -107,3 +107,57 @@ describe("createProposalDraft", () => {
 		expect(r.success).toBe(false);
 	});
 });
+
+describe("saveProposalSection", () => {
+	beforeEach(() => {
+		proposalFindUnique.mockReset();
+		proposalUpdateMock.mockReset();
+		proposalFindUnique.mockResolvedValue({
+			id: "p1",
+			status: "DRAFT",
+			editableContent: { existing: { ok: true } },
+		});
+	});
+
+	it("merges into editableContent without audit", async () => {
+		const r = await actions.saveProposalSection({
+			proposalId: "p1",
+			sectionKey: "summary",
+			sectionData: { text: "novo" },
+		});
+		expect(r.success).toBe(true);
+		expect(proposalUpdateMock).toHaveBeenCalledWith({
+			where: { id: "p1" },
+			data: {
+				editableContent: {
+					existing: { ok: true },
+					summary: { text: "novo" },
+				},
+			},
+		});
+		expect(auditWriteMock).not.toHaveBeenCalled();
+	});
+
+	it("rejects when not DRAFT", async () => {
+		proposalFindUnique.mockResolvedValue({
+			id: "p1",
+			status: "PUBLISHED",
+			editableContent: {},
+		});
+		const r = await actions.saveProposalSection({
+			proposalId: "p1",
+			sectionKey: "summary",
+			sectionData: { text: "x" },
+		});
+		expect(r.success).toBe(false);
+	});
+
+	it("rejects empty sectionKey", async () => {
+		const r = await actions.saveProposalSection({
+			proposalId: "p1",
+			sectionKey: "",
+			sectionData: {},
+		});
+		expect(r.success).toBe(false);
+	});
+});

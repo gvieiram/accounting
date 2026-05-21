@@ -10,7 +10,10 @@ import { requireAdmin } from "@/lib/auth/helpers";
 import { db } from "@/lib/db";
 
 import { normalizeDocument } from "./normalize-document";
-import { createProposalDraftSchema } from "./schemas";
+import {
+	createProposalDraftSchema,
+	saveProposalSectionSchema,
+} from "./schemas";
 
 export type ActionResult<T = void> =
 	| ({ success: true } & (T extends void ? object : { data: T }))
@@ -65,4 +68,32 @@ export async function createProposalDraft(
 	revalidatePath("/admin/proposals");
 
 	return { success: true, data: { proposalId: proposal.id } };
+}
+
+export async function saveProposalSection(
+	input: z.infer<typeof saveProposalSectionSchema>,
+): Promise<ActionResult> {
+	await requireAdmin();
+	const parsed = saveProposalSectionSchema.safeParse(input);
+	if (!parsed.success) return { success: false, error: "Dados inválidos" };
+
+	const proposal = await db.proposal.findUnique({
+		where: { id: parsed.data.proposalId },
+		select: { id: true, status: true, editableContent: true },
+	});
+	if (!proposal) return { success: false, error: "Proposta não encontrada" };
+	if (proposal.status !== "DRAFT")
+		return { success: false, error: "Apenas rascunhos podem ser editados" };
+
+	const current = (proposal.editableContent as Record<string, unknown>) ?? {};
+	await db.proposal.update({
+		where: { id: parsed.data.proposalId },
+		data: {
+			editableContent: {
+				...current,
+				[parsed.data.sectionKey]: parsed.data.sectionData,
+			} as Prisma.InputJsonValue,
+		},
+	});
+	return { success: true };
 }
