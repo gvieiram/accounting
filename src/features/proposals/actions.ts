@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import type { z } from "zod";
+import { z } from "zod";
 
 import { Prisma } from "@/generated/prisma/client";
 import type { ProposalStatus } from "@/generated/prisma/enums";
@@ -455,4 +455,39 @@ export async function rotateToken(input: {
 		success: true,
 		data: { publicUrl: `${getSiteUrl()}/propostas/${newToken}` },
 	};
+}
+
+export async function promoteProspectToActive(input: {
+	clientId: string;
+}): Promise<ActionResult> {
+	const session = await requireAdmin();
+	const schema = z.object({ clientId: z.string().min(1) });
+	const parsed = schema.safeParse(input);
+	if (!parsed.success) return { success: false, error: "Dados inválidos" };
+
+	const client = await db.client.findUnique({
+		where: { id: parsed.data.clientId },
+		select: { id: true, status: true, legalName: true },
+	});
+	if (!client) return { success: false, error: "Cliente não encontrado" };
+	if (client.status !== "PROSPECT")
+		return { success: false, error: "Cliente já está ativo" };
+
+	await db.client.update({
+		where: { id: parsed.data.clientId },
+		data: { status: "ACTIVE" },
+	});
+
+	await auditLog.write({
+		action: "CLIENT_UPDATED",
+		actorId: session.user.id,
+		actorEmail: session.user.email,
+		resourceType: "Client",
+		resourceId: parsed.data.clientId,
+		metadata: { promotedFrom: "PROSPECT" },
+		headers: await headers(),
+	});
+
+	revalidatePath(`/admin/clients/${parsed.data.clientId}`);
+	return { success: true };
 }

@@ -352,3 +352,31 @@ describe("rotateToken", () => {
 		);
 	});
 });
+
+describe("promoteProspectToActive", () => {
+	beforeEach(() => {
+		clientFindUnique.mockReset();
+		clientUpdateMock.mockReset();
+	});
+
+	it("promotes PROSPECT→ACTIVE", async () => {
+		clientFindUnique.mockResolvedValue({
+			id: "c1",
+			status: "PROSPECT",
+			legalName: "A",
+		});
+		const r = await actions.promoteProspectToActive({ clientId: "c1" });
+		expect(r.success).toBe(true);
+		expect(clientUpdateMock).toHaveBeenCalledWith({
+			where: { id: "c1" },
+			data: { status: "ACTIVE" },
+		});
+	});
+
+	it("rejects when already ACTIVE", async () => {
+		clientFindUnique.mockResolvedValue({ id: "c1", status: "ACTIVE" });
+		expect(
+			(await actions.promoteProspectToActive({ clientId: "c1" })).success,
+		).toBe(false);
+	});
+});
