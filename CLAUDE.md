@@ -125,17 +125,29 @@ o harness (skills, comandos, colisões) em
 
 **Fatia vertical** é a unidade — uma capacidade que o usuário percebe, atravessando schema
 → action → UI → teste. Uma fatia por PR. Se você não consegue completar *"agora eu consigo
-___"*, não é fatia.
+___"*, não é fatia. Teto: **≤600 linhas de produção** (teste fora da conta); 600-1000
+justifica; >1000 divide.
 
-**Dois portões inegociáveis:**
+**Três portões inegociáveis:**
 
+0. Protótipo aprovado antes de fatiar, quando a feature tem UI relevante. Serve para
+   responder "eu gosto disso?" antes de seis fatias construídas.
 1. `ready-for-agent` no ticket — sem a label, ninguém implementa. Faltou informação? Pare e
    diga o que falta; **não preencha a lacuna sozinho**.
 2. Conferência humana no navegador — o agente roda `pnpm test`, sobe `pnpm dev` e entrega a
    lista de aceite para Gustavo conferir. Só então vai para PR.
 
+**Antes de escrever código**, a fatia passa pelo Architecture Gate
+([`docs/architecture.md`](./docs/architecture.md)) — colocação, dependência, vocabulário,
+constraints, ADRs. Falhou: para e discute.
+
+**Invariantes que valem sempre** (detalhe em `workflow.md`): green-state (não consegue
+deixar verde? reverte a fatia inteira) · uma fatia por vez, descoberta vai pro resumo e não
+pro diff · não gold-plate · ambiguidade = perguntar · retry diagnóstico máximo 2 ciclos ·
+sem comentário que não seja o *porquê* não-óbvio.
+
 **Barra de teste** — schema, action, e formulário (erro no campo + submit pendente). Nada
-além. Sem meta de cobertura.
+além. Sem meta de cobertura. Declare a camada de cada um; o viés é marcar tudo como unit.
 
 **Nunca escreva *como implementar* em ticket, spec ou ADR.** Isso se decide na hora, com o
 código na frente. Planos gigantes escritos antes de olhar o código são a causa raiz que

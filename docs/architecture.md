@@ -4,6 +4,11 @@ O Next.js é **unopinionated** sobre organização de projeto — a doc oficial 
 três estratégias. O duohub usa a primeira: `app/` só para roteamento, o resto em pastas
 irmãs. Isso é escolha deliberada, não desvio.
 
+> **Como ler este documento.** Não basta "ler a arquitetura" — leitura vaga perde restrição
+> nas fases seguintes. Ao carregar este arquivo, **extraia e liste** como restrições ativas:
+> as regras de camada e a direção de dependência, onde cada tipo de arquivo mora, e as
+> convenções de nome. Carregue essa lista adiante; ela é o insumo do Architecture Gate.
+
 ## As quatro pastas
 
 | Pasta | Papel | Como saber |
@@ -102,6 +107,25 @@ skeleton nenhum.
 
 Contrato em [`design/README.md`](./design/README.md). Os quatro estados fazem parte do
 aceite da fatia, não são polimento posterior.
+
+## Architecture Gate
+
+Checagem **bloqueante antes de escrever qualquer código**, em toda fatia. Entrada: os
+arquivos do campo `Arquivos` do ticket, mais o que a exploração revelou.
+
+1. **Colocação** — cada arquivo cai na pasta certa pelas regras acima?
+2. **Direção de dependência** — os imports planejados respeitam a fronteira? Nada de fora
+   alcançando o interior de uma feature.
+3. **Vocabulário de domínio** — tipos, funções e variáveis novos usam os termos
+   estabelecidos? Termo inventado é sinal de que falta entendimento, não de criatividade.
+4. **Constraints do ticket** — cada regra do campo `Constraints` está respeitada?
+5. **ADRs** — a mudança contradiz algum ADR de `docs/adr/`? Se contradiz, **traga à tona**
+   em vez de sobrescrever em silêncio.
+
+**Falhou qualquer item: pare e discuta.** Não prossiga até resolver.
+
+O gate existe porque o `dependency-cruiser` roda no build — depois. A decisão de onde o
+arquivo mora é tomada antes, e é aí que custa barato corrigir.
 
 ## Legado
 

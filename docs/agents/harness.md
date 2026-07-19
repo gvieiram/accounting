@@ -78,18 +78,23 @@ Se algo disparar quando você não esperava, provavelmente é colisão. Remover 
 ```
 ideia
  └─ /grill-with-docs      decide; ADR em docs/adr/ quando couber
-     └─ /to-spec          docs/features/<f>/spec.md (teto 1-2 páginas)
-         └─ /to-tickets   DUO-xx no Linear, uma fatia vertical cada
-             └─ PORTÃO 1  label ready-for-agent — sem ela, ninguém implementa
-                 └─ /implement    uma fatia, /tdd por dentro
-                     └─ PORTÃO 2  Gustavo confere no navegador
-                         └─ /code-review
-                             └─ PR
+     └─ /to-spec          docs/specs/<f>/spec.md (teto 1-2 páginas)
+         └─ /prototype    fluxo completo, descartável, mock data
+             └─ PORTÃO 0  "eu gosto disso?" — antes de fatiar
+                 └─ /to-tickets   DUO-xx no Linear, uma fatia vertical cada
+                     └─ PORTÃO 1  label ready-for-agent
+                         └─ /implement    uma fatia, /tdd por dentro
+                             └─ PORTÃO 2  Gustavo confere no navegador
+                                 └─ /code-review
+                                     └─ PR
 ```
 
-Os dois portões são acréscimos nossos ao fluxo original, e cada um existe por um motivo
-concreto: o Portão 1 impede que uma lacuna de spec seja preenchida por invenção; o Portão 2
-impede que algo vá para a main sem alguém ter olhado a tela.
+Os três portões são acréscimos nossos ao fluxo original, cada um contra uma falha concreta:
+
+- **Portão 0** — cada fatia pode passar no seu aceite e o conjunto montado ficar sem graça.
+  Régua de fatia não protege contra isso; protótipo protege, e custa um dia.
+- **Portão 1** — impede que lacuna de spec seja preenchida por invenção.
+- **Portão 2** — impede que algo vá para a main sem alguém ter olhado a tela.
 
 ## Higiene de contexto
 
@@ -108,7 +113,9 @@ implementação errada aqui.
 | [`issue-tracker.md`](./issue-tracker.md) | Linear, time DuoHub, como criar e ler issue |
 | [`triage-labels.md`](./triage-labels.md) | os cinco papéis e o portão `ready-for-agent` |
 | [`domain.md`](./domain.md) | onde ficam `CONTEXT.md` e ADRs |
-| [`workflow.md`](./workflow.md) | as regras do fluxo |
+| [`workflow.md`](./workflow.md) | as regras do fluxo, invariantes e portões |
+| [`templates/ticket.md`](./templates/ticket.md) | formato do ticket (aceite, Reference, Constraints, Test) |
+| [`templates/spec.md`](./templates/spec.md) | formato do spec, delta spec e arquivamento |
 | [`../architecture.md`](../architecture.md) | as regras do código |
 | [`../design/README.md`](../design/README.md) | contrato dos quatro estados |
 
