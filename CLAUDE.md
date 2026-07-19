@@ -1,243 +1,197 @@
-# CLAUDE.md
+# duohub
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Sistema de um **escritório de contabilidade brasileiro**. Não é SaaS multi-tenant: existe
+um escritório, e `Client` é cliente **dele**.
 
-## Project Context
+> **Consequência direta:** não há escopo de tenant. Query não precisa filtrar por
+> organização, e não invente esse filtro "por segurança" — ele não existe no modelo.
 
-  Digital platform for **DuoHub Gestão Contábil**, a Brazilian accounting/consulting firm serving micro and small businesses (MEI, ME, EPP), startups, and freelancers.
+Quatro superfícies no mesmo app Next.js:
 
-Product direction, roadmap, architecture, security decisions, and delivery
-context live in the user's Zé Papagaio vault, not in this repository's local
-`docs/` directory.
+| Superfície | Quem usa | Escala |
+| --- | --- | --- |
+| `admin` | as contadoras do escritório | ~4 pessoas, uso diário e intenso |
+| `app` | os clientes do escritório | 15 hoje, **vai escalar muito** com o lançamento da plataforma |
+| `(marketing)` | público, inclui a landing de imposto de renda | — |
+| `(public-app)` | login, convite, pós-login | — |
 
-- Before introducing a new capability or making a product/architecture/security
-  decision, query Zé Papagaio / the Obsidian vault at
-  `/Users/gvieiram/cofre/ai-zepapagaio`.
-- Prefer the MCP tools `vault-rag`, `vault-graph`, and `obsidian` when
-  available. If MCP is unavailable in the current session, use the local `ze`
-  CLI or read the vault files directly.
+Essa assimetria muda decisão: no `admin`, densidade e atalho valem mais que hand-holding —
+são quatro usuárias experientes, todo dia. No `app`, clareza vale mais que densidade, e
+paginação e performance de listagem importam de verdade, porque é o lado que cresce.
 
-## Commands
+## Regulatório
+
+LGPD se aplica, e legislação contábil também.
+
+- `AuditLog` é **obrigação**, não zelo. Não remova nem contorne a trilha de auditoria.
+- Dado pessoal de cliente (CPF/CNPJ, endereço, contato, informação financeira) é sensível:
+  não mande para PostHog, não coloque em log, não exponha em URL.
+- Retenção e prazos específicos ainda **não estão confirmados** — ao mexer em exclusão de
+  dado ou em export, pergunte antes de assumir.
+
+Domínio central, pelo schema Prisma: `Client`, `User`/`UserClient`, `Contact`,
+`Proposal` (com `ProposalTemplate`, `ProposalTemplateVersion`,
+`ProposalPublishedVersion`) e `AuditLog`. Conceitos fiscais aparecem como enums —
+`TaxRegime`, `IrpfSituation`, `IrpfComplexity`, `IrpfMoment`.
+
+## Stack
+
+| Camada | Escolha |
+| --- | --- |
+| Framework | Next.js 16 (App Router), React 19 |
+| Dados | Prisma 7 + Neon (Postgres serverless) |
+| Auth | better-auth |
+| UI | shadcn/ui (`new-york`, base `slate`), Tailwind 4, Radix |
+| Estado | zustand |
+| Forms | react-hook-form + zod 4 |
+| Email | React Email + Resend |
+| Rate limit | Upstash Redis |
+| Lint/format | Biome |
+| Testes | Vitest + Testing Library |
+| Deploy | Vercel |
+
+Gerenciador de pacotes: **pnpm** (10.14.0). Node >= 20.9.
+
+## Comandos
 
 ```bash
-pnpm dev       # Start development server
-pnpm build     # Production build
-pnpm lint      # Biome check with safe autofixes
-pnpm format    # Biome format
+pnpm dev                # next dev
+pnpm build              # next build
+pnpm test               # vitest run
+pnpm test:watch
+pnpm test:coverage
+pnpm lint               # biome check --write
+pnpm format             # biome format --write
+
+pnpm db:migrate         # prisma migrate dev
+pnpm db:push
+pnpm db:seed
+pnpm db:studio
+pnpm db:reset
+
+pnpm email:dev          # preview de emails na :3333
 ```
 
-### Testing
-
-Tests run via **Vitest** with the React + Testing Library + jsdom stack:
-
-```bash
-pnpm test           # single run (CI mode)
-pnpm test:watch     # watch mode
-pnpm test:coverage  # coverage report (text + html)
-```
-
-Configuration lives in `vitest.config.ts`:
-
-- Environment: `jsdom`
-- Globals enabled (`describe` / `it` / `expect` available without imports)
-- Path alias `@/*` resolves via `vite-tsconfig-paths`
-- Setup file: `src/test/setup.ts` (loads `@testing-library/jest-dom` matchers)
-- Test discovery: `src/**/*.{test,spec}.{ts,tsx}` — co-located next to the source file (e.g., `actions.ts` → `actions.test.ts` in the same directory)
-- Coverage scope: `src/features/**` and `src/lib/**`
-
-Existing tests cover env validation, rate limiting, the IRPF feature (schemas, actions, utils), the IRPF modal stores, and infrastructure modules (`db`, `resend`, `site-url`).
-
-## Tech Stack
-
-**In use today:**
-
-- **Next.js 16** (App Router), **React 19**, Node >=20.9.0
-- **Tailwind CSS v4** with CSS variables for theming
-- **shadcn/ui** (new-york style) + **Radix UI** primitives
-- **Framer Motion** for animations
-- **Zustand** for client state
-- **Biome** for linting and formatting (source of truth — not ESLint/Prettier)
-- Deployed on **Vercel**
-
-**Planned for F1+** (do not introduce before confirming the phase/status in the
-Zé Papagaio vault):
-
-- **Postgres** via Neon + **Prisma** (ORM) — F1a
-- **Better Auth** (auth, admin + client roles) — F1a
-- **Resend** (transactional email) — F0
-- **Infisical** (KMS / key vault, envelope encryption for digital certificates) — F1b
-- **Cloudflare R2** as the primary storage provider — F1b (encrypted certificates) and F4 (general client documents)
-- **`@react-pdf/renderer`** (PDF generation) — F2
-- **Zod** + **`@t3-oss/env-nextjs`** (validation, env vars) — F1a
-- **Upstash Redis** + `@upstash/ratelimit` (rate limiting) — F0
-
-## Code Conventions
-
-- **Biome** enforces: tabs (width 2), line width 80, double quotes, semicolons, LF endings, kebab-case filenames, camelCase/PascalCase identifiers
-- **Code in English**, **content in Portuguese (pt-BR)**
-- Path alias: `@/*` → `./src/*`
-- Use `cn()` from `@/lib/utils` for all className merging (combines clsx + tailwind-merge)
-- Biome's `useSortedClasses` applies to: `cn()`, `cva()`, `clsx()`, `tw*` functions
-- Conventional commits: `feat:`, `fix:`, `docs:`, `chore:`, etc.
-- Branch naming convention: `feat/<DUO-01>/<feature-name>` or `fix/<DUO-01>/<bug-name>` or `chore/<DUO-01>/<task-name>`
-
-## Architecture
-
-### Content System
-
-All user-facing text lives in `src/content/` — **never hardcode content in components**. For new pages or distinct contexts, create a dedicated file (e.g., `src/content/messages/about.ts`) rather than extending existing ones:
-
-- `src/content/company.ts` — brand name, WhatsApp number, social links, `whatsappUrl(text)` helper
-- `src/content/messages/common.ts` — shared UI strings (nav, forms, a11y labels)
-- `src/content/messages/home.ts` — full landing page content (hero, features, about, testimonials, FAQ, CTA, footer)
-- `src/content/messages/index.ts` — re-exports combined messages object
-
-Access content in components via the Zustand store:
-
-```ts
-import { useCompany, useMessages } from "@/stores/use-content-store";
-const company = useCompany();
-const messages = useMessages();
-```
-
-### Route Structure (App Router)
-
-Routes are organised by audience using route groups and fixed top-level segments:
-
-```
-src/app/
-├── (marketing)/           # Public institutional site — STATIC / ISR
-├── (public-app)/          # Public dynamic routes (proposal link, etc.)
-├── admin/                 # Admin area — auth required, always dynamic
-├── app/                   # Client portal (F4) — auth required, always dynamic
-└── api/                   # Better Auth + webhooks
-```
-
-**Rendering rules (inviolable):**
-
-| Area              | Strategy        | Forbidden in this area                                             |
-| ----------------- | --------------- | ------------------------------------------------------------------ |
-| `(marketing)`     | Static / ISR    | `cookies()`, `headers()`, `noStore()`, `fetch({ cache: "no-store" })`, dynamic Server Actions |
-| `(public-app)`    | Dynamic         | *(free)*                                                           |
-| `admin`, `app`    | Dynamic, no-cache | *(free)*                                                         |
-
-Marketing must remain statically renderable. Reading cookies/headers anywhere under `(marketing)` silently breaks static generation — treat it as a bug.
-
-### Feature-First Code Organisation
-
-New domain code goes under `src/features/<feature>/`:
+## Organização
 
 ```
 src/
-├── app/                 # Routes
-├── components/
-│   ├── ui/             # shadcn primitives ONLY — do not add custom components here
-│   └── shared/         # Components used across features (Header, Footer, Banner, …)
-│
-├── features/            # Domain logic grouped by feature
-│   └── <feature>/
-│       ├── components/      # Feature-specific React components
-│       ├── schemas.ts       # Zod schemas
-│       ├── queries.ts       # Prisma reads (server)
-│       ├── actions.ts       # Server Actions (mutations)
-│       └── types.ts
-│
-├── lib/                 # Auth, db client, email, storage, pdf, env, utils
-├── content/             # pt-BR content (see Content System)
-├── stores/              # Zustand stores
-└── hooks/               # Cross-feature React hooks
+├── app/          rotas (App Router), agrupadas por superfície
+├── features/     auth · clients · irpf · proposals · users
+├── components/   ui/ = shadcn; o resto é compartilhado
+├── lib/          infra: auth, db, audit, posthog, env, ratelimit
+├── emails/       templates React Email
+├── stores/       zustand
+└── content/      mensagens
 ```
 
-**Placement rules:**
+## Padrões de código
 
-- Component used by a single feature → `features/<name>/components/`.
-- Component shared across features → `components/shared/`.
-- Raw shadcn primitive → `components/ui/`.
+Detalhe em **[`docs/architecture.md`](./docs/architecture.md)**. O essencial:
 
-Existing top-level section components (`hero.tsx`, `about-section.tsx`, etc.) are treated as shared marketing composition and may remain under `src/components/` until a migration pass moves them to `features/marketing/`.
+**Quatro pastas, uma regra cada.** `app/` rota · `features/<x>/` domínio ·
+`components/` UI sem domínio · `lib/` infra.
 
-### Data Fetching & Mutations
+**Teste de import** decide entre feature e rota: o componente importa de
+`@/features/<x>`? Então mora na feature. O critério é o import, não o nome.
 
-- **Queries:** Server Components fetch directly via Prisma. No client-side fetching for admin or portal data.
-- **Mutations:** Server Actions (`"use server"`) for admin and portal. Do not add REST API routes for internal CRUD.
-- **Route Handlers (`/api`):** only for Better Auth, webhooks, and truly public endpoints (e.g., lead submission from a static form in F0).
-- **Validation:** every Server Action parses input with Zod *before* any logic. No exceptions.
+**Porta de entrada.** Só `features/<x>/index.ts` é público; o resto é interno. De fora,
+`import { X } from "@/features/<x>"` — nunca caminho profundo. O `dependency-cruiser` que
+falha o build nisso é DUO-63; os `index.ts` são DUO-62. **Nenhum dos dois existe ainda.**
 
-### Auth Guard Pattern (F1+)
+**Contrato único de Server Action** via `defineAction` (sessão, zod com `fieldErrors`,
+erro do Prisma, auditoria), com escape hatch explícito. **É DUO-61 — `src/lib/action.ts`
+ainda não existe.** Não improvise um substituto.
 
-Sessions are validated on the server, inside protected layouts. The middleware only performs a cheap cookie existence check.
+**Carregamento** — Server Components + Suspense por região + skeleton ao lado do
+componente que ele representa. Nunca spinner de página inteira.
 
-```ts
-// src/app/admin/layout.tsx
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+**Estados** — as quatro situações de [`docs/design/README.md`](./docs/design/README.md)
+fazem parte do aceite da fatia.
 
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+### Legado
 
-  if (!session || session.user.role !== "admin") {
-    redirect("/login?next=/admin");
-  }
+**Nenhuma feature segue o padrão hoje** — não há `index.ts`, a UI de domínio vive nas rotas,
+e convivem dois contratos de action (`{ success }` e `{ ok }`). Detalhe e plano de migração
+em [`docs/architecture.md`](./docs/architecture.md#legado).
 
-  return <AdminShell user={session.user}>{children}</AdminShell>;
-}
-```
+**Não replique o que está lá.** Migração é preguiçosa — uma feature migra quando uma fatia
+encostar nela.
 
-**Forbidden:** `useSession` + redirect in `useEffect`. Flashes protected content and is bypassable.
+## Como o trabalho anda
 
-**Middleware** must keep its matcher restricted so marketing never pays the latency cost:
+Regras do fluxo em **[`docs/agents/workflow.md`](./docs/agents/workflow.md)**; como operar
+o harness (skills, comandos, colisões) em
+**[`docs/agents/harness.md`](./docs/agents/harness.md)**.
 
-```ts
-// src/middleware.ts
-export const config = {
-  matcher: ["/admin/:path*", "/app/:path*"],
-};
-```
+> **Antes de rodar `/to-spec` ou `/to-tickets`, leia `workflow.md` e o template
+> correspondente.** As skills têm comportamento padrão próprio — publicar a spec no tracker,
+> carimbar `ready-for-agent` em todo ticket — que **não** é o nosso. Os desvios estão em
+> [`issue-tracker.md`](./docs/agents/issue-tracker.md) e
+> [`triage-labels.md`](./docs/agents/triage-labels.md), que são os arquivos que as skills
+> leem sozinhas. O resto da documentação só chega até você por esta cadeia de links.
 
-### Robots, Metadata, Sitemap
+O essencial:
 
-| Area                  | `metadata.robots`                                     | In sitemap? |
-| --------------------- | ----------------------------------------------------- | ----------- |
-| `(marketing)`         | indexable (default)                                   | yes         |
-| `/admin`, `/app`      | `{ index: false, follow: false, nocache: true }`      | no          |
-| `/propostas/[token]`  | `{ index: false, follow: false }` + `Cache-Control: no-store` | no |
+**Fatia vertical** é a unidade — uma capacidade que o usuário percebe, atravessando schema
+→ action → UI → teste. Uma fatia por PR. Se você não consegue completar *"agora eu consigo
+___"*, não é fatia. Teto: **≤600 linhas de produção** (teste fora da conta); 600-1000
+justifica; >1000 divide.
 
-### Page Structure
+**Três portões inegociáveis:**
 
-`src/app/layout.tsx` renders: `<Providers>` (next-themes ThemeProvider) → `<Header>` → `{children}` → `<Banner>` (dismissible IR 2026 alert).
+0. Protótipo aprovado antes de fatiar, quando a feature tem UI relevante. Serve para
+   responder "eu gosto disso?" antes de seis fatias construídas.
+1. `ready-for-agent` no ticket — sem a label, ninguém implementa. Faltou informação? Pare e
+   diga o que falta; **não preencha a lacuna sozinho**.
+2. Conferência humana no navegador — o agente roda `pnpm test`, sobe `pnpm dev` e entrega a
+   lista de aceite para Gustavo conferir. Só então vai para PR.
 
-`src/app/page.tsx` composes the landing page by importing section components in order: HeroSection → LogosSection → StackedFeatures → AboutSection → TestimonialsSection → FaqSection → CtaSection → Footer.
+**Antes de escrever código**, a fatia passa pelo Architecture Gate
+([`docs/architecture.md`](./docs/architecture.md)) — colocação, dependência, vocabulário,
+constraints, ADRs. Falhou: para e discute.
 
-### Theming
+**Invariantes que valem sempre** (detalhe em `workflow.md`): green-state (não consegue
+deixar verde? reverte a fatia inteira) · uma fatia por vez, descoberta vai pro resumo e não
+pro diff · não gold-plate · ambiguidade = perguntar · retry diagnóstico máximo 2 ciclos ·
+sem comentário que não seja o *porquê* não-óbvio.
 
-Design system: **Dark Teal** (primary) + **Terracota** (accent). Defined as CSS custom properties in `src/app/globals.css`. Dark mode via `.dark` class (next-themes manages toggling). Fonts: Plus Jakarta Sans (body), Marcellus (headings), JetBrains Mono (mono) — loaded in layout and exposed as CSS variables.
+**Barra de teste** — schema, action, e formulário (erro no campo + submit pendente). Nada
+além. Sem meta de cobertura. Declare a camada de cada um; o viés é marcar tudo como unit.
 
-### Hooks
+**Nunca escreva *como implementar* em ticket, spec ou ADR.** Isso se decide na hora, com o
+código na frente. Planos gigantes escritos antes de olhar o código são a causa raiz que
+este harness existe para evitar.
 
-`src/hooks/use-scroll.tsx` — detects `scrollY > threshold`, used in the header for sticky styling.
+## Worktrees
 
-### Accessibility & SEO
+O projeto é trabalhado em **git worktrees**, gerenciados pelo Orca. O repo principal fica
+em `~/projects/duohub` (branch `main`); cada worktree vive em
+`~/orca/workspaces/duohub/<nome>` com sua própria branch.
 
-- Target: WCAG 2.1 AA
-- Biome a11y recommended rules are enabled
-- Mobile-first responsive design
+Isso não faz do projeto um monorepo — é o mesmo repo, várias cópias de trabalho.
 
-## Security & Configuration
+O que muda na prática:
 
-For the full security model, consult the Zé Papagaio vault. Non-negotiables any
-change must respect:
+- O diretório de trabalho **não é** o repo principal. Não assuma caminho absoluto.
+- Branch nova sai de `main`, não da branch do worktree vizinho.
+- `CLAUDE.md`, `docs/` e `.claude/` são versionados, logo **valem por branch**. Um worktree
+  cujo branch não tem esses arquivos não tem o harness — nem o hook de git.
 
-- **Never commit secrets.** `.env*` is ignored by default; commit only `.env.example` with empty/dummy values.
-- **Validate env vars** with `@t3-oss/env-nextjs` (introduced in F1a). Separate `server` and `client` schemas to prevent bundle leaks.
-- **IDOR protection:** every query/mutation on a client-owned resource must verify ownership against `session.user.id` (or `UserClient`) before reading or writing. Never trust an ID from the client.
-- **No personal data in logs** (CPF, CNPJ, email, phone). Never include personal data in URLs or query strings.
-- **Audit log:** every sensitive action (create client, send proposal, login, etc.) writes to the `AuditLog` table. Required for accounting context and incident review.
-- **Rate limit** all public endpoints: `/api/auth/*`, lead submissions, public proposal links, free tools.
-- **Digital certificates (F1b+):** `.pfx` files and passwords use envelope encryption with a KEK stored in **Infisical**. Never store them in plaintext, never log them, never cache decrypted content on disk. Every access writes to `CertificateAccessLog`. Confirm current certificate-handling details in the Zé Papagaio vault before implementation.
+## Agent skills
+
+### Issue tracker
+
+Issues vivem no Linear, time DuoHub (prefixo `DUO`), acessadas via MCP.
+Veja `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Três labels no Linear (`needs-info`, `ready-for-agent`, `ready-for-human`) mais dois
+papéis absorvidos por status (`Backlog`, `Canceled`).
+Veja `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` na raiz e ADRs em `docs/adr/`.
+Veja `docs/agents/domain.md`.

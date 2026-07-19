@@ -1,0 +1,141 @@
+# O harness — guia do dev
+
+O que está instalado, o que cada peça faz, e o que rodar em cada situação.
+
+As **regras** (fatia, portões, barra de teste) estão em [`workflow.md`](./workflow.md).
+Este arquivo é a orientação: como operar.
+
+## As peças
+
+| Peça | Onde | O que faz |
+| --- | --- | --- |
+| **Skills** | `~/.agents/skills/` (global, 25) | os comandos do fluxo — `/grill-with-docs`, `/implement`, etc. |
+| **Linear MCP** | plugin `linear` | criar e ler issues direto do chat |
+| **Docs do repo** | `CLAUDE.md`, `docs/` | o que o agente lê antes de agir |
+| **Hook de git** | `.claude/` | bloqueia o irreversível: `reset --hard`, `clean -f`, `branch -D`, `checkout .`, `restore .` |
+
+> **Publicar é decisão humana.** `git push`, `gh pr create` e `gh pr merge` **não** estão no
+> hook — bloquear por string dava falsa segurança, já que `gh pr create` empurra a branch
+> sem casar o padrão. Virou regra de conduta: o agente commita quando o trabalho está
+> pronto, mostra o que ficou, e **pergunta antes de publicar**. Autorização vale para o
+> pedido daquela vez, não para os seguintes.
+
+As skills são **globais** (`~/.agents/skills`), então valem em qualquer projeto. As docs e o
+hook são **versionados**, então valem por branch — worktree cujo branch não os tem, não tem
+o harness.
+
+## Duas formas de invocar
+
+Isto confunde e não está escrito em lugar nenhum: **das 25 skills, 11 o agente pode chamar
+sozinho e 14 só respondem se você digitar `/nome`.**
+
+As que têm `disable-model-invocation: true` no frontmatter são deliberadamente manuais —
+são as que tomam decisão ou consomem muito contexto. **As etapas que produzem artefato são
+manuais**: `/grill-with-docs`, `/to-spec`, `/to-tickets`, `/implement`. Você dirige; o
+agente não decide sozinho começar a fatiar tickets.
+
+A exceção é `/prototype`, que é auto-invocável apesar de ser o Portão 0 — se ele disparar
+sozinho antes de você querer, é só interromper.
+
+**Só via `/`** — `ask-matt` · `grill-me` · `grill-with-docs` · `handoff` · `implement` ·
+`improve-codebase-architecture` · `setup-matt-pocock-skills` · `setup-ts-deep-modules` ·
+`teach` · `to-spec` · `to-tickets` · `triage` · `wayfinder` · `writing-great-skills`
+
+**O agente chama sozinho** — `code-review` · `codebase-design` · `diagnosing-bugs` ·
+`domain-modeling` · `find-skills` · `git-guardrails-claude-code` · `grilling` · `prototype`
+· `research` · `resolving-merge-conflicts` · `tdd`
+
+## O que rodar em cada situação
+
+| Situação | Comando |
+| --- | --- |
+| Ideia nova, ainda difusa | `/grill-with-docs` — entrevista até fechar, e deixa ADR |
+| Ideia fechada, virar documento | `/to-spec` |
+| Spec pronta, virar tickets | `/to-tickets` |
+| Ticket `ready-for-agent` na mão | `/implement` (chama `/tdd` por dentro) |
+| Terminou a fatia | `/code-review` |
+| Bug difícil, intermitente, regressão | `/diagnosing-bugs` |
+| Dúvida de design de módulo | `/codebase-design` |
+| Precisa ler doc/API externa | `/research` (roda em background) |
+| Não sabe qual usar | `/ask-matt` — é o roteador |
+| Conversa ficou longa demais | `/handoff` — compacta e você abre sessão nova |
+
+Duas que **não** são para uso rotineiro: `/wayfinder` (esforço grande demais para uma
+sessão — mais lento e denso, guarde para isso) e `/prototype` (código descartável para
+responder uma pergunta de design).
+
+## Colisões de nome
+
+Existem skills com o mesmo nome vindas de fontes diferentes. Vale saber qual responde:
+
+- **`code-review`** — o do Matt (eixos Standards + Spec) **substituiu** o nativo do Claude
+  Code. É o que queremos. O `/review` (revisar PR do GitHub) continua intacto e é outro.
+- **`tdd`** vs **`superpowers:test-driven-development`** — convivem, porque o do superpowers
+  tem prefixo. Use `tdd`; o `/implement` já chama esse.
+- **`grilling`** vs **`superpowers:brainstorming`** — mesmo papel. Adotamos `grilling`.
+
+Se algo disparar quando você não esperava, provavelmente é colisão. Remover a pasta em
+`~/.agents/skills/<nome>` desfaz.
+
+## Fluxo completo
+
+Diagrama e regras em [`workflow.md`](./workflow.md). Em uma frase: a ideia vira spec, a spec
+vira protótipo aprovado, o protótipo vira fatias no Linear, cada fatia vira um PR.
+
+Os três portões são acréscimos nossos ao fluxo original, cada um contra uma falha concreta:
+
+- **Portão 0** — cada fatia pode passar no seu aceite e o conjunto montado ficar sem graça.
+  Régua de fatia não protege contra isso; protótipo protege, e custa um dia.
+- **Portão 1** — impede que lacuna de spec seja preenchida por invenção.
+- **Portão 2** — impede que algo vá para a main sem alguém ter olhado a tela.
+
+## Higiene de contexto
+
+Mantenha `/grill-with-docs → /to-spec → /to-tickets` **numa janela só**, sem compactar — os
+três constroem em cima do mesmo raciocínio. Cada `/implement` depois começa limpo, lendo o
+ticket.
+
+Se a sessão ficar longa antes de `/to-tickets`, não force: `/handoff` e continue em thread
+nova. Modelo em contexto saturado raciocina pior, e foi assim que planos gigantes viraram
+implementação errada aqui.
+
+## Configuração
+
+| Arquivo | O que guarda |
+| --- | --- |
+| [`issue-tracker.md`](./issue-tracker.md) | Linear, time DuoHub, como criar e ler issue |
+| [`triage-labels.md`](./triage-labels.md) | os cinco papéis e o portão `ready-for-agent` |
+| [`domain.md`](./domain.md) | onde ficam `CONTEXT.md` e ADRs |
+| [`workflow.md`](./workflow.md) | as regras do fluxo, invariantes e portões |
+| [`templates/ticket.md`](./templates/ticket.md) | formato do ticket (aceite, Reference, Constraints, Test) |
+| [`templates/spec.md`](./templates/spec.md) | formato do spec, delta spec e arquivamento |
+| [`../architecture.md`](../architecture.md) | as regras do código |
+| [`../design/README.md`](../design/README.md) | contrato dos quatro estados |
+
+### Quais desses as skills leem sozinhas
+
+Distinção que importa e não é óbvia:
+
+- **`issue-tracker.md`, `triage-labels.md` e `domain.md`** — as skills do Matt leem
+  **automaticamente**. Foram cabeados pelo `/setup-matt-pocock-skills`. É por isso que os
+  desvios de comportamento (não publicar spec no Linear, não carimbar `ready-for-agent`)
+  moram nesses dois arquivos e não no `workflow.md`: é onde a skill procura.
+- **Todo o resto** — `workflow.md`, este arquivo, os templates, `architecture.md`,
+  `design/README.md` — chega ao agente **só pela cadeia de links do `CLAUDE.md`**. Nenhuma
+  skill é obrigada a seguir.
+
+Na prática: antes de rodar `/to-spec` ou `/to-tickets`, **leia `workflow.md` e o template
+correspondente**. Sem isso a skill roda no comportamento padrão dela, não no nosso.
+
+Trocar de issue tracker é a única mudança que pede rerodar `/setup-matt-pocock-skills`.
+
+## O hook `docs-index-check`
+
+Bloqueia (`PostToolUse` em Write/Edit) doc criado em `docs/` que não seja alcançável por
+links a partir do `CLAUDE.md`, em qualquer profundidade. Doc que ninguém referencia
+apodrece sem ser notado.
+
+Isentos: `docs/specs/**` e `docs/adr/**` — têm ciclo de vida próprio.
+
+Foi bloqueado? A mensagem diz onde adicionar o link. **Confira que o caminho do link
+resolve de verdade** a partir do arquivo que você está editando.
