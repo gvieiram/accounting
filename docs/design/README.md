@@ -11,14 +11,20 @@ Este arquivo guarda o que vale para as duas. Formato dos dois documentos de supe
 frontmatter YAML com tokens (`colors`, `typography`, `rounded`, `spacing`, `components`) +
 seções em prosa. **Sempre referência de token (`{colors.primary}`), nunca hex inline.**
 
-> **Estado:** `admin.md` e `public.md` estão vazios por decisão — a direção estética foi
-> adiada. O contrato de estados abaixo já vale.
+> **Estado:** os dois documentos estão preenchidos (DUO-64). A direção vale a partir de
+> agora; o contrato de estados abaixo sempre valeu.
 
 ## Fundação
 
 Já existe e não se joga fora: **146 custom properties** em `src/app/globals.css`, 30
-primitivos shadcn (`new-york`, base `slate`), Inter via `next/font/google`, e composições
-resolvidas (`responsive-dialog`, `scrollable-dialog`, `responsive-sheet`).
+primitivos shadcn (`new-york`, base `slate`) e composições resolvidas
+(`responsive-dialog`, `scrollable-dialog`, `responsive-sheet`).
+
+Tipografia é o ponto onde a fundação **não** está pronta: o `layout.tsx` carrega hoje cinco
+famílias (Plus Jakarta Sans, Marcellus, JetBrains Mono, Playfair Display, Inter), mapeadas
+em `--font-sans`, `--font-heading`, `--font-mono`, `--font-logo` e `--font-subtitle`. A
+direção mantém Marcellus e Playfair no público e adota **Geist** no admin — Inter e o papel
+de `--font-subtitle` ficam sem uso e devem sair quando alguma fatia encostar neles.
 
 Tokens e primitivos são infraestrutura. O que falhou antes foi a **composição** — como as
 telas eram montadas, decidida caso a caso.
