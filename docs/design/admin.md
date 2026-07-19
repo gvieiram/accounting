@@ -288,8 +288,14 @@ Respeitar `prefers-reduced-motion` não é opcional.
 Claro é o padrão. **Escuro é tema de primeira classe**, não cortesia: toda fatia valida os
 quatro estados nos dois temas, e isso faz parte do aceite.
 
-O escuro se define **por token**, nunca por `dark:` espalhado em componente. Se um
-componente precisou de `dark:` para ficar certo, o token é que está errado.
+O escuro se define **por token**. Em componente de domínio, `dark:` é cheiro: se precisou
+dele para ficar certo, o token é que está errado.
+
+**A exceção são os primitivos de `components/ui/`.** O shadcn usa `dark:` de propósito para
+ajustar opacidade por tema (`dark:bg-input/30`, `dark:aria-invalid:ring-destructive/40`), e
+esses arquivos são regeneráveis pela CLI. Removê-los ali bifurcaria do upstream sem ganho —
+não faça. O `@custom-variant dark` no topo do `globals.css` já prende essas utilities à
+classe `.dark`, e não ao tema do sistema operacional.
 
 ## Estados
 

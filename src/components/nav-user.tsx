@@ -1,7 +1,9 @@
 "use client";
 
-import { ChevronsUpDown, LogOut } from "lucide-react";
+import { ChevronsUpDown, LogOut, Moon, Sun } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -107,6 +109,8 @@ export function NavUser({ user }: NavUserProps) {
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
+						<ThemeMenuItem />
+						<DropdownMenuSeparator />
 						<DropdownMenuItem
 							data-testid="admin-logout"
 							onSelect={handleLogout}
@@ -118,5 +122,32 @@ export function NavUser({ user }: NavUserProps) {
 				</DropdownMenu>
 			</SidebarMenuItem>
 		</SidebarMenu>
+	);
+}
+
+/**
+ * `resolvedTheme` só existe depois da hidratação — no servidor não há como saber
+ * a preferência guardada. Sem a guarda, o item renderiza com o rótulo errado e o
+ * React acusa mismatch.
+ */
+function ThemeMenuItem() {
+	const { resolvedTheme, setTheme } = useTheme();
+	const [mounted, setMounted] = useState(false);
+	const messages = useMessages();
+
+	useEffect(() => setMounted(true), []);
+
+	const isDark = mounted && resolvedTheme === "dark";
+
+	return (
+		<DropdownMenuItem
+			data-testid="admin-theme-toggle"
+			onSelect={() => setTheme(isDark ? "light" : "dark")}
+		>
+			{isDark ? <Sun /> : <Moon />}
+			{isDark
+				? messages.admin.shell.themeLight
+				: messages.admin.shell.themeDark}
+		</DropdownMenuItem>
 	);
 }

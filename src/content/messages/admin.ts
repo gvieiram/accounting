@@ -17,6 +17,8 @@ export const admin = {
 		toggleSidebar: "Alternar menu lateral",
 		menu: "Menu",
 		loading: "Carregando",
+		themeDark: "Modo escuro",
+		themeLight: "Modo claro",
 	},
 	dashboard: {
 		title: "Dashboard",

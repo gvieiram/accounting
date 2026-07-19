@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import type { MouseEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import { AnimatedThemeToggle } from "@/components/animated-theme-toggle";
 import { HomeLink } from "@/components/home-link";
 import { Logo } from "@/components/logo";
 import { MenuToggleIcon } from "@/components/menu-toggle-icon";
@@ -209,6 +210,7 @@ export function Header({ isLogoCentered = false }: HeaderProps) {
 							</Link>
 						);
 					})}
+					<AnimatedThemeToggle />
 					<Button asChild>
 						<a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
 							{messages.common.actions.start}
@@ -216,6 +218,7 @@ export function Header({ isLogoCentered = false }: HeaderProps) {
 					</Button>
 				</div>
 				<div className="flex items-center gap-2 md:hidden">
+					<AnimatedThemeToggle />
 					<Button
 						size="icon"
 						variant="outline"
