@@ -52,7 +52,7 @@ O segundo só é obrigatório **quando a tela tem filtro**.
 | **Falha numa ação** | toast + erro no campo, **tela intacta** | o usuário digitou algo; perder o que ele preencheu é inaceitável |
 
 Ação que falha **nunca** derruba a tela nem limpa o formulário. O `fieldErrors` do
-`defineAction` existe para isso.
+`defineAction` (DUO-61) existirá para isso.
 
 ### 4. Sem permissão
 

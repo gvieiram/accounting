@@ -91,8 +91,11 @@ desenvolvimento, então em produção **a rota não é compilada**. Não é 404 
 existe.
 
 > **Toda rota em `(dev)/` termina em `.dev.tsx`** — `page`, `layout` e `route`. Um
-> `page.tsx` sem o sufixo vai ao ar publicamente. Há teste de guarda no CI e `/playground`
-> está no matcher do proxy, mas a regra é essa.
+> `page.tsx` sem o sufixo vai ao ar publicamente, **sem autenticação**.
+>
+> Hoje **não há nenhuma proteção automática**: o `pageExtensions` condicional, o teste de
+> guarda e a entrada de `/playground` no matcher do proxy são DUO-65 e ainda não existem. Até
+> lá, a regra é a única defesa.
 
 ### O snapshot
 
@@ -132,7 +135,7 @@ quebra o build de produção por causa de código que nem é publicado.
 | | Conteúdo | Tamanho |
 | --- | --- | --- |
 | **Ticket Linear** `DUO-xx` | a fatia: aceite binário, arquivos, referência, restrições | cabe na tela |
-| `docs/specs/<f>/spec.md` | como a feature funciona por inteiro | **teto: 1-2 páginas** |
+| `docs/specs/<f>/spec.md` | como a feature funciona por inteiro | sem teto — ver abaixo |
 | `docs/specs/<f>/assets/` | material de contexto (documentos, imagens, referências) | livre |
 | `docs/adr/` | decisão difícil de reverter + a alternativa descartada | curto, um por decisão |
 | `CONTEXT.md` | glossário do domínio | — |
@@ -147,9 +150,25 @@ quebra o build de produção por causa de código que nem é publicado.
 Templates: [`templates/spec.md`](./templates/spec.md) ·
 [`templates/ticket.md`](./templates/ticket.md).
 
-O teto de 1-2 páginas do `spec.md` não é sugestão. Documento grande não é escolha que
-alguém faz de propósito — cresce um parágrafo por vez. Passou do teto, a feature é grande
-demais e vira duas features, não um documento maior.
+### Tamanho da spec
+
+**A spec não tem teto de páginas.** Descrever bem o domínio, os estados e os casos de borda
+pode legitimamente ocupar espaço, e uma lista extensa de user stories é *desejável* — é dela
+que saem as fatias. Truncar para caber numa página mata o insumo do `/to-tickets`.
+
+O que segura o inchaço é a **regra de conteúdo**, que é checável:
+
+> Sem caminho de arquivo, sem trecho de código, sem passo a passo de implementação.
+
+Foi isso que causou o estrago antes — planos de 1.000 a 3.500 linhas descrevendo *como*
+implementar, escritos antes de olhar o código. Spec extensa descrevendo *o quê* nunca foi o
+problema.
+
+**O sinal é sobre a feature, não sobre o documento:** se a lista de user stories passar de
+~15, a feature é grande demais e vira duas features. É a heurística de Minimum Viable Slice
+— uma capacidade demonstrável, ~15 tasks ou menos.
+
+O teto rígido continua valendo no **ticket**: esse tem que caber na tela.
 
 ### O spec lista as fatias
 
@@ -207,10 +226,10 @@ arquivada, os tickets dela já estão fechados.
 ## Portão 1 — `ready-for-agent`
 
 **Nenhum agente implementa um ticket sem essa label.** Pegou um ticket sem ela: pare e diga
-o que falta. Não preencha a lacuna sozinho — preencher lacuna é como spec vaga vira entrega
-errada.
+o que falta.
 
-Critérios em [`triage-labels.md`](./triage-labels.md).
+Critérios, mapeamento e a instrução que impede o `/to-tickets` de carimbar a label sozinho
+estão em [`triage-labels.md`](./triage-labels.md) — que é o arquivo que as skills leem.
 
 ## Portão 2 — conferência no navegador
 

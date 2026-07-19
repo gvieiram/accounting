@@ -22,6 +22,20 @@ para rastrear trabalho — o GitHub aqui é só código, PRs e CI.
 Ao referenciar uma issue em prosa, spec ou mensagem de commit, use o identificador
 `DUO-<n>` — nunca o UUID.
 
+## A spec é arquivo, não issue
+
+> **`/to-spec` NÃO publica a spec no Linear neste repo.**
+>
+> A skill descreve a si mesma como *"publish it to the project issue tracker"*. Aqui a spec
+> é **arquivo versionado** em `docs/specs/<feature>/spec.md`, seguindo
+> [`templates/spec.md`](./templates/spec.md).
+>
+> Motivo: a spec precisa conviver com `assets/`, com os prints do protótipo e com o
+> histórico do git, e precisa ser lida durante a implementação sem depender do MCP.
+>
+> O que vai para o Linear é **um ticket por fatia**, criado pelo `/to-tickets`, no formato de
+> [`templates/ticket.md`](./templates/ticket.md).
+
 ## Statuses
 
 O board usa o fluxo padrão do Linear:

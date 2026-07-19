@@ -108,11 +108,13 @@ done | head -1)
   echo "O doc não é alcançável a partir do CLAUDE.md seguindo links markdown"
   echo "(em qualquer profundidade). Doc que ninguém referencia apodrece sem ser notado."
   echo
+  # O exemplo precisa ser relativo ao arquivo onde o link será inserido —
+  # `./basename` só vale para um doc irmão. A partir do CLAUDE.md (raiz) o
+  # caminho é `./<REL>`. Antes o hook sugeria um link morto e ainda o aprovava,
+  # porque o caminho em crase já contava como referência.
   echo "Adicione um link para ele em um destes lugares:"
-  echo "  - CLAUDE.md (índice de topo)"
-  [ -n "$SUGGEST" ] && echo "  - $SUGGEST (já alcançável, na mesma pasta)"
-  echo
-  echo "Exemplo de linha: [\`$REL\`](./$(basename "$REL"))"
+  echo "  - CLAUDE.md (índice de topo)   →  [\`$REL\`](./$REL)"
+  [ -n "$SUGGEST" ] && echo "  - $SUGGEST (já alcançável, na mesma pasta)   →  [\`$(basename "$REL")\`](./$(basename "$REL"))"
   echo
   echo "Isentos (não precisam de índice): docs/specs/**, docs/adr/**."
 } >&2

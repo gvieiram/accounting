@@ -1,5 +1,19 @@
 # Arquitetura
 
+> **Estado.** Este documento descreve o padrão **alvo**. Quatro peças dele ainda não existem
+> em código e estão em tickets abertos — o texto abaixo marca cada uma:
+>
+> | Peça | Ticket |
+> | --- | --- |
+> | `defineAction` / `src/lib/action.ts` | DUO-61 |
+> | `index.ts` por feature | DUO-62 |
+> | `dependency-cruiser` | DUO-63 |
+> | playground dev-only | DUO-65 |
+>
+> Ao escrever código hoje, siga o padrão alvo no que já é possível e **não invente** as
+> peças que faltam — se precisar de `defineAction` antes do DUO-61, diga que ele não existe
+> em vez de improvisar um.
+
 O Next.js é **unopinionated** sobre organização de projeto — a doc oficial diz isso e lista
 três estratégias. O duohub usa a primeira: `app/` só para roteamento, o resto em pastas
 irmãs. Isso é escolha deliberada, não desvio.
@@ -61,9 +75,9 @@ De fora, só `import { ClientsTable } from "@/features/clients"`.
 O ganho: reorganizar o interior da feature sem tocar em nada fora dela, desde que o
 `index.ts` continue exportando o mesmo.
 
-**Enforcement:** `dependency-cruiser` falha o build em import profundo. Sem isso, a porta é
-combinado verbal — e combinado verbal já falhou aqui (existia um padrão de action razoável
-e ainda assim nasceram dois contratos).
+**Enforcement (DUO-63, ainda não instalado):** o `dependency-cruiser` falhará o build em
+import profundo. Sem ele, a porta é combinado verbal — e combinado verbal já falhou aqui
+(existia um padrão de action razoável e ainda assim nasceram dois contratos).
 
 ## Contrato de Server Action
 
@@ -120,21 +134,28 @@ arquivos do campo `Arquivos` do ticket, mais o que a exploração revelou.
    estabelecidos? Termo inventado é sinal de que falta entendimento, não de criatividade.
 4. **Constraints do ticket** — cada regra do campo `Constraints` está respeitada?
 5. **ADRs** — a mudança contradiz algum ADR de `docs/adr/`? Se contradiz, **traga à tona**
-   em vez de sobrescrever em silêncio.
+   em vez de sobrescrever em silêncio. (O diretório ainda não existe — é criado
+   preguiçosamente pelo `/domain-modeling` no primeiro ADR. Ausente, pule em silêncio.)
 
 **Falhou qualquer item: pare e discuta.** Não prossiga até resolver.
 
-O gate existe porque o `dependency-cruiser` roda no build — depois. A decisão de onde o
+O gate existe porque o `dependency-cruiser` (DUO-63) roda no build — depois. E enquanto
+ele não existe, o gate é a **única** verificação de fronteira. A decisão de onde o
 arquivo mora é tomada antes, e é aí que custa barato corrigir.
 
 ## Legado
 
-`src/features/clients` e `src/features/users` **ainda não seguem** este documento: a UI de
-domínio deles vive em `src/app/admin/*/_components`, não há `index.ts`, e as actions não
-passam pelo wrapper.
+**Nenhuma feature segue este documento hoje.** `auth`, `clients`, `irpf`, `proposals` e
+`users` não têm `index.ts` nem `components/`; a UI de domínio vive em
+`src/app/**/_components`; e as actions não passam por wrapper — porque ele ainda não existe
+(DUO-61).
+
+`clients` e `users` são os casos mais avançados no padrão antigo: 36 e 7 imports profundos,
+e dois contratos de action convivendo.
 
 **Isso é legado, não é o padrão.** Não replique ao escrever código novo.
 
-Migração é preguiçosa: uma feature migra quando uma fatia encostar nela. `proposals` nasce
-já na regra nova. Big bang de 22 arquivos é risco sem entrega no meio, e contraria a regra
-da fatia vertical.
+Migração é preguiçosa: uma feature migra quando uma fatia encostar nela. `proposals` está
+quase vazia (só `templates/`, `render`, `format`, `escape`) e será replanejada do zero — é
+a primeira que deve nascer na regra nova. Big bang é risco sem entrega no meio, e contraria
+a regra da fatia vertical.

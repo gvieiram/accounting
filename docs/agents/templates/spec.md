@@ -1,7 +1,8 @@
 # Template de spec
 
-`docs/specs/<feature>/spec.md`. **Teto: 1-2 páginas.** Passou disso, a feature é grande
-demais e vira duas — não um documento maior.
+`docs/specs/<feature>/spec.md`. **Sem teto de páginas** — o que segura o inchaço é a regra
+de conteúdo: sem caminho de arquivo, sem trecho de código, sem passo a passo. Se a lista de
+user stories passar de ~15, a feature é grande demais e vira duas.
 
 ```markdown
 ---
@@ -87,15 +88,14 @@ A Vaas separa `research.md`, `requirements.md` e `design.md`. Aqui é um só, de
 - **design** — o que ele traz de *implementation guidance* já é global e vive em
   `docs/architecture.md`; *public interfaces* a gente proíbe de propósito.
 
-O teto de 1-2 páginas só funciona com **um** arquivo. Com três, vira ambíguo — 1-2 páginas
-cada, ou no total? — e limite ambíguo é limite morto.
+Um arquivo mantém a regra de conteúdo em um lugar só. Com três, "onde isso vai?" vira
+pergunta a cada parágrafo, e a resposta errada é sempre o arquivo que ninguém lê.
 
-Revisitar se as specs passarem a bater no teto com frequência e "Como funciona" ficar
-espremida. Aí separar passa a valer.
+Revisitar se as specs ficarem difíceis de navegar — aí separar passa a valer.
 
 ## Evoluir: delta spec
 
-Feature existente não ganha spec reescrita. Cria-se `docs/specs/<f>-v2/spec.md`:
+Regra e justificativa em [`../workflow.md`](../workflow.md). O formato:
 
 ```markdown
 # Propostas v2
@@ -114,9 +114,6 @@ Feature existente não ganha spec reescrita. Cria-se `docs/specs/<f>-v2/spec.md`
 
 ## Arquivar
 
-Todas as fatias `Done` e mergeadas → mova a pasta inteira para
-`docs/specs/_archive/<feature>/`. `assets/` e `prototype/` (os prints) vão junto.
-
-**Apague o protótipo** de `src/app/(dev)/playground/<feature>/`. Ele continua sendo
-type-checked mesmo sem virar rota — protótipo esquecido quebra o build de produção quando
-um componente que ele importa é removido.
+Todas as fatias `Done` e mergeadas → mova a pasta para `docs/specs/_archive/<feature>/` e
+apague o protótipo de `src/app/(dev)/playground/<feature>/`. Motivo e detalhe em
+[`../workflow.md`](../workflow.md).

@@ -30,8 +30,12 @@ Isto confunde e não está escrito em lugar nenhum: **das 25 skills, 11 o agente
 sozinho e 14 só respondem se você digitar `/nome`.**
 
 As que têm `disable-model-invocation: true` no frontmatter são deliberadamente manuais —
-são as que tomam decisão ou consomem muito contexto. **Todo o fluxo principal é manual.**
-Você dirige; o agente não decide sozinho começar a fatiar tickets.
+são as que tomam decisão ou consomem muito contexto. **As etapas que produzem artefato são
+manuais**: `/grill-with-docs`, `/to-spec`, `/to-tickets`, `/implement`. Você dirige; o
+agente não decide sozinho começar a fatiar tickets.
+
+A exceção é `/prototype`, que é auto-invocável apesar de ser o Portão 0 — se ele disparar
+sozinho antes de você querer, é só interromper.
 
 **Só via `/`** — `ask-matt` · `grill-me` · `grill-with-docs` · `handoff` · `implement` ·
 `improve-codebase-architecture` · `setup-matt-pocock-skills` · `setup-ts-deep-modules` ·
@@ -73,21 +77,10 @@ Existem skills com o mesmo nome vindas de fontes diferentes. Vale saber qual res
 Se algo disparar quando você não esperava, provavelmente é colisão. Remover a pasta em
 `~/.agents/skills/<nome>` desfaz.
 
-## Fluxo completo, em uma tela
+## Fluxo completo
 
-```
-ideia
- └─ /grill-with-docs      decide; ADR em docs/adr/ quando couber
-     └─ /to-spec          docs/specs/<f>/spec.md (teto 1-2 páginas)
-         └─ /prototype    fluxo completo, descartável, mock data
-             └─ PORTÃO 0  "eu gosto disso?" — antes de fatiar
-                 └─ /to-tickets   DUO-xx no Linear, uma fatia vertical cada
-                     └─ PORTÃO 1  label ready-for-agent
-                         └─ /implement    uma fatia, /tdd por dentro
-                             └─ PORTÃO 2  Gustavo confere no navegador
-                                 └─ /code-review
-                                     └─ PR
-```
+Diagrama e regras em [`workflow.md`](./workflow.md). Em uma frase: a ideia vira spec, a spec
+vira protótipo aprovado, o protótipo vira fatias no Linear, cada fatia vira um PR.
 
 Os três portões são acréscimos nossos ao fluxo original, cada um contra uma falha concreta:
 
@@ -119,6 +112,30 @@ implementação errada aqui.
 | [`../architecture.md`](../architecture.md) | as regras do código |
 | [`../design/README.md`](../design/README.md) | contrato dos quatro estados |
 
-Editar esses arquivos é o jeito de mudar o comportamento do harness — eles são lidos, não
-são decoração. Trocar de issue tracker é a única mudança que pede rerodar
-`/setup-matt-pocock-skills`.
+### Quais desses as skills leem sozinhas
+
+Distinção que importa e não é óbvia:
+
+- **`issue-tracker.md`, `triage-labels.md` e `domain.md`** — as skills do Matt leem
+  **automaticamente**. Foram cabeados pelo `/setup-matt-pocock-skills`. É por isso que os
+  desvios de comportamento (não publicar spec no Linear, não carimbar `ready-for-agent`)
+  moram nesses dois arquivos e não no `workflow.md`: é onde a skill procura.
+- **Todo o resto** — `workflow.md`, este arquivo, os templates, `architecture.md`,
+  `design/README.md` — chega ao agente **só pela cadeia de links do `CLAUDE.md`**. Nenhuma
+  skill é obrigada a seguir.
+
+Na prática: antes de rodar `/to-spec` ou `/to-tickets`, **leia `workflow.md` e o template
+correspondente**. Sem isso a skill roda no comportamento padrão dela, não no nosso.
+
+Trocar de issue tracker é a única mudança que pede rerodar `/setup-matt-pocock-skills`.
+
+## O hook `docs-index-check`
+
+Bloqueia (`PostToolUse` em Write/Edit) doc criado em `docs/` que não seja alcançável por
+links a partir do `CLAUDE.md`, em qualquer profundidade. Doc que ninguém referencia
+apodrece sem ser notado.
+
+Isentos: `docs/specs/**` e `docs/adr/**` — têm ciclo de vida próprio.
+
+Foi bloqueado? A mensagem diz onde adicionar o link. **Confira que o caminho do link
+resolve de verdade** a partir do arquivo que você está editando.

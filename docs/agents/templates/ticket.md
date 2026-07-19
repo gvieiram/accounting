@@ -29,7 +29,7 @@ schema (unit) · action (unit) · formulário (componente) · smoke manual
 src/features/clients/actions.ts
 
 ## Constraints
-- action via `defineAction`
+- action via `defineAction` _(exemplo — só use como constraint depois do DUO-61)_
 - UI de domínio vive na feature, não na rota
 - os quatro estados fazem parte do aceite
 

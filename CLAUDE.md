@@ -96,11 +96,12 @@ Detalhe em **[`docs/architecture.md`](./docs/architecture.md)**. O essencial:
 `@/features/<x>`? Então mora na feature. O critério é o import, não o nome.
 
 **Porta de entrada.** Só `features/<x>/index.ts` é público; o resto é interno. De fora,
-`import { X } from "@/features/<x>"` — nunca caminho profundo. `dependency-cruiser`
-falha o build se alguém tentar.
+`import { X } from "@/features/<x>"` — nunca caminho profundo. O `dependency-cruiser` que
+falha o build nisso é DUO-63; os `index.ts` são DUO-62. **Nenhum dos dois existe ainda.**
 
 **Contrato único de Server Action** via `defineAction` (sessão, zod com `fieldErrors`,
-erro do Prisma, auditoria). Escape hatch existe e é explícito.
+erro do Prisma, auditoria), com escape hatch explícito. **É DUO-61 — `src/lib/action.ts`
+ainda não existe.** Não improvise um substituto.
 
 **Carregamento** — Server Components + Suspense por região + skeleton ao lado do
 componente que ele representa. Nunca spinner de página inteira.
@@ -110,18 +111,27 @@ fazem parte do aceite da fatia.
 
 ### Legado
 
-`src/features/clients` e `src/features/users` **ainda não seguem** o padrão: UI de domínio
-em `src/app/admin/*/_components`, sem `index.ts`, actions sem wrapper. Além disso convivem
-dois contratos de retorno antigos (`{ success }` e `{ ok }`).
+**Nenhuma feature segue o padrão hoje** — não há `index.ts`, a UI de domínio vive nas rotas,
+e convivem dois contratos de action (`{ success }` e `{ ok }`). Detalhe e plano de migração
+em [`docs/architecture.md`](./docs/architecture.md#legado).
 
-**Não replique isso.** Migração é preguiçosa — uma feature migra quando uma fatia encostar
-nela.
+**Não replique o que está lá.** Migração é preguiçosa — uma feature migra quando uma fatia
+encostar nela.
 
 ## Como o trabalho anda
 
 Regras do fluxo em **[`docs/agents/workflow.md`](./docs/agents/workflow.md)**; como operar
 o harness (skills, comandos, colisões) em
-**[`docs/agents/harness.md`](./docs/agents/harness.md)**. O essencial:
+**[`docs/agents/harness.md`](./docs/agents/harness.md)**.
+
+> **Antes de rodar `/to-spec` ou `/to-tickets`, leia `workflow.md` e o template
+> correspondente.** As skills têm comportamento padrão próprio — publicar a spec no tracker,
+> carimbar `ready-for-agent` em todo ticket — que **não** é o nosso. Os desvios estão em
+> [`issue-tracker.md`](./docs/agents/issue-tracker.md) e
+> [`triage-labels.md`](./docs/agents/triage-labels.md), que são os arquivos que as skills
+> leem sozinhas. O resto da documentação só chega até você por esta cadeia de links.
+
+O essencial:
 
 **Fatia vertical** é a unidade — uma capacidade que o usuário percebe, atravessando schema
 → action → UI → teste. Uma fatia por PR. Se você não consegue completar *"agora eu consigo

@@ -16,6 +16,17 @@ Quando uma skill mencionar um papel ("aplique a label de pronto-para-agente"), t
 pela tabela: se a linha aponta para um **status**, mude o status; se aponta para uma
 **label**, aplique a label.
 
+## Quem aplica — e quem NÃO aplica
+
+> **`/to-tickets` e `/to-spec` NÃO devem aplicar `ready-for-agent` neste repo.**
+>
+> As duas skills carimbam essa label por padrão ("apply the `ready-for-agent` triage label
+> unless instructed otherwise"). Esta é a instrução em contrário: **crie os tickets sem
+> label de prontidão**. Quem promove para `ready-for-agent` é o Gustavo, depois de revisar.
+>
+> Sem isso, todo ticket nasce carimbado e o portão vira no-op — nenhum agente jamais para
+> para perguntar, que é exatamente o que ele existe para provocar.
+
 ## O portão `ready-for-agent`
 
 Esta é a label que mais importa, e existe por um motivo específico: separar "o ticket
