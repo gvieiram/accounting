@@ -3,47 +3,55 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Tema claro — ver docs/design/admin.md § Cor.
+ *
+ * O chão é off-white e o card é branco puro. Antes os dois eram branco, e o
+ * card não descolava do fundo: era preciso sombra para fazer o trabalho que a
+ * escada de superfície deveria fazer sozinha. Os neutros têm viés teal (não são
+ * cinza puro) para ficarem escolhidos, e não herdados.
+ */
 :root {
-	--background: oklch(1 0 0);
-	--foreground: oklch(0.145 0 0);
+	--background: #f5f7f7;
+	--foreground: #16211f;
 
-	--card: oklch(1 0 0);
-	--card-foreground: oklch(0.145 0 0);
+	--card: #ffffff;
+	--card-foreground: #16211f;
 
-	--popover: oklch(1 0 0);
-	--popover-foreground: oklch(0.145 0 0);
+	--popover: #ffffff;
+	--popover-foreground: #16211f;
 
-	--primary: hsl(173 34% 23%); /* #274f4a */
-	--primary-foreground: hsl(0 0% 100%);
+	--primary: #274f4a;
+	--primary-foreground: #ffffff;
 
-	--secondary: hsl(11 52% 92%);
-	--secondary-foreground: hsl(173 34% 23%);
-	/* --secondary-foreground: oklch(0.205 0 0); */
+	--secondary: #f6e2dd;
+	--secondary-foreground: #274f4a;
 
-	--muted: oklch(0.97 0 0);
-	--muted-foreground: oklch(0.556 0 0);
+	--muted: #f0f3f3;
+	--muted-foreground: #69736f;
 
-	--accent: oklch(0.97 0 0);
-	--accent-foreground: oklch(0.205 0 0);
+	--accent: #f0f3f3;
+	--accent-foreground: #16211f;
 
-	--highlight: hsl(11 51% 69.6%); /* #d9988a */
-	--highlight-foreground: oklch(0.985 0 0); /* #fafafa */
+	--highlight: #d9988a;
+	--highlight-foreground: #ffffff;
 
-	--destructive: hsl(0 84.2% 60.2%);
-	--destructive-foreground: hsl(0 0% 98%);
+	--destructive: #c94a3d;
+	--destructive-foreground: #ffffff;
 
-	--success: hsl(142 76% 36%);
-	--success-foreground: hsl(0 0% 98%);
+	--success: #1f8a54;
+	--success-foreground: #ffffff;
 
-	--warning: hsl(38 92% 50%);
-	--warning-foreground: hsl(0 0% 3.9%);
+	/* âmbar mais surdo que o padrão do Tailwind — texto branco passa em AA */
+	--warning: #b7791f;
+	--warning-foreground: #ffffff;
 
 	--info: hsl(173 34% 30%);
 	--info-foreground: hsl(0 0% 100%);
 
-	--border: oklch(0.922 0 0);
-	--input: oklch(0.922 0 0);
-	--ring: hsl(173 34% 23%);
+	--border: #e4e9e8;
+	--input: #d5dcdb;
+	--ring: #274f4a;
 
 	/* 10px — deriva sm 6 · md 8 (input) · lg 10 (botão) · xl 14 (card),
 	   a escala de docs/design/admin.md § Profundidade e forma */

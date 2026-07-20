@@ -1,19 +1,15 @@
 "use client";
 
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useThemeToggle } from "@/hooks/use-theme-toggle";
 import { cn } from "@/lib/utils";
 import { useMessages } from "@/stores/use-content-store";
 
 export const AnimatedThemeToggle = ({ className }: { className?: string }) => {
-	const { resolvedTheme, setTheme } = useTheme();
-	const [mounted, setMounted] = useState(false);
+	const { isDark, mounted, toggle } = useThemeToggle();
 	const messages = useMessages();
 	const a11y = messages.common.a11y;
-
-	useEffect(() => setMounted(true), []);
 
 	if (!mounted) {
 		return (
@@ -23,11 +19,9 @@ export const AnimatedThemeToggle = ({ className }: { className?: string }) => {
 		);
 	}
 
-	const isDark = resolvedTheme === "dark";
-
 	return (
 		<Button
-			onClick={() => setTheme(isDark ? "light" : "dark")}
+			onClick={toggle}
 			className={cn("px-2.5", className)}
 			variant="outline"
 			aria-label={isDark ? a11y.themeLight : a11y.themeDark}
