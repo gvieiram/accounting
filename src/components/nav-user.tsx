@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronsUpDown, LogOut } from "lucide-react";
+import { ChevronsUpDown, LogOut, Moon, Sun } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -20,6 +20,7 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import { logoutAction } from "@/features/auth/actions";
+import { useThemeToggle } from "@/hooks/use-theme-toggle";
 import { authClient } from "@/lib/auth/auth-client";
 import { useMessages } from "@/stores/use-content-store";
 
@@ -107,6 +108,8 @@ export function NavUser({ user }: NavUserProps) {
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
+						<ThemeMenuItem />
+						<DropdownMenuSeparator />
 						<DropdownMenuItem
 							data-testid="admin-logout"
 							onSelect={handleLogout}
@@ -118,5 +121,19 @@ export function NavUser({ user }: NavUserProps) {
 				</DropdownMenu>
 			</SidebarMenuItem>
 		</SidebarMenu>
+	);
+}
+
+function ThemeMenuItem() {
+	const { isDark, toggle } = useThemeToggle();
+	const messages = useMessages();
+
+	return (
+		<DropdownMenuItem data-testid="admin-theme-toggle" onSelect={toggle}>
+			{isDark ? <Sun /> : <Moon />}
+			{isDark
+				? messages.admin.shell.themeLight
+				: messages.admin.shell.themeDark}
+		</DropdownMenuItem>
 	);
 }

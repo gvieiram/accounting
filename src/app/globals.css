@@ -3,48 +3,59 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Tema claro — ver docs/design/admin.md § Cor.
+ *
+ * O chão é off-white e o card é branco puro. Antes os dois eram branco, e o
+ * card não descolava do fundo: era preciso sombra para fazer o trabalho que a
+ * escada de superfície deveria fazer sozinha. Os neutros têm viés teal (não são
+ * cinza puro) para ficarem escolhidos, e não herdados.
+ */
 :root {
-	--background: oklch(1 0 0);
-	--foreground: oklch(0.145 0 0);
+	--background: #f5f7f7;
+	--foreground: #16211f;
 
-	--card: oklch(1 0 0);
-	--card-foreground: oklch(0.145 0 0);
+	--card: #ffffff;
+	--card-foreground: #16211f;
 
-	--popover: oklch(1 0 0);
-	--popover-foreground: oklch(0.145 0 0);
+	--popover: #ffffff;
+	--popover-foreground: #16211f;
 
-	--primary: hsl(173 34% 23%); /* #274f4a */
-	--primary-foreground: hsl(0 0% 100%);
+	--primary: #274f4a;
+	--primary-foreground: #ffffff;
 
-	--secondary: hsl(11 52% 92%);
-	--secondary-foreground: hsl(173 34% 23%);
-	/* --secondary-foreground: oklch(0.205 0 0); */
+	--secondary: #f6e2dd;
+	--secondary-foreground: #274f4a;
 
-	--muted: oklch(0.97 0 0);
-	--muted-foreground: oklch(0.556 0 0);
+	--muted: #f0f3f3;
+	--muted-foreground: #69736f;
 
-	--accent: oklch(0.97 0 0);
-	--accent-foreground: oklch(0.205 0 0);
+	--accent: #f0f3f3;
+	--accent-foreground: #16211f;
 
-	--highlight: hsl(11 51% 69.6%); /* #d9988a */
-	--highlight-foreground: oklch(0.985 0 0); /* #fafafa */
+	--highlight: #d9988a;
+	--highlight-foreground: #ffffff;
 
-	--destructive: hsl(0 84.2% 60.2%);
-	--destructive-foreground: hsl(0 0% 98%);
+	--destructive: #c94a3d;
+	--destructive-foreground: #ffffff;
 
-	--success: hsl(142 76% 36%);
-	--success-foreground: hsl(0 0% 98%);
+	--success: #1f8a54;
+	--success-foreground: #ffffff;
 
-	--warning: hsl(38 92% 50%);
-	--warning-foreground: hsl(0 0% 3.9%);
+	/* âmbar mais surdo que o padrão do Tailwind — texto branco passa em AA */
+	--warning: #b7791f;
+	--warning-foreground: #ffffff;
 
 	--info: hsl(173 34% 30%);
 	--info-foreground: hsl(0 0% 100%);
 
-	--border: oklch(0.922 0 0);
-	--input: oklch(0.922 0 0);
-	--ring: hsl(173 34% 23%);
-	--radius: 0.5rem;
+	--border: #e4e9e8;
+	--input: #d5dcdb;
+	--ring: #274f4a;
+
+	/* 10px — deriva sm 6 · md 8 (input) · lg 10 (botão) · xl 14 (card),
+	   a escala de docs/design/admin.md § Profundidade e forma */
+	--radius: 0.625rem;
 
 	--sidebar: oklch(0.985 0 0);
 	--sidebar-foreground: oklch(0.145 0 0);
@@ -69,64 +80,80 @@
 	--whatsapp-foreground: hsl(0 0% 100%);
 }
 
+/*
+ * Tema escuro — ver docs/design/admin.md § Cor.
+ *
+ * O chão é NEUTRO de propósito. A versão anterior tingia o fundo com a marca
+ * (hsl(173 30% 4%), 30% de saturação): croma alto em luminância baixa lê como
+ * lama esverdeada, fundo e card ficavam a 3 pontos e não descolavam, e o teal
+ * — sendo cor escura — não conseguia ser ação. A cor vive só nos acentos.
+ *
+ * Os âncoras trocam de papel entre os temas: no claro a ação é teal e o acento
+ * é terracota; no escuro a ação é coral (a própria terracota saturada) e o teal
+ * volta clareado como status, link e anel de foco (--info / --ring).
+ */
 .dark {
-	--background: hsl(173 30% 4%);
-	--foreground: hsl(11 15% 93%);
+	--background: #0c0c0c;
+	--foreground: #f2f1ef;
 
-	--card: hsl(173 25% 7%);
-	--card-foreground: hsl(11 15% 93%);
+	--card: #141414;
+	--card-foreground: #f2f1ef;
 
-	--popover: hsl(173 20% 9%);
-	--popover-foreground: hsl(0 0% 66%);
+	--popover: #1c1c1c;
+	--popover-foreground: #f2f1ef;
 
-	--primary: hsl(173 40% 40%);
-	--primary-foreground: hsl(0 0% 100%);
+	/* ação = coral, a terracota saturada */
+	--primary: #cc785c;
+	--primary-foreground: #1a0f0b;
 
-	--secondary: hsl(358 28% 50%);
-	--secondary-foreground: hsl(0 0% 100%);
+	--secondary: #1f1f1f;
+	--secondary-foreground: #f2f1ef;
 
-	--muted: hsl(173 12% 13%);
-	--muted-foreground: hsl(0 0% 63%);
+	--muted: #1c1c1c;
+	--muted-foreground: #918f8b;
 
-	--accent: hsl(173 12% 19%);
-	--accent-foreground: hsl(0 0% 98%);
-	--highlight: hsl(11 45% 55%);
-	--highlight-foreground: hsl(0 0% 100%);
+	--accent: #1f1f1f;
+	--accent-foreground: #f2f1ef;
 
-	--destructive: hsl(0 63% 31%);
-	--destructive-foreground: hsl(0 0% 98%);
+	/* terracota clara segue como acento quente (item ativo da sidebar) */
+	--highlight: #d9988a;
+	--highlight-foreground: #2a1411;
 
-	--success: hsl(142 71% 45%);
-	--success-foreground: hsl(0 0% 3.9%);
+	--destructive: #e0655a;
+	--destructive-foreground: #2b0f0c;
 
-	--warning: hsl(38 92% 55%);
-	--warning-foreground: hsl(0 0% 3.9%);
+	--success: #5db872;
+	--success-foreground: #06210f;
 
-	--info: hsl(173 40% 40%);
-	--info-foreground: hsl(0 0% 100%);
+	--warning: #e8a55a;
+	--warning-foreground: #241a08;
 
-	--border: hsl(173 15% 17%);
-	--input: hsl(173 15% 14%);
-	--ring: hsl(173 40% 40%);
+	/* o verde da marca, clareado — status e link */
+	--info: #57b5a8;
+	--info-foreground: #06201c;
 
-	--sidebar: hsl(173 30% 4%);
-	--sidebar-foreground: hsl(0 0% 54%);
-	--sidebar-accent: hsl(173 12% 19%);
-	--sidebar-accent-foreground: hsl(0 0% 98%);
-	--sidebar-border: hsl(173 15% 17%);
-	--sidebar-ring: hsl(11 45% 55%);
-	--sidebar-primary: hsl(11 45% 55%);
-	--sidebar-primary-foreground: hsl(0 0% 100%);
+	--border: #292929;
+	--input: #383838;
+	--ring: #57b5a8;
 
-	--stack-1: hsl(173 10% 24%);
-	--stack-2: hsl(173 12% 18%);
-	--stack-3: hsl(173 15% 12%);
+	--sidebar: #0c0c0c;
+	--sidebar-foreground: #bdbcb9;
+	--sidebar-accent: #1f1f1f;
+	--sidebar-accent-foreground: #f2f1ef;
+	--sidebar-border: #292929;
+	--sidebar-ring: #57b5a8;
+	--sidebar-primary: #d9988a;
+	--sidebar-primary-foreground: #2a1411;
 
-	--chart-1: hsl(11 55% 65%);
-	--chart-2: hsl(173 50% 45%);
-	--chart-3: hsl(38 75% 60%);
-	--chart-4: hsl(280 50% 60%);
-	--chart-5: hsl(350 55% 60%);
+	--stack-1: #1a1a1a;
+	--stack-2: #202020;
+	--stack-3: #262626;
+
+	--chart-1: #cc785c;
+	--chart-2: #57b5a8;
+	--chart-3: #e8a55a;
+	--chart-4: #9b8bd0;
+	--chart-5: #d97f8f;
 
 	--whatsapp: hsl(142 70% 49%);
 	--whatsapp-foreground: hsl(0 0% 100%);

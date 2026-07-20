@@ -22,7 +22,7 @@ export function FaqSection() {
 					{faq.title}
 				</h2>
 				<p className="text-center text-muted-foreground">{faq.description}</p>
-				<div className="-space-y-px rounded-lg bg-card dark:bg-card/50">
+				<div className="-space-y-px rounded-lg bg-card">
 					<Accordion collapsible defaultValue="item-1" type="single">
 						{faq.items.map((item) => (
 							<AccordionItem
