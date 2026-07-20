@@ -6,6 +6,11 @@ import { useThemeToggle } from "@/hooks/use-theme-toggle";
 import { cn } from "@/lib/utils";
 import { useMessages } from "@/stores/use-content-store";
 
+/**
+ * Sem uso hoje: o público está travado no claro até o escuro dele ficar pronto
+ * (DUO-67), e o admin alterna pelo item do menu do usuário. Fica parado aqui
+ * porque é a peça que o header público vai receber quando aquele ticket rodar.
+ */
 export const AnimatedThemeToggle = ({ className }: { className?: string }) => {
 	const { isDark, mounted, toggle } = useThemeToggle();
 	const messages = useMessages();

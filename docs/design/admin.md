@@ -285,8 +285,11 @@ Respeitar `prefers-reduced-motion` não é opcional.
 
 ## Os dois temas
 
-Claro é o padrão. **Escuro é tema de primeira classe**, não cortesia: toda fatia valida os
-quatro estados nos dois temas, e isso faz parte do aceite.
+Claro é o padrão. **Escuro é tema de primeira classe nesta superfície**, não cortesia: toda
+fatia do admin valida os quatro estados nos dois temas, e isso faz parte do aceite.
+
+O escuro está ligado **apenas em `/admin`** — o público segue travado no claro até o
+DUO-67. A lista está em `THEMED_PREFIXES` (`src/components/providers.tsx`).
 
 O escuro se define **por token**. Em componente de domínio, `dark:` é cheiro: se precisou
 dele para ficar certo, o token é que está errado.

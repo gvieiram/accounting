@@ -172,9 +172,16 @@ acento. Isso não é escolha nova — a superfície já usa `text-primary` e `te
 Canvas é claro. O ritmo de seção alterna `{colors.canvas}` e `{colors.canvas-alt}`; o
 `{components.quote-band}` usa o alternado para dar respiro entre blocos.
 
-No escuro valem as mesmas regras do [`admin.md`](./admin.md): **chão neutro, cor só nos
-acentos**, coral como ação e teal clareado em status. A justificativa completa está lá e
-não se repete aqui.
+> **O escuro do público está desligado** (`forcedTheme="light"` fora de `/admin`). Uma
+> validação em tela achou três lacunas que os tokens sozinhos não resolvem: a logo usa uma
+> variante que some no fundo escuro, os cards empilhados ficam da mesma cor do fundo, e a
+> banda de CTA em terracota sólida briga com o botão verde do WhatsApp. É **DUO-67**.
+
+Quando voltar, valem as mesmas regras do [`admin.md`](./admin.md): **chão neutro, cor só
+nos acentos**, coral como ação e teal clareado em status. A justificativa completa está lá
+e não se repete aqui. Mas os três pontos acima mostram que o escuro do público **não é só
+questão de token** — logo, profundidade de card e banda cromática precisam de decisão
+própria.
 
 ## Ritmo e espaço
 
