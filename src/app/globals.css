@@ -24,6 +24,10 @@
 	--primary: #274f4a;
 	--primary-foreground: #ffffff;
 
+	/* Cor de marca — âncora teal, separada da cor de AÇÃO (--primary). São
+	   tokens distintos porque no escuro --primary vira coral; a marca não. */
+	--brand: #274f4a;
+
 	--secondary: #f6e2dd;
 	--secondary-foreground: #274f4a;
 
@@ -106,6 +110,10 @@
 	--primary: #cc785c;
 	--primary-foreground: #1a0f0b;
 
+	/* marca = teal clareado (mesma família do âncora), legível sobre o chão
+	   escuro — a logo usa isto, nunca --primary (que aqui é coral) */
+	--brand: #57b5a8;
+
 	--secondary: #1f1f1f;
 	--secondary-foreground: #f2f1ef;
 
@@ -136,7 +144,9 @@
 	--input: #383838;
 	--ring: #57b5a8;
 
-	--sidebar: #0c0c0c;
+	/* piso do shell inset — um degrau ABAIXO do painel (--background #0c0c0c),
+	   senão navbar e tela ficam idênticas. Escada: piso → painel → card → popover. */
+	--sidebar: #060606;
 	--sidebar-foreground: #bdbcb9;
 	--sidebar-accent: #1f1f1f;
 	--sidebar-accent-foreground: #f2f1ef;
@@ -168,6 +178,7 @@
 	--color-popover-foreground: var(--popover-foreground);
 	--color-primary: var(--primary);
 	--color-primary-foreground: var(--primary-foreground);
+	--color-brand: var(--brand);
 	--color-secondary: var(--secondary);
 	--color-secondary-foreground: var(--secondary-foreground);
 	--color-muted: var(--muted);

@@ -26,7 +26,7 @@ const TONE_CLASSES: Record<Kpi["tone"], string> = {
 	accent:
 		"data-[active=true]:border-accent data-[active=true]:bg-accent/10 data-[active=true]:ring-1 data-[active=true]:ring-accent/20",
 	warning:
-		"data-[active=true]:border-amber-500 data-[active=true]:bg-amber-500/5 data-[active=true]:ring-1 data-[active=true]:ring-amber-500/20",
+		"data-[active=true]:border-warning data-[active=true]:bg-warning/5 data-[active=true]:ring-1 data-[active=true]:ring-warning/20",
 	muted: "data-[active=true]:border-foreground/40 data-[active=true]:bg-muted",
 };
 

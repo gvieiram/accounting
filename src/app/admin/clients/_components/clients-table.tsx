@@ -415,9 +415,9 @@ function HierarchyBadge({
 
 function StatusBadge({ status }: { status: ClientListItem["status"] }) {
 	const messages = useMessages();
-	const variant: "default" | "secondary" | "outline" =
+	const variant: "success" | "secondary" | "outline" =
 		status === "ACTIVE"
-			? "default"
+			? "success"
 			: status === "PROSPECT"
 				? "secondary"
 				: "outline";
