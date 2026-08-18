@@ -1,6 +1,18 @@
 import type { FeatureCardData } from "@/components/feature-section";
 import { company } from "../company";
 
+/**
+ * Link do header do site institucional. `badge` é o selo opcional ao lado do
+ * label — o header renderiza quando existe. A anotação explícita mantém
+ * `badge` no tipo mesmo quando nenhum link em uso tem selo, sem forçar o
+ * header a mudar toda vez que a campanha da vez entra ou sai do menu.
+ */
+type HeaderLink = {
+	label: string;
+	href: string;
+	badge?: string;
+};
+
 export const home = {
 	metadata: {
 		title: "DuoHub | Contabilidade Digital para MEI, ME e Startups",
@@ -333,12 +345,7 @@ export const home = {
 			{ label: "Serviços", href: "/#servicos" },
 			{ label: "Sobre", href: "/#sobre" },
 			{ label: "Contato", href: "/#contato" },
-			{
-				label: "Imposto de Renda",
-				href: "/imposto-de-renda",
-				badge: "2026",
-			},
-		],
+		] as readonly HeaderLink[],
 	},
 } as const;
 

@@ -24,7 +24,6 @@ export const common = {
 		services: { label: "Serviços", href: "/#servicos" },
 		about: { label: "Sobre", href: "/#sobre" },
 		contact: { label: "Contato", href: "/#contato" },
-		ir: { label: "Imposto de Renda", href: "/imposto-de-renda", badge: "2026" },
 	},
 	forms: {
 		labels: {
