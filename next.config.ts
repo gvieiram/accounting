@@ -109,6 +109,19 @@ const nextConfig: NextConfig = {
 		];
 	},
 
+	// A landing de IRPF está desativada: a rota redireciona para a home em vez
+	// de responder 404 para não quebrar link já divulgado (WhatsApp, banner,
+	// resultado de busca). `permanent: false` (307) é deliberado — o
+	// desligamento é sazonal, e um 308 ficaria cacheado no browser do visitante
+	// mesmo depois de religarmos a página. O código da landing continua no
+	// repositório; religar é remover este bloco.
+	async redirects() {
+		return [
+			{ source: "/imposto-de-renda", destination: "/", permanent: false },
+			{ source: "/imposto-de-renda/", destination: "/", permanent: false },
+		];
+	},
+
 	async headers() {
 		return [
 			{ source: "/admin/:path*", headers: ADMIN_HEADERS },
