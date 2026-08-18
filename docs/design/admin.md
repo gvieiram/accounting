@@ -212,6 +212,12 @@ No escuro, `{colors.dark-action}` é a própria terracota saturada — mesma fam
 O teal não desaparece no escuro: volta clareado em `{colors.dark-accent-teal}`, no papel de
 **ponto de status, link e anel de foco**.
 
+**Cor de marca é separada da cor de ação.** A logo desenha com `--brand`, nunca com
+`--primary`. Como `--primary` troca de papel entre os temas (teal → coral), usá-la pintaria
+a marca de coral no escuro. `--brand` é o âncora teal — `{colors.brand-teal}` no claro e o
+teal clareado `{colors.dark-accent-teal}` no escuro, para manter contraste sobre o chão
+escuro. Marca e ação são a mesma cor no claro por coincidência, não por serem o mesmo token.
+
 **Cor semântica é separada do acento.** `{colors.success}`, `{colors.warning}` e
 `{colors.danger}` comunicam estado e não contam como cor de marca — nunca use teal ou
 terracota para dizer "deu certo" ou "deu errado".
@@ -266,6 +272,13 @@ O componente mais importante desta superfície.
 
 O canvas claro é off-white (`{colors.canvas}`) com o card em branco puro
 (`{colors.surface}`). Isso dá separação sem precisar de sombra forte.
+
+**A escada de superfície vale também para o shell.** O admin usa `variant="inset"`: o piso
+é `bg-sidebar` e o painel de conteúdo, que flutua sobre ele, é `bg-background`. No escuro os
+dois precisam de um passo real entre si — se forem a mesma cor, navbar e tela se fundem e o
+efeito de painel some. A escada completa, do mais fundo ao mais alto, com degrau visível em
+cada salto: **piso (`--sidebar`) → painel (`--background`) → card (`--card`) → popover
+(`--popover`)**.
 
 ## Movimento
 
