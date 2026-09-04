@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proposta de Serviço – DuoHub Gestão Contábil</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Marcellus&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --verde: #274f4a;
+      --verde-light: #3a6b64;
+      --verde-xlight: #e8f0ef;
+      --rose: #d9988a;
+      --rose-light: #f5ebe8;
+      --off-white: #f7f5f2;
+      --dark: #1a1a1a;
+      --muted: #6b7280;
+      --border: #ddd8d0;
+      --white: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #eceae6;
+      color: var(--dark);
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── PAGE WRAPPER ── */
+    .page {
+      width: 794px;
+      min-height: 1123px;
+      margin: 32px auto;
+      background: var(--white);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 48px rgba(0, 0, 0, 0.12);
+      page-break-after: always;
+    }
+
+    /* ══════════════════════════
+     PAGE 1 – CAPA
+  ══════════════════════════ */
+    .pg-cover {
+      display: flex;
+      flex-direction: column;
+      min-height: 1123px;
+      order: 1;
+    }
+
+    .cover-sidebar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 8px;
+      background: linear-gradient(180deg, var(--verde) 60%, var(--rose) 100%);
+    }
+
+    .cover-top-band {
+      background: var(--verde);
+      padding: 38px 60px 34px 68px;
+      position: relative;
+    }
+
+    .cover-top-band::after {
+      content: '';
+      position: absolute;
+      bottom: -28px;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: var(--verde);
+      clip-path: ellipse(55% 100% at 50% 0%);
+    }
+
+    .cover-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 12px;
+    }
+
+    .cover-title {
+      font-family: 'Marcellus', serif;
+      font-size: 46px;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.05;
+      margin-bottom: 12px;
+    }
+
+    .cover-subtitle {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.72);
+      max-width: 420px;
+      line-height: 1.6;
+    }
+
+    .cover-subtitle span {
+      color: var(--rose);
+      font-weight: 600;
+    }
+
+    .cover-body {
+      padding: 50px 56px 28px 64px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .info-card {
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 22px;
+      background: var(--off-white);
+    }
+
+    .info-card .label {
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .info-row {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      margin-bottom: 8px;
+      font-size: 14.5px;
+    }
+
+    .info-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-row strong {
+      color: var(--verde);
+      font-weight: 600;
+      min-width: 80px;
+    }
+
+    .info-row.client strong {
+      color: var(--rose);
+    }
+
+    .summary-card {
+      background: var(--verde);
+      border-radius: 14px;
+      padding: 20px 26px;
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .summary-card::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: rgba(217, 152, 138, 0.15);
+    }
+
+    .summary-card-title {
+      font-family: 'Marcellus', serif;
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .summary-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .tag {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .summary-text {
+      font-size: 13px;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .highlight-value {
+      display: inline-flex;
+      gap: 20px;
+      margin-top: 12px;
+    }
+
+    .val-box {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px 18px;
+      text-align: center;
+    }
+
+    .val-box .num {
+      font-family: 'Marcellus', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--rose);
+      display: block;
+      white-space: nowrap;
+    }
+
+    .val-box .desc {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 2px;
+    }
+
+    .cover-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 60px 22px 68px;
+      border-top: 1px solid var(--border);
+    }
+
+    .cover-budget-title {
+      font-family: 'Marcellus', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--verde);
+      margin-top: 2px;
+    }
+
+    .pg-cover .badges-row {
+      padding: 0;
+      border-bottom: none;
+    }
+
+    .pg-cover .badge-pill {
+      flex: 1;
+      padding: 9px 12px;
+    }
+
+    .pg-cover .badge-pill .bp-label {
+      font-size: 8.5px;
+      letter-spacing: 1.5px;
+    }
+
+    .pg-cover .badge-pill .bp-value {
+      font-size: 13px;
+    }
+
+    .pg-cover .table-wrap {
+      padding: 0;
+    }
+
+    .pg-cover .svc-table {
+      border-radius: 10px;
+    }
+
+    .pg-cover .svc-table thead th {
+      padding: 10px 14px;
+      font-size: 12px;
+    }
+
+    .pg-cover .svc-table tbody td {
+      padding: 10px 14px;
+      font-size: 12.5px;
+    }
+
+    .pg-cover .svc-table tfoot td {
+      padding: 12px 14px;
+      font-size: 13px;
+    }
+
+    .pg-cover .svc-table tfoot td:last-child {
+      font-size: 20px;
+    }
+
+    .cover-footer .brand {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .cover-footer .brand strong {
+      color: var(--verde);
+      font-weight: 600;
+    }
+
+    .page-num {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .pg-scope {
+      order: 2;
+    }
+
+    .pg-sign {
+      order: 3;
+    }
+
+    .page-header-tag {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--verde);
+      margin-bottom: 6px;
+      padding-left: 8px;
+    }
+
+    .page-header-title {
+      font-family: 'Marcellus', serif;
+      font-size: 38px;
+      font-weight: 700;
+      color: var(--verde);
+      padding-left: 8px;
+    }
+
+    .badges-row {
+      display: flex;
+      gap: 12px;
+      padding: 24px 60px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge-pill {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 20px;
+      background: var(--off-white);
+    }
+
+    .badge-pill .bp-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .badge-pill .bp-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    /* Service Table */
+    .table-wrap {
+      padding: 32px 60px;
+    }
+
+    .svc-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .svc-table thead tr {
+      background: var(--verde);
+    }
+
+    .svc-table thead th {
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: 0.5px;
+    }
+
+    .svc-table thead th:last-child {
+      text-align: center;
+    }
+
+    .svc-table tbody tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .svc-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .svc-table tbody tr:nth-child(even) {
+      background: var(--off-white);
+    }
+
+    .svc-table tbody td {
+      padding: 15px 20px;
+      font-size: 14px;
+      color: var(--dark);
+    }
+
+    .svc-table tbody td:first-child {
+      color: var(--muted);
+      width: 40px;
+      font-weight: 600;
+    }
+
+    .svc-table tbody td.check-col {
+      text-align: center;
+    }
+
+    .check-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      background: var(--verde);
+      border-radius: 50%;
+    }
+
+    .check-icon svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .svc-table tfoot tr {
+      background: var(--verde);
+    }
+
+    .svc-table tfoot td {
+      padding: 16px 20px;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--white);
+    }
+
+    .svc-table tfoot td:last-child {
+      color: var(--rose);
+      font-family: 'Marcellus', serif;
+      font-size: 22px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* Desenquadramento */
+    .extra-section {
+      padding: 0 60px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .extra-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .extra-desc {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .extra-row {
+      display: flex;
+      align-items: stretch;
+      gap: 16px;
+    }
+
+    .price-highlight {
+      background: var(--verde);
+      border-radius: 12px;
+      padding: 20px 28px;
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 180px;
+    }
+
+    .price-highlight .ph-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 6px;
+    }
+
+    .price-highlight .ph-value {
+      font-family: 'Marcellus', serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--rose);
+    }
+
+    .price-note {
+      background: var(--rose-light);
+      border-radius: 12px;
+      padding: 18px 22px;
+      flex: 1;
+      border-left: 4px solid var(--rose);
+    }
+
+    .price-note p {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--dark);
+    }
+
+    .price-note strong {
+      color: var(--rose);
+    }
+
+    .payment-row {
+      background: var(--off-white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .payment-row .pr-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--verde);
+      min-width: 160px;
+    }
+
+    .payment-row .pr-value {
+      font-size: 13px;
+      color: var(--dark);
+    }
+
+    /* ══════════════════════════
+     PAGE 3 – ESCOPO
+  ══════════════════════════ */
+    .pg-scope .page-header {
+      padding: 48px 60px 32px;
+      border-bottom: 1.5px solid var(--border);
+      position: relative;
+    }
+
+    .pg-scope .page-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--verde) 60%, var(--rose) 100%);
+    }
+
+    .scope-body {
+      padding: 36px 60px;
+    }
+
+    .scope-section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--verde-xlight);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .scope-section-title .num {
+      background: var(--verde);
+      color: var(--white);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .scope-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .scope-tag {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 500;
+      background: var(--verde-xlight);
+      color: var(--verde);
+      border: 1px solid rgba(39, 79, 74, 0.2);
+    }
+
+    .scope-tagline {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin-bottom: 22px;
+      line-height: 1.6;
+    }
+
+    .scope-tagline span {
+      color: var(--rose);
+      font-weight: 600;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .scope-card {
+      border: 1.5px solid var(--border);
+      box-shadow: inset 4px 0 0 0 var(--verde);
+      border-radius: 12px;
+      padding: 20px 22px;
+      background: var(--off-white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scope-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--verde);
+      margin-bottom: 10px;
+    }
+
+    .scope-card p {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .scope-card p span {
+      color: var(--rose);
+      font-weight: 600;
+    }
+
+    /* ══════════════════════════
+     PAGE 4 – ASSINATURA
+  ══════════════════════════ */
+    .pg-sign {
+      display: flex;
+      flex-direction: column;
+      min-height: 1123px;
+    }
+
+    .sign-header {
+      background: var(--verde);
+      padding: 56px 60px 44px 68px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sign-header::before {
+      content: '';
+      position: absolute;
+      bottom: -40px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(217, 152, 138, 0.12);
+    }
+
+    .sign-header-tag {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 10px;
+    }
+
+    .sign-header-title {
+      font-family: 'Marcellus', serif;
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+    }
+
+    .sign-body {
+      flex: 1;
+      padding: 48px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .terms-box {
+      background: var(--off-white);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 32px;
+    }
+
+    .terms-box h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--verde);
+      margin-bottom: 14px;
+    }
+
+    .terms-box ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .terms-box ul li {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.55;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .terms-box ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--rose);
+      font-weight: 700;
+    }
+
+    .sign-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 8px;
+    }
+
+    .sign-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .sign-block .sb-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .sign-block .sb-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 2px;
+    }
+
+    .sign-block .sb-role {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .sign-line {
+      border: none;
+      border-top: 1.5px solid var(--border);
+      margin-bottom: 6px;
+    }
+
+    .sign-block .sb-date-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .contact-box {
+      background: var(--rose-light);
+      border-left: 4px solid var(--rose);
+      border-radius: 12px;
+      padding: 20px 24px;
+    }
+
+    .contact-box h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .contact-box p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .contact-box strong {
+      color: var(--verde);
+    }
+
+    .sign-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px 28px 68px;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .sign-footer .brand {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .sign-footer .brand strong {
+      color: var(--verde);
+      font-weight: 600;
+    }
+
+    /* shared footer */
+    .page-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 60px;
+      border-top: 1px solid var(--border);
+    }
+
+    .page-footer .brand {
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    .page-footer .brand strong {
+      color: var(--verde);
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 0;
+      }
+
+      body {
+        margin: 0;
+        background: white;
+      }
+
+      .page {
+        margin: 0;
+        box-shadow: none;
+        width: 210mm;
+        height: 297mm;
+        min-height: auto;
+        page-break-after: always;
+        overflow: hidden;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════════════════
+     PÁGINA 1 – CAPA
+══════════════════════ -->
+  <div class="page pg-cover">
+    <div class="cover-sidebar"></div>
+
+    <div class="cover-top-band">
+      <div class="cover-tag">Serviços Contábeis</div>
+      <div class="cover-title">Proposta<br>de Serviço</div>
+      <div class="cover-subtitle">
+        Esta proposta organiza os <span>serviços contábeis</span> da sua empresa com segurança, clareza e suporte especializado.
+      </div>
+    </div>
+
+    <div class="cover-body">
+
+      <div class="info-card">
+        <div class="label">Prestador de Serviços</div>
+        <div class="info-row">
+          <strong>Empresa:</strong>
+          <span>DuoHub Gestão Contábil</span>
+        </div>
+        <div class="info-row">
+          <strong>CNPJ:</strong>
+          <span>58.333.395/0001-24</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="label">Dados do Contratante</div>
+        <div class="info-row client">
+          <strong>Contratante:</strong>
+          <span>Jéssica Lohn Biomédica</span>
+        </div>
+        <div class="info-row client">
+          <strong>CNPJ:</strong>
+          <span></span>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-card-title">Resumo desta Proposta</div>
+        <div class="summary-tags">
+          <span class="tag">Contabilidade</span>
+          <span class="tag">Eficiência</span>
+          <span class="tag">Conformidade</span>
+        </div>
+        <div class="summary-text">
+          Esta proposta contempla o serviço de contabilidade pelo valor de R$
+          289,70 mensais, incluindo todas as obrigações contábeis e fiscais necessárias para manter a empresa
+          regularizada, com segurança, eficiência e tranquilidade para o seu negócio.
+        </div>
+        <div class="highlight-value">
+          <div class="val-box">
+            <span class="num">R$ 289,70</span>
+            <div class="desc">Mensalidade</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cover-budget-title">Orçamento dos Serviços</div>
+
+      <div class="badges-row">
+        <div class="badge-pill">
+          <div class="bp-label">Regime Tributário</div>
+          <div class="bp-value">Simples Nacional</div>
+        </div>
+        <div class="badge-pill">
+          <div class="bp-label">Modalidade</div>
+          <div class="bp-value">Prestação de Serviços</div>
+        </div>
+        <div class="badge-pill">
+          <div class="bp-label">Faturamento Mensal</div>
+          <div class="bp-value">Até R$ 25.000,00</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="svc-table">
+          <thead>
+            <tr>
+              <th style="width:44px">Nº</th>
+              <th>Serviços Contratados</th>
+              <th style="width:120px">Incluso</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Obrigações Contábeis e Fiscais</td>
+              <td class="check-col">
+                <div class="check-icon">
+                  <svg viewBox="0 0 14 14" fill="none">
+                    <polyline points="2,7 5.5,11 12,3" stroke="white" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Consultoria e Atendimento</td>
+              <td class="check-col">
+                <div class="check-icon">
+                  <svg viewBox="0 0 14 14" fill="none">
+                    <polyline points="2,7 5.5,11 12,3" stroke="white" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Pró-Labore e 1 Funcionário</td>
+              <td class="check-col">
+                <div class="check-icon">
+                  <svg viewBox="0 0 14 14" fill="none">
+                    <polyline points="2,7 5.5,11 12,3" stroke="white" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+          <tr>
+            <td colspan="2">Valor da Mensalidade</td>
+            <td>R$ 289,70</td>
+          </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="cover-footer">
+      <div class="brand"><strong>DuoHub</strong> Gestão Contábil</div>
+      <div class="page-num"></div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════
+     PÁGINA 2 – ESCOPO
+══════════════════════ -->
+  <div class="page pg-scope">
+
+    <div class="page-header">
+      <div class="page-header-tag">Detalhamento</div>
+      <div class="page-header-title" style="padding-left:8px">
+        <span style="color:var(--verde)">Escopo</span> do Serviço
+      </div>
+    </div>
+
+    <div class="scope-body">
+
+      <div class="scope-section-title">
+        <span class="num">1</span> Obrigações Fiscais e Contábeis
+      </div>
+
+      <div class="scope-tags">
+        <span class="scope-tag">PGDas</span>
+        <span class="scope-tag">Defis</span>
+        <span class="scope-tag">NFS-e</span>
+        <span class="scope-tag">DCTFWeb</span>
+        <span class="scope-tag">ESocial</span>
+      </div>
+
+      <div class="scope-tagline">
+        Tenha tranquilidade com uma contabilidade que mantém sua empresa sempre em conformidade e <span>livre de riscos
+          fiscais</span>.
+      </div>
+
+      <div class="cards-grid">
+        <div class="scope-card">
+          <h4>Apuração Mensal</h4>
+          <p>Apuração do <span>PGDAS-D</span> e emissão do <span>DAS</span> de forma precisa e pontual, garantindo o
+            cumprimento das obrigações do Simples Nacional.</p>
+        </div>
+        <div class="scope-card">
+          <h4>Conformidades Fiscais</h4>
+          <p>Envio das principais declarações: DEFIS, DeSTDA, DCTFWeb, eSocial e EFD-Reinf. Asseguramos total
+            conformidade em <span>todas as esferas</span> governamentais.</p>
+        </div>
+        <div class="scope-card">
+          <h4>Gestão de Informações Financeiras</h4>
+          <p>Estruturamos e acompanhamos as informações da sua empresa para garantir controle, <span>clareza nos
+              números</span> e apoio na tomada de decisões.</p>
+        </div>
+        <div class="scope-card">
+          <h4>Gestão Tributária</h4>
+          <p>Acompanhamos parcelamentos, guias e tributos, garantindo o controle sobre vencimentos e <span>evitando
+              encargos desnecessários</span>.</p>
+        </div>
+      </div>
+
+      <div class="scope-section-title">
+        <span class="num">2</span> Consultoria e Atendimento
+      </div>
+
+      <div class="cards-grid">
+        <div class="scope-card">
+          <h4>Atendimento Dedicado</h4>
+          <p>Suporte via WhatsApp e e-mail com retorno em até <span>24 horas úteis</span>. Seu contador sempre
+            disponível quando você precisar.</p>
+        </div>
+        <div class="scope-card">
+          <h4>Consultoria Estratégica</h4>
+          <p>Orientação sobre <span>planejamento tributário</span>, abertura de filiais, enquadramento societário e
+            crescimento sustentável do negócio.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="page-footer">
+      <div class="brand"><strong>DuoHub</strong> Gestão Contábil</div>
+      <div class="page-num"></div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════
+     PÁGINA 3 – ASSINATURA
+══════════════════════ -->
+  <div class="page pg-sign">
+
+    <div class="sign-header">
+      <div class="sign-header-tag">Aceite da Proposta</div>
+      <div class="sign-header-title">Condições<br>Gerais</div>
+    </div>
+
+    <div class="sign-body">
+
+      <div class="terms-box">
+        <h3>Condições Gerais da Proposta</h3>
+        <ul>
+          <li>Esta proposta tem validade de <strong>15 dias</strong> a partir da data de envio.</li>
+          <li>Os serviços serão iniciados após confirmação do aceite desta proposta.</li>
+          <li>A mensalidade será cobrada todo dia <strong>10</strong> de cada mês via Pix.</li>
+          <li>Rescisão com aviso prévio de <strong>30 dias</strong> por qualquer das partes.</li>
+          <li>Valores sujeitos a reajuste anual pelo IPCA ou índice acordado.</li>
+          <li>Todos os dados do cliente são tratados com total sigilo e confidencialidade.</li>
+        </ul>
+      </div>
+
+      <div class="contact-box">
+        <h4>Dúvidas? Fale com a gente</h4>
+        <p>
+          <strong>WhatsApp:</strong> (48) 99246-7107<br>
+          <strong>E-mail:</strong> contato@duohubcontabil.com.br<br>
+
+        </p>
+      </div>
+
+      <!-- <div style="margin-top:8px">
+        <div style="font-size:13px; color:var(--muted); margin-bottom:20px">
+          Ao assinar abaixo, ambas as partes declaram estar de acordo com todos os termos desta proposta.
+        </div>
+
+        <div class="sign-grid">
+          <div class="sign-block">
+            <div class="sb-label">Prestador de Serviços</div>
+            <div class="sb-name">DuoHub Gestão Contábil</div>
+            <div class="sb-role">CNPJ: 58.333.395/0001-24</div>
+            <hr class="sign-line">
+            <div class="sb-date-label">Assinatura &amp; Data</div>
+          </div>
+          <div class="sign-block">
+            <div class="sb-label">Contratante</div>
+            <div class="sb-name">Jéssica Lohn Biomédica</div>
+            <div class="sb-role">CNPJ:</div>
+            <hr class="sign-line">
+            <div class="sb-date-label">Assinatura &amp; Data</div>
+          </div>
+        </div>
+      </div> -->
+
+    </div>
+
+    <div class="sign-footer">
+      <div class="brand"><strong>DuoHub</strong> Gestão Contábil · Proposta de Serviços Contábeis</div>
+      <div class="page-num"></div>
+    </div>
+  </div>
+
+</body>
+
+</html>
